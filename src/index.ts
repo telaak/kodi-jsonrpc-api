@@ -1,5 +1,7 @@
 import axios, { AxiosBasicCredentials, AxiosInstance } from "axios";
 import { v4 as uuidv4 } from "uuid";
+import { WebSocket } from "partysocket";
+
 import { KodiAddonsNamespace } from "./namespaces/addons";
 import { KodiApplicationNamespace } from "./namespaces/application";
 import { KodiFavouritesNamespace } from "./namespaces/favourites";
@@ -135,7 +137,13 @@ export class WebsocketKodiClient extends BaseKodiClient {
 
   sendMessage: ISendMessage = (method, params) => {
     return new Promise(async (resolve, reject) => {
-      if (!this.isOpen) await this.waitForSocketOpen(5000);
+      if (!this.isOpen) {
+        try {
+          await this.waitForSocketOpen(5000);
+        } catch (error) {
+          return reject(error);
+        }
+      }
       const id = uuidv4();
       const listener = (event: MessageEvent) => {
         try {
@@ -201,7 +209,7 @@ export class WebsocketKodiClient extends BaseKodiClient {
         if (this.isOpen) {
           resolve();
         } else if (elapsed >= timeout) {
-          reject(new Error(`Socket did not open within ${timeout}ms`));
+          reject(`Socket did not open within ${timeout}ms`);
         } else {
           elapsed += interval;
           setTimeout(check, interval);

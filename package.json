@@ -1,6 +1,6 @@
 {
   "name": "kodi-jsonrpc-api",
-  "version": "14.0.0",
+  "version": "14.1.0",
   "description": "TypeScript methods to access Kodi's JSONRPC API",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/telaak/kodi-jsonrpc-api#readme",
   "dependencies": {
     "axios": "^1.7.9",
+    "partysocket": "^1.0.3",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
