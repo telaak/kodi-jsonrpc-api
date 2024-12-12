@@ -10,7 +10,7 @@ This project was extracted from my personal mediacenter control implementation a
 
 ## Installation
 
-`npm i telaak/kodi-jsonrpc-api`
+`npm i kodi-jsonrpc-api`
 
 ## Usage
 
