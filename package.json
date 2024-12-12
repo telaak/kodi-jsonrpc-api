@@ -23,5 +23,9 @@
   "dependencies": {
     "axios": "^1.7.9",
     "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/gh-pages": "^6.1.0",
+    "gh-pages": "^6.2.0"
   }
 }
