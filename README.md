@@ -17,7 +17,7 @@ This project was extracted from my personal mediacenter control implementation a
 Import the client you wish to use:
 
 ```TypeScript
-import { HttpKodiClient } from "telaak/kodi-jsonrpc-api";
+import { HttpKodiClient } from "kodi-jsonrpc-api";
 
 /**
 * Example HTTP client that uses HTTP POST requests to communicate with Kodi
@@ -35,7 +35,7 @@ const httpClient = new HttpKodiClient("http://192.168.0.124:8080/jsonrpc", {
 OR
 
 ```TypeScript
-import { WebsocketKodiClient } from "telaak/kodi-jsonrpc-api";
+import { WebsocketKodiClient } from "kodi-jsonrpc-api";
 
 /**
  * Example WebSocket client to communicate with Kodi
