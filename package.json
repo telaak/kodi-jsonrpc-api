@@ -3,9 +3,11 @@
   "version": "14.0.0",
   "description": "TypeScript methods to access Kodi's JSONRPC API",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npx tsc"
+    "prepublish": "tsc",
+    "prepack": "tsc"
   },
   "repository": {
     "type": "git",
