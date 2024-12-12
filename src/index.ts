@@ -38,6 +38,12 @@ abstract class BaseKodiClient {
   public VideoLibrary!: KodiVideoLibraryNamespace;
   public XBMC!: KodiXBMCNamespace;
 
+  /**
+   * Initializing all namespaces
+   * MAKE SURE THIS IS CALLED IF YOU'RE EXTENDING THE BaseKodiClient class
+   * @param sendMessage the function used to communicate with Kodi
+   */
+
   init(sendMessage: ISendMessage) {
     this.Addons = new KodiAddonsNamespace(sendMessage);
     this.Application = new KodiApplicationNamespace(sendMessage);
@@ -71,6 +77,13 @@ export class HttpKodiClient extends BaseKodiClient {
   public url: string;
   public axiosInstance: AxiosInstance;
 
+  /**
+   * The sendMessage method, the actual JSON sent to Kodi
+   * @param method name of the method e.g. "Addons.ExecuteAddon"
+   * @param params string, number, object, array, whatever the method accepts
+   * @returns Promise containing the result, or rejects with an error
+   */
+
   sendMessage: ISendMessage = async (method, params) => {
     return new Promise(async (resolve, reject) => {
       const request = await this.axiosInstance.post(this.url, {
@@ -87,6 +100,13 @@ export class HttpKodiClient extends BaseKodiClient {
     });
   };
 
+  /**
+   * Constructor for the HTTP client
+   * Uses Axios for communication
+   * @param url full url to the endpoint e.g. "http://192.168.0.124:8080/jsonrpc"
+   * @param auth object containing the username and password
+   */
+
   constructor(url: string, auth?: AxiosBasicCredentials) {
     super();
     const axiosInstance = axios.create({ auth });
@@ -96,10 +116,22 @@ export class HttpKodiClient extends BaseKodiClient {
   }
 }
 
+/**
+ * WebSocket client for communicating with Kodi
+ * Currently does not handle reconnecting or disconnects
+ */
+
 export class WebsocketKodiClient extends BaseKodiClient {
   public url: string;
   public webSocket: WebSocket;
   public isOpen: boolean;
+
+  /**
+   * The sendMessage method, the actual JSON sent to Kodi
+   * @param method name of the method e.g. "Addons.ExecuteAddon"
+   * @param params string, number, object, array, whatever the method accepts
+   * @returns Promise containing the result, or rejects with an error
+   */
 
   sendMessage: ISendMessage = (method, params) => {
     return new Promise(async (resolve, reject) => {
@@ -129,6 +161,11 @@ export class WebsocketKodiClient extends BaseKodiClient {
       );
     });
   };
+
+  /**
+   * Sets all the event listeners and properties
+   * @param url full url for the WebSocket connection e.g. "ws://192.168.0.124:9090"
+   */
 
   constructor(url: string) {
     super();

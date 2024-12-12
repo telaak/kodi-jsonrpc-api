@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@types/gh-pages": "^6.1.0",
-    "gh-pages": "^6.2.0"
+    "gh-pages": "^6.2.0",
+    "typedoc-plugin-merge-modules": "^6.1.0"
   }
 }

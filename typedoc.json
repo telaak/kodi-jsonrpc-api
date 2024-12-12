@@ -1,0 +1,9 @@
+{
+  "entryPointStrategy": "expand",
+  "tsconfig": "tsconfig.json",
+  "readme": "README.md",
+  "entryPoints": ["src/index.ts", "src/namespaces", "src/types"],
+  "plugin": ["typedoc-plugin-merge-modules"],
+  "mergeModulesRenameDefaults": true, // NEW option of TypeDoc added by this plugin
+  "mergeModulesMergeMode": "project" // NEW option of TypeDoc added by this plugin
+}
