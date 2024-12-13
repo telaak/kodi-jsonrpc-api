@@ -1,19 +1,4 @@
-// Functions Block
-// These functions correspond to the Favourites methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Favourites" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiFavouritesNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  FavouriteType,
-  Favourite,
-  FavouritesGetFavouritesResponse,
-  FavouritesAddFavouriteParams,
-  FavouritesAddFavouriteResponse,
-} from "../types/favourites"; // Adjust the import path as necessary
 
 export class KodiFavouritesNamespace {
   private sendMessage: ISendMessage;
@@ -22,42 +7,67 @@ export class KodiFavouritesNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // Favourites Namespace Methods
+  // =====================
+
   /**
-   * Adds an item to the favourites.
+   * Adds a new favourite with the specified details.
    *
-   * @param title - The title of the favourite.
-   * @param type - The type of the favourite (e.g., 'video', 'music').
-   * @param path - Optional path for media, script, and androidapp favourites types.
-   * @param window - Optional window name for window favourite type.
-   * @param windowparameter - Optional window parameter.
-   * @param thumbnail - Optional thumbnail URL for the favourite.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param name - The name of the favourite.
+   * @param path - The file system path associated with the favourite.
+   * @param thumbnail - Optional URL to the thumbnail image for the favourite.
+   * @returns A promise that resolves to a confirmation string upon successful addition.
    */
   async AddFavourite(
-    title: string,
-    type: FavouriteType,
-    path?: string,
-    window?: string,
-    windowparameter?: string,
+    name: string,
+    path: string,
     thumbnail?: string
-  ): Promise<FavouritesAddFavouriteResponse> {
-    const params: FavouritesAddFavouriteParams = {
-      title,
-      type,
-      path,
-      window,
-      windowparameter,
-      thumbnail,
-    };
+  ): Promise<string> {
+    const params: AddFavouriteParams = { name, path, thumbnail };
     return this.sendMessage("Favourites.AddFavourite", params);
   }
 
   /**
-   * Retrieves all favourites.
+   * Retrieves the list of all favourites.
    *
-   * @returns A promise resolving to a list of favourites.
+   * @returns A promise that resolves to an object containing an array of favourites.
    */
-  async GetFavourites(): Promise<FavouritesGetFavouritesResponse> {
+  async GetFavourites(): Promise<GetFavouritesResponse> {
     return this.sendMessage("Favourites.GetFavourites", {});
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available properties for a favourite.
+ */
+type FavouriteProperty = "name" | "path" | "thumbnail";
+
+/**
+ * Represents the parameters for adding a favourite.
+ */
+interface AddFavouriteParams {
+  name: string;
+  path: string;
+  thumbnail?: string;
+}
+
+/**
+ * Represents a single favourite item.
+ */
+interface Favourite {
+  name: string;
+  path: string;
+  thumbnail?: string;
+}
+
+/**
+ * Represents the response structure for getting favourites.
+ */
+interface GetFavouritesResponse {
+  favourites: Favourite[];
 }

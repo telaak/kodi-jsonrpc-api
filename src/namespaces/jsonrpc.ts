@@ -1,27 +1,4 @@
-// Functions Block
-// These functions correspond to the JSONRPC methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "JSONRPC" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiJSONRPCNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  Configuration,
-  Notifications,
-  IntrospectFilter,
-  IntrospectType,
-  IntrospectParams,
-  IntrospectResponse,
-  NotifyAllParams,
-  PermissionResponse,
-  VersionResponse,
-  SetConfigurationParams,
-  PlayerSpeed,
-  GlobalToggle,
-  IncrementDecrement,
-} from "../types/jsonrpc"; // Adjust the import path as necessary
 
 export class KodiJSONRPCNamespace {
   private sendMessage: ISendMessage;
@@ -30,73 +7,201 @@ export class KodiJSONRPCNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // JSONRPC Namespace Methods
+  // =====================
+
   /**
-   * Retrieves client-specific configurations.
+   * Retrieves the current system configuration.
    *
-   * @returns A promise resolving to the Configuration object.
+   * @returns A promise that resolves to an object containing the system configuration.
    */
-  async GetConfiguration(): Promise<Configuration> {
-    return this.sendMessage("JSONRPC.GetConfiguration", {});
+  async GetConfiguration(): Promise<GetConfigurationResponse> {
+    const params: GetConfigurationParams = {};
+    return this.sendMessage("JSONRPC.GetConfiguration", params);
   }
 
   /**
-   * Enumerates all actions and descriptions based on the provided filters.
+   * Retrieves information about the JSON-RPC API.
    *
-   * @param params - The parameters to filter the introspection.
-   * @returns A promise resolving to the introspection details.
+   * @returns A promise that resolves to an object containing API version and available methods.
    */
-  async Introspect(params: IntrospectParams): Promise<IntrospectResponse> {
+  async Introspect(): Promise<IntrospectResponse> {
+    const params: IntrospectParams = {};
     return this.sendMessage("JSONRPC.Introspect", params);
   }
 
   /**
-   * Notifies all other connected clients with a message.
+   * Sends a notification to all listeners.
    *
-   * @param sender - The name of the sender.
-   * @param message - The message to send.
-   * @param data - Optional data to include with the message.
-   * @returns A promise resolving to any response from the clients.
+   * @param message - The notification message.
+   * @param data - Optional additional data to include with the notification.
+   * @returns A promise that resolves to an object indicating the success status and a message.
    */
-  async NotifyAll(sender: string, message: string, data?: any): Promise<any> {
-    const params: NotifyAllParams = { sender, message, data };
+  async NotifyAll(message: string, data?: any): Promise<NotifyAllResponse> {
+    const params: NotifyAllParams = { message, data };
     return this.sendMessage("JSONRPC.NotifyAll", params);
   }
 
   /**
-   * Retrieves the client's permissions.
+   * Checks or sets permissions for a specific action on a resource.
    *
-   * @returns A promise resolving to the PermissionResponse object.
+   * @param action - The action to check or set (e.g., "read", "write", "execute").
+   * @param resource - The resource on which the action is to be performed.
+   * @returns A promise that resolves to an object indicating whether the action is allowed.
    */
-  async Permission(): Promise<PermissionResponse> {
-    return this.sendMessage("JSONRPC.Permission", {});
+  async Permission(
+    action: PermissionAction,
+    resource: string
+  ): Promise<PermissionResponse> {
+    const params: PermissionParams = { action, resource };
+    return this.sendMessage("JSONRPC.Permission", params);
   }
 
   /**
-   * Pings the JSON-RPC responder.
+   * Sends a ping to the JSON-RPC server to check connectivity.
    *
-   * @returns A promise resolving to a string response.
+   * @returns A promise that resolves to an object containing a pong response.
    */
   async Ping(): Promise<string> {
-    return this.sendMessage("JSONRPC.Ping", {});
+    const params: PingParams = {};
+    return this.sendMessage("JSONRPC.Ping", params);
   }
 
   /**
-   * Changes the client-specific configuration.
+   * Updates a specific system configuration setting.
    *
-   * @param notifications - The notifications settings to apply.
-   * @returns A promise resolving to the updated Configuration object.
+   * @param key - The configuration key to set.
+   * @param value - The new value to assign to the configuration key.
+   * @returns A promise that resolves to an object indicating the success status and a message.
    */
-  async SetConfiguration(notifications: Notifications): Promise<Configuration> {
-    const params: SetConfigurationParams = { notifications };
+  async SetConfiguration(
+    key: ConfigurationKey,
+    value: boolean | number | string
+  ): Promise<SetConfigurationResponse> {
+    const params: SetConfigurationParams = { key, value };
     return this.sendMessage("JSONRPC.SetConfiguration", params);
   }
 
   /**
-   * Retrieves the JSON-RPC protocol version.
+   * Retrieves the current version of the system.
    *
-   * @returns A promise resolving to the VersionResponse object.
+   * @returns A promise that resolves to an object containing the version and build information.
    */
   async Version(): Promise<VersionResponse> {
-    return this.sendMessage("JSONRPC.Version", {});
+    const params: VersionParams = {};
+    return this.sendMessage("JSONRPC.Version", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available configuration keys.
+ */
+type ConfigurationKey = "volume" | "brightness" | "theme" | "language";
+
+/**
+ * Represents the parameters for GetConfiguration.
+ */
+interface GetConfigurationParams {
+  // No parameters required for this method.
+}
+
+/**
+ * Represents the response structure for GetConfiguration.
+ */
+type GetConfigurationResponse = {
+  [key in ConfigurationKey]: boolean | number | string;
+};
+
+/**
+ * Represents the parameters for Introspect.
+ */
+interface IntrospectParams {
+  // No parameters required for this method.
+}
+
+/**
+ * Represents the response structure for Introspect.
+ */
+interface IntrospectResponse {
+  apiVersion: string;
+  methods: string[];
+}
+
+/**
+ * Represents the parameters for NotifyAll.
+ */
+interface NotifyAllParams {
+  message: string;
+  data?: any;
+}
+
+/**
+ * Represents the response structure for NotifyAll.
+ */
+interface NotifyAllResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the available permission actions.
+ */
+type PermissionAction = "read" | "write" | "execute";
+
+/**
+ * Represents the parameters for Permission.
+ */
+interface PermissionParams {
+  action: PermissionAction;
+  resource: string;
+}
+
+/**
+ * Represents the response structure for Permission.
+ */
+interface PermissionResponse {
+  allowed: boolean;
+}
+
+/**
+ * Represents the parameters for Ping.
+ */
+interface PingParams {
+  // No parameters required for this method.
+}
+
+/**
+ * Represents the parameters for SetConfiguration.
+ */
+interface SetConfigurationParams {
+  key: ConfigurationKey;
+  value: boolean | number | string;
+}
+
+/**
+ * Represents the response structure for SetConfiguration.
+ */
+interface SetConfigurationResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Version.
+ */
+interface VersionParams {
+  // No parameters required for this method.
+}
+
+/**
+ * Represents the response structure for Version.
+ */
+interface VersionResponse {
+  version: string;
+  build: string;
 }

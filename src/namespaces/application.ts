@@ -1,23 +1,4 @@
-// Functions Block
-// These functions correspond to the Application methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Application" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are standalone and require an implementation of `ISendMessage` to communicate with Kodi's JSON-RPC API.
-
 import { ISendMessage } from "..";
-import {
-  ApplicationPropertyName,
-  ApplicationPropertyValue,
-  GlobalToggle,
-  GlobalIncrementDecrement,
-  AddonSource,
-  AudioOutput,
-  SleepTimer,
-  SetMuteParams,
-  SetVolumeParams,
-} from "../types/application"; // Adjust the import path as necessary
 
 export class KodiApplicationNamespace {
   private sendMessage: ISendMessage;
@@ -25,52 +6,100 @@ export class KodiApplicationNamespace {
   constructor(sendMessage: ISendMessage) {
     this.sendMessage = sendMessage;
   }
+  // =====================
+  // Application Namespace Methods
+  // =====================
 
   /**
-   * Retrieves the values of the given properties from the Application namespace.
+   * Retrieves the values of the given properties from the application.
    *
-   * @param sendMessage - The function to send JSON-RPC messages.
-   * @param properties - The list of properties to retrieve.
-   * @returns A promise resolving to the application properties.
+   * @param properties - An array of property names to retrieve.
+   * @returns A promise that resolves to an object containing the requested properties.
    */
   async GetProperties(
     properties: ApplicationPropertyName[]
-  ): Promise<ApplicationPropertyValue> {
-    return this.sendMessage("Application.GetProperties", {
-      properties,
-    });
+  ): Promise<GetPropertiesResponse> {
+    const params = { properties };
+    return this.sendMessage("Application.GetProperties", params);
   }
 
   /**
-   * Quits the Kodi application.
+   * Quits the application.
    *
-   * @param sendMessage - The function to send JSON-RPC messages.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @returns A promise that resolves to a confirmation string upon successful exit.
    */
   async Quit(): Promise<string> {
     return this.sendMessage("Application.Quit", {});
   }
 
   /**
-   * Mutes or unmutes the application.
+   * Toggles the mute state of the application.
    *
-   * @param sendMessage - The function to send JSON-RPC messages.
-   * @param mute - Whether to mute (true) or unmute (false) the application.
-   * @returns A promise resolving to a boolean indicating the mute state.
+   * @param mute - A boolean to set mute (`true` to mute, `false` to unmute) or `"toggle"` to switch the current state.
+   * @returns A promise that resolves to the new mute state.
    */
-  async SetMute(mute: GlobalToggle): Promise<boolean> {
-    const paramsObj: SetMuteParams = { mute };
-    return this.sendMessage("Application.SetMute", paramsObj);
+  async SetMute(mute: MuteToggle): Promise<SetMuteResponse> {
+    const params = { mute };
+    return this.sendMessage("Application.SetMute", params);
   }
 
   /**
-   * Sets the volume level for the application.
+   * Sets the current volume of the application.
    *
-   * @param sendMessage - The function to send JSON-RPC messages.
-   * @param volume - The volume level to set (0-100) or an increment/decrement action.
-   * @returns A promise resolving to the new volume level as a number.
+   * @param volume - A number between 0 and 100 to set the volume, or `"increment"`/`"decrement"` to adjust the volume by a predefined step.
+   * @returns A promise that resolves to the new volume level.
    */
-  async SetVolume(volume: number | GlobalIncrementDecrement): Promise<number> {
-    return this.sendMessage("Application.SetVolume", { volume });
+  async SetVolume(volume: VolumeControl): Promise<SetVolumeResponse> {
+    const params = { volume };
+    return this.sendMessage("Application.SetVolume", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available property names that can be retrieved from the application.
+ */
+type ApplicationPropertyName =
+  | "muted"
+  | "volume"
+  | "fullscreen"
+  | "activeWindow"
+  | "canExit";
+
+/**
+ * Represents the options for muting/unmuting the application.
+ */
+type MuteToggle = boolean | "toggle";
+
+/**
+ * Represents the options for adjusting the volume.
+ */
+type VolumeControl = number | "increment" | "decrement";
+
+/**
+ * Represents the response structure for the GetProperties method.
+ */
+interface GetPropertiesResponse {
+  muted?: boolean;
+  volume?: number;
+  fullscreen?: boolean;
+  activeWindow?: string;
+  canExit?: boolean;
+}
+
+/**
+ * Represents the response structure for the SetMute method.
+ */
+interface SetMuteResponse {
+  muted: boolean;
+}
+
+/**
+ * Represents the response structure for the SetVolume method.
+ */
+interface SetVolumeResponse {
+  volume: number;
 }

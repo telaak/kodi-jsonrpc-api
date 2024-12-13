@@ -1,33 +1,4 @@
-// Functions Block
-// These functions correspond to the Playlist methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Playlist" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiPlaylistNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  PlaylistId,
-  PlaylistItem,
-  PlaylistMediaItem,
-  PlaylistMediaItemOptions,
-  PlaylistPosition,
-  PlaylistType,
-  PlaylistSwapOptions,
-  PlaylistGetItemsParams,
-  PlaylistGetItemsResponse,
-  PlaylistGetPlaylistsResponse,
-  PlaylistDetails,
-  PlaylistGetPropertiesParams,
-  PlaylistGetPropertiesResponse,
-  PlaylistInsertParams,
-  PlaylistRemoveParams,
-  PlaylistSwapParams,
-  ListLimits,
-  ListLimitsReturned,
-  ListSort,
-} from "../types/playlist"; // Adjust the import path as necessary
 
 export class KodiPlaylistNamespace {
   private sendMessage: ISendMessage;
@@ -36,125 +7,275 @@ export class KodiPlaylistNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // Playlist Namespace Methods
+  // =====================
+
   /**
-   * Adds item(s) to the specified playlist.
+   * Adds an item to the specified playlist.
    *
-   * @param playlistid - The ID of the playlist to add items to.
-   * @param item - The media item or items to add.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param item - The playlist item to add.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async Add(
-    playlistid: PlaylistId,
-    item: PlaylistMediaItem | PlaylistMediaItem[]
-  ): Promise<string> {
-    const params: PlaylistItem = { item };
-    return this.sendMessage("Playlist.Add", { playlistid, item });
+  async Add(playlistId: string, item: PlaylistItem): Promise<AddResponse> {
+    const params: AddParams = { playlistId, item };
+    return this.sendMessage("Playlist.Add", params);
   }
 
   /**
    * Clears all items from the specified playlist.
    *
-   * @param playlistid - The ID of the playlist to clear.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param playlistId - The unique identifier of the playlist to clear.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async Clear(playlistid: PlaylistId): Promise<string> {
-    return this.sendMessage("Playlist.Clear", { playlistid });
+  async Clear(playlistId: string): Promise<ClearResponse> {
+    const params: ClearParams = { playlistId };
+    return this.sendMessage("Playlist.Clear", params);
   }
 
   /**
-   * Retrieves all items from the specified playlist with optional filtering and pagination.
+   * Retrieves items from the specified playlist within the given range.
    *
-   * @param playlistid - The ID of the playlist to retrieve items from.
-   * @param properties - Optional list of properties to retrieve for each item.
-   * @param limits - Optional pagination limits.
-   * @param sort - Optional sorting options.
-   * @returns A promise resolving to a list of playlist items and pagination details.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param start - Optional starting index of items to retrieve.
+   * @param end - Optional ending index of items to retrieve.
+   * @returns A promise that resolves to an object containing the retrieved items and the total number of items.
    */
   async GetItems(
-    playlistid: PlaylistId,
-    properties?: string[],
-    limits?: ListLimits,
-    sort?: ListSort
-  ): Promise<PlaylistGetItemsResponse> {
-    const params: PlaylistGetItemsParams = {
-      playlistid,
-      properties,
-      limits,
-      sort,
-    };
+    playlistId: string,
+    start?: number,
+    end?: number
+  ): Promise<GetItemsResponse> {
+    const params: GetItemsParams = { playlistId, start, end };
     return this.sendMessage("Playlist.GetItems", params);
   }
 
   /**
-   * Retrieves all existing playlists.
+   * Retrieves all available playlists.
    *
-   * @returns A promise resolving to a list of playlists.
+   * @returns A promise that resolves to an object containing an array of playlists.
    */
-  async GetPlaylists(): Promise<PlaylistGetPlaylistsResponse> {
-    return this.sendMessage("Playlist.GetPlaylists", {});
+  async GetPlaylists(): Promise<GetPlaylistsResponse> {
+    const params: {} = {};
+    return this.sendMessage("Playlist.GetPlaylists", params);
   }
 
   /**
-   * Retrieves the values of the specified properties for a playlist.
+   * Retrieves specified properties of the given playlist.
    *
-   * @param playlistid - The ID of the playlist.
-   * @param properties - The list of properties to retrieve.
-   * @returns A promise resolving to the requested properties and their values.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param properties - An array of property names to retrieve.
+   * @returns A promise that resolves to an object containing the requested properties.
    */
   async GetProperties(
-    playlistid: PlaylistId,
+    playlistId: string,
     properties: string[]
-  ): Promise<PlaylistGetPropertiesResponse> {
-    const params: PlaylistGetPropertiesParams = { playlistid, properties };
+  ): Promise<GetPropertiesResponse> {
+    const params: GetPropertiesParams = { playlistId, properties };
     return this.sendMessage("Playlist.GetProperties", params);
   }
 
   /**
-   * Inserts item(s) into the specified playlist at the given position.
+   * Inserts an item into the specified playlist at the given position.
    *
-   * @param playlistid - The ID of the playlist to insert items into.
-   * @param position - The position at which to insert the items.
-   * @param item - The media item or items to insert.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param position - The position at which to insert the item.
+   * @param item - The playlist item to insert.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
   async Insert(
-    playlistid: PlaylistId,
-    position: PlaylistPosition,
-    item: PlaylistMediaItem | PlaylistMediaItem[]
-  ): Promise<string> {
-    const params: PlaylistInsertParams = { playlistid, position, item };
+    playlistId: string,
+    position: number,
+    item: PlaylistItem
+  ): Promise<InsertResponse> {
+    const params: InsertParams = { playlistId, position, item };
     return this.sendMessage("Playlist.Insert", params);
   }
 
   /**
-   * Removes an item from the specified playlist at the given position.
+   * Removes an item from the specified playlist.
    *
-   * @param playlistid - The ID of the playlist to remove the item from.
-   * @param position - The position of the item to remove.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param itemId - The unique identifier of the item to remove.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async Remove(
-    playlistid: PlaylistId,
-    position: PlaylistPosition
-  ): Promise<string> {
-    const params: PlaylistRemoveParams = { playlistid, position };
+  async Remove(playlistId: string, itemId: string): Promise<RemoveResponse> {
+    const params: RemoveParams = { playlistId, itemId };
     return this.sendMessage("Playlist.Remove", params);
   }
 
   /**
    * Swaps two items within the specified playlist.
    *
-   * @param playlistid - The ID of the playlist containing the items.
-   * @param position1 - The position of the first item to swap.
-   * @param position2 - The position of the second item to swap.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param playlistId - The unique identifier of the playlist.
+   * @param itemId1 - The unique identifier of the first item.
+   * @param itemId2 - The unique identifier of the second item.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
   async Swap(
-    playlistid: PlaylistId,
-    position1: PlaylistPosition,
-    position2: PlaylistPosition
-  ): Promise<string> {
-    const params: PlaylistSwapParams = { playlistid, position1, position2 };
+    playlistId: string,
+    itemId1: string,
+    itemId2: string
+  ): Promise<SwapResponse> {
+    const params: SwapParams = { playlistId, itemId1, itemId2 };
     return this.sendMessage("Playlist.Swap", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the type of a playlist item.
+ */
+type PlaylistItemType = "video" | "audio" | "picture";
+
+/**
+ * Represents a playlist item.
+ */
+interface PlaylistItem {
+  id: string;
+  type: PlaylistItemType;
+  title: string;
+  path: string;
+  thumbnail?: string;
+  duration?: number; // in seconds
+}
+
+/**
+ * Represents the available playlist types.
+ */
+type PlaylistType = "default" | "music" | "video" | "picture";
+
+/**
+ * Represents a playlist.
+ */
+interface Playlist {
+  id: string;
+  name: string;
+  type: PlaylistType;
+  items: PlaylistItem[];
+  properties: Record<string, any>; // More specific typing can be applied if known
+}
+
+/**
+ * Represents the parameters for Add.
+ */
+interface AddParams {
+  playlistId: string;
+  item: PlaylistItem;
+}
+
+/**
+ * Represents the response structure for Add.
+ */
+interface AddResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Clear.
+ */
+interface ClearParams {
+  playlistId: string;
+}
+
+/**
+ * Represents the response structure for Clear.
+ */
+interface ClearResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for GetItems.
+ */
+interface GetItemsParams {
+  playlistId: string;
+  start?: number;
+  end?: number;
+}
+
+/**
+ * Represents the response structure for GetItems.
+ */
+interface GetItemsResponse {
+  items: PlaylistItem[];
+  total: number;
+}
+
+/**
+ * Represents the response structure for GetPlaylists.
+ */
+interface GetPlaylistsResponse {
+  playlists: Playlist[];
+}
+
+/**
+ * Represents the parameters for GetProperties.
+ */
+interface GetPropertiesParams {
+  playlistId: string;
+  properties: string[];
+}
+
+/**
+ * Represents the response structure for GetProperties.
+ */
+interface GetPropertiesResponse {
+  [key: string]: boolean | number | string | PlaylistItem[] | undefined;
+}
+
+/**
+ * Represents the parameters for Insert.
+ */
+interface InsertParams {
+  playlistId: string;
+  position: number;
+  item: PlaylistItem;
+}
+
+/**
+ * Represents the response structure for Insert.
+ */
+interface InsertResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Remove.
+ */
+interface RemoveParams {
+  playlistId: string;
+  itemId: string;
+}
+
+/**
+ * Represents the response structure for Remove.
+ */
+interface RemoveResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Swap.
+ */
+interface SwapParams {
+  playlistId: string;
+  itemId1: string;
+  itemId2: string;
+}
+
+/**
+ * Represents the response structure for Swap.
+ */
+interface SwapResponse {
+  success: boolean;
+  message: string;
 }

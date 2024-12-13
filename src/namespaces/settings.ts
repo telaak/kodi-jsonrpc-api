@@ -1,37 +1,4 @@
-// Functions Block
-// These functions correspond to the Settings methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Settings" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiSettingsNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  SettingLevel,
-  SettingCategory,
-  SettingSection,
-  SettingValue,
-  SkinSettingValue,
-  SettingsGetCategoriesParams,
-  SettingsGetCategoriesResponse,
-  SettingsGetSectionsParams,
-  SettingsGetSectionsResponse,
-  SettingsGetSettingValueParams,
-  SettingsGetSettingValueResponse,
-  SettingsGetSettingsParams,
-  SettingsGetSettingsResponse,
-  Setting,
-  SettingsGetSkinSettingValueParams,
-  SettingsGetSkinSettingValueResponse,
-  SettingsGetSkinSettingsResponse,
-  SettingsResetSettingValueParams,
-  SettingsResetSettingValueResponse,
-  SettingsSetSettingValueParams,
-  SettingsSetSettingValueResponse,
-  SettingsSetSkinSettingValueParams,
-  SettingsSetSkinSettingValueResponse,
-} from "../types/settings"; // Adjust the import path as necessary
 
 export class KodiSettingsNamespace {
   private sendMessage: ISendMessage;
@@ -40,128 +7,295 @@ export class KodiSettingsNamespace {
     this.sendMessage = sendMessage;
   }
 
-  /**
-   * Changes the value of a setting.
-   *
-   * @param setting - The name of the setting to change.
-   * @param value - The new value for the setting.
-   * @returns A promise resolving to a boolean indicating success.
-   */
-  async SetSettingValue(
-    setting: string,
-    value: SettingValue
-  ): Promise<SettingsSetSettingValueResponse> {
-    const params: SettingsSetSettingValueParams = { setting, value };
-    return this.sendMessage("Settings.SetSettingValue", params);
-  }
+  // =====================
+  // Settings Namespace Methods
+  // =====================
 
   /**
-   * Changes the value of the specified skin setting.
+   * Retrieves all available settings categories.
    *
-   * @param setting - The name of the skin setting to change.
-   * @param value - The new value for the skin setting.
-   * @returns A promise resolving to a boolean indicating success.
+   * @returns A promise that resolves to an object containing an array of settings categories.
    */
-  async SetSkinSettingValue(
-    setting: string,
-    value: SkinSettingValue
-  ): Promise<SettingsSetSkinSettingValueResponse> {
-    const params: SettingsSetSkinSettingValueParams = { setting, value };
-    return this.sendMessage("Settings.SetSkinSettingValue", params);
-  }
-
-  /**
-   * Retrieves all setting categories.
-   *
-   * @param level - Optional filter by setting level (e.g., 'standard', 'advanced').
-   * @param section - Optional filter by section.
-   * @param properties - Optional list of properties to retrieve.
-   * @returns A promise resolving to a list of setting categories.
-   */
-  async GetCategories(
-    level?: SettingLevel,
-    section?: string,
-    properties?: string[]
-  ): Promise<SettingsGetCategoriesResponse> {
-    const params: SettingsGetCategoriesParams = { level, section, properties };
+  async GetCategories(): Promise<GetCategoriesResponse> {
+    const params: GetCategoriesParams = {};
     return this.sendMessage("Settings.GetCategories", params);
   }
 
   /**
-   * Retrieves all setting sections.
+   * Retrieves all sections within a specified settings category.
    *
-   * @param level - Optional filter by setting level (e.g., 'standard', 'advanced').
-   * @param properties - Optional list of properties to retrieve.
-   * @returns A promise resolving to a list of setting sections.
+   * @param category - The category to retrieve sections for.
+   * @returns A promise that resolves to an object containing an array of settings sections.
    */
-  async GetSections(
-    level?: SettingLevel,
-    properties?: string[]
-  ): Promise<SettingsGetSectionsResponse> {
-    const params: SettingsGetSectionsParams = { level, properties };
+  async GetSections(category: SettingsCategory): Promise<GetSectionsResponse> {
+    const params: GetSectionsParams = { category };
     return this.sendMessage("Settings.GetSections", params);
   }
 
   /**
    * Retrieves the value of a specific setting.
    *
-   * @param setting - The name of the setting to retrieve.
-   * @returns A promise resolving to the value of the requested setting.
+   * @param settingId - The unique identifier of the setting.
+   * @returns A promise that resolves to an object containing the value of the setting.
    */
-  async GetSettingValue(
-    setting: string
-  ): Promise<SettingsGetSettingValueResponse> {
-    const params: SettingsGetSettingValueParams = { setting };
+  async GetSettingValue(settingId: string): Promise<GetSettingValueResponse> {
+    const params: GetSettingValueParams = { settingId };
     return this.sendMessage("Settings.GetSettingValue", params);
   }
 
   /**
-   * Retrieves all settings with optional filtering.
+   * Retrieves all settings within a specified category and optional section.
    *
-   * @param level - Optional filter by setting level (e.g., 'standard', 'advanced').
-   * @param filter - Optional filter criteria (e.g., category, section).
-   * @returns A promise resolving to a list of settings.
+   * @param category - The category to retrieve settings from.
+   * @param section - Optional section to filter settings.
+   * @returns A promise that resolves to an object containing an array of settings.
    */
   async GetSettings(
-    level?: SettingLevel,
-    filter?: { category?: string; section?: string }
-  ): Promise<SettingsGetSettingsResponse> {
-    const params: SettingsGetSettingsParams = { level, filter };
+    category: SettingsCategory,
+    section?: SettingsSection
+  ): Promise<GetSettingsResponse> {
+    const params: GetSettingsParams = { category, section };
     return this.sendMessage("Settings.GetSettings", params);
   }
 
   /**
    * Retrieves the value of a specific skin setting.
    *
-   * @param setting - The name of the skin setting to retrieve.
-   * @returns A promise resolving to the value of the requested skin setting.
+   * @param settingId - The unique identifier of the skin setting.
+   * @returns A promise that resolves to an object containing the value of the skin setting.
    */
   async GetSkinSettingValue(
-    setting: string
-  ): Promise<SettingsGetSkinSettingValueResponse> {
-    const params: SettingsGetSkinSettingValueParams = { setting };
+    settingId: string
+  ): Promise<GetSkinSettingValueResponse> {
+    const params: GetSkinSettingValueParams = { settingId };
     return this.sendMessage("Settings.GetSkinSettingValue", params);
   }
 
   /**
-   * Retrieves all skin settings of the currently used skin.
+   * Retrieves all skin settings for a specified skin.
    *
-   * @returns A promise resolving to a list of skin settings and the current skin name.
+   * @param skinId - The unique identifier of the skin.
+   * @returns A promise that resolves to an object containing an array of skin settings.
    */
-  async GetSkinSettings(): Promise<SettingsGetSkinSettingsResponse> {
-    return this.sendMessage("Settings.GetSkinSettings", {});
+  async GetSkinSettings(skinId: string): Promise<GetSkinSettingsResponse> {
+    const params: GetSkinSettingsParams = { skinId };
+    return this.sendMessage("Settings.GetSkinSettings", params);
   }
 
   /**
    * Resets the value of a specific setting to its default.
    *
-   * @param setting - The name of the setting to reset.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param settingId - The unique identifier of the setting to reset.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
   async ResetSettingValue(
-    setting: string
-  ): Promise<SettingsResetSettingValueResponse> {
-    const params: SettingsResetSettingValueParams = { setting };
+    settingId: string
+  ): Promise<ResetSettingValueResponse> {
+    const params: ResetSettingValueParams = { settingId };
     return this.sendMessage("Settings.ResetSettingValue", params);
   }
+
+  /**
+   * Sets the value of a specific setting.
+   *
+   * @param settingId - The unique identifier of the setting to set.
+   * @param value - The new value to assign to the setting.
+   * @returns A promise that resolves to an object indicating success and a message.
+   */
+  async SetSettingValue(
+    settingId: string,
+    value: boolean | number | string | any[]
+  ): Promise<SetSettingValueResponse> {
+    const params: SetSettingValueParams = { settingId, value };
+    return this.sendMessage("Settings.SetSettingValue", params);
+  }
+
+  /**
+   * Sets the value of a specific skin setting.
+   *
+   * @param settingId - The unique identifier of the skin setting to set.
+   * @param value - The new value to assign to the skin setting.
+   * @returns A promise that resolves to an object indicating success and a message.
+   */
+  async SetSkinSettingValue(
+    settingId: string,
+    value: boolean | number | string | any[]
+  ): Promise<SetSkinSettingValueResponse> {
+    const params: SetSkinSettingValueParams = { settingId, value };
+    return this.sendMessage("Settings.SetSkinSettingValue", params);
+  }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available settings categories.
+ */
+type SettingsCategory =
+  | "general"
+  | "system"
+  | "interface"
+  | "skins"
+  | "services"
+  | "network";
+
+/**
+ * Represents the available sections within a settings category.
+ */
+type SettingsSection =
+  | "display"
+  | "audio"
+  | "video"
+  | "language"
+  | "privacy"
+  | "updates";
+
+/**
+ * Represents the type of a setting value.
+ */
+type SettingType = "boolean" | "integer" | "string" | "array" | "object";
+
+/**
+ * Represents a setting object.
+ */
+interface Setting {
+  id: string;
+  label: string;
+  type: SettingType;
+  value: boolean | number | string | any[];
+  options?: any; // Depending on setting type, could include enum values, ranges, etc.
+}
+
+/**
+ * Represents the parameters for GetCategories.
+ */
+interface GetCategoriesParams {
+  // No parameters required for this method.
+}
+
+/**
+ * Represents the response structure for GetCategories.
+ */
+interface GetCategoriesResponse {
+  categories: SettingsCategory[];
+}
+
+/**
+ * Represents the parameters for GetSections.
+ */
+interface GetSectionsParams {
+  category: SettingsCategory;
+}
+
+/**
+ * Represents the response structure for GetSections.
+ */
+interface GetSectionsResponse {
+  sections: SettingsSection[];
+}
+
+/**
+ * Represents the parameters for GetSettingValue.
+ */
+interface GetSettingValueParams {
+  settingId: string;
+}
+
+/**
+ * Represents the response structure for GetSettingValue.
+ */
+interface GetSettingValueResponse {
+  value: boolean | number | string | any[];
+}
+
+/**
+ * Represents the parameters for GetSettings.
+ */
+interface GetSettingsParams {
+  category: SettingsCategory;
+  section?: SettingsSection;
+}
+
+/**
+ * Represents the response structure for GetSettings.
+ */
+interface GetSettingsResponse {
+  settings: Setting[];
+}
+
+/**
+ * Represents the parameters for GetSkinSettingValue.
+ */
+interface GetSkinSettingValueParams {
+  settingId: string;
+}
+
+/**
+ * Represents the response structure for GetSkinSettingValue.
+ */
+interface GetSkinSettingValueResponse {
+  value: boolean | number | string | any[];
+}
+
+/**
+ * Represents the parameters for GetSkinSettings.
+ */
+interface GetSkinSettingsParams {
+  skinId: string;
+}
+
+/**
+ * Represents the response structure for GetSkinSettings.
+ */
+interface GetSkinSettingsResponse {
+  settings: Setting[];
+}
+
+/**
+ * Represents the parameters for ResetSettingValue.
+ */
+interface ResetSettingValueParams {
+  settingId: string;
+}
+
+/**
+ * Represents the response structure for ResetSettingValue.
+ */
+interface ResetSettingValueResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for SetSettingValue.
+ */
+interface SetSettingValueParams {
+  settingId: string;
+  value: boolean | number | string | any[];
+}
+
+/**
+ * Represents the response structure for SetSettingValue.
+ */
+interface SetSettingValueResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for SetSkinSettingValue.
+ */
+interface SetSkinSettingValueParams {
+  settingId: string;
+  value: boolean | number | string | any[];
+}
+
+/**
+ * Represents the response structure for SetSkinSettingValue.
+ */
+interface SetSkinSettingValueResponse {
+  success: boolean;
+  message: string;
 }

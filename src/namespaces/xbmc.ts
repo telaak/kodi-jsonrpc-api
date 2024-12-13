@@ -1,13 +1,4 @@
-// Functions Block
-// These functions correspond to the XBMC methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "XBMC" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiXBMCNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import { GetInfoBooleansResponse, GetInfoLabelsResponse } from "../types/xbmc"; // Adjust the import path as necessary
 
 export class KodiXBMCNamespace {
   private sendMessage: ISendMessage;
@@ -16,27 +7,75 @@ export class KodiXBMCNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // XBMC Namespace Methods
+  // =====================
+
   /**
-   * Retrieves the specified info booleans about Kodi and the system.
+   * Retrieves the specified boolean information from XBMC.
    *
-   * @param booleans - An array of info boolean names to retrieve.
-   * @returns A promise resolving to an object containing the requested info booleans and their states.
+   * @param information - An array of information keys to retrieve boolean values for.
+   * @returns A promise that resolves to an object containing the requested boolean information.
    */
-  async GetInfoBooleans(booleans: string[]): Promise<GetInfoBooleansResponse> {
-    const params = { booleans };
-    const response = await this.sendMessage("XBMC.GetInfoBooleans", params);
-    return response as GetInfoBooleansResponse;
+  async GetInfoBooleans(
+    information: InfoBoolean[]
+  ): Promise<GetInfoBooleansResponse> {
+    const params: GetInfoBooleansParams = { information };
+    return this.sendMessage("XBMC.GetInfoBooleans", params);
   }
 
   /**
-   * Retrieves the specified info labels about Kodi and the system.
+   * Retrieves the specified label information from XBMC.
    *
-   * @param labels - An array of info label names to retrieve.
-   * @returns A promise resolving to an object containing the requested info labels and their values.
+   * @param information - An array of information keys to retrieve label values for.
+   * @returns A promise that resolves to an object containing the requested label information.
    */
-  async GetInfoLabels(labels: string[]): Promise<GetInfoLabelsResponse> {
-    const params = { labels };
-    const response = await this.sendMessage("XBMC.GetInfoLabels", params);
-    return response as GetInfoLabelsResponse;
+  async GetInfoLabels(
+    information: InfoLabel[]
+  ): Promise<GetInfoLabelsResponse> {
+    const params: GetInfoLabelsParams = { information };
+    return this.sendMessage("XBMC.GetInfoLabels", params);
   }
 }
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available information boolean keys.
+ */
+type InfoBoolean = "fullscreen" | "mute" | "pause" | "onScreensaver";
+
+/**
+ * Represents the available information label keys.
+ */
+type InfoLabel = "currenttime" | "totaltime" | "percentage" | "version";
+
+/**
+ * Represents the parameters for GetInfoBooleans.
+ */
+interface GetInfoBooleansParams {
+  information: InfoBoolean[];
+}
+
+/**
+ * Represents the response structure for GetInfoBooleans.
+ */
+type GetInfoBooleansResponse = {
+  [key in InfoBoolean]: boolean;
+};
+
+/**
+ * Represents the parameters for GetInfoLabels.
+ */
+interface GetInfoLabelsParams {
+  information: InfoLabel[];
+}
+
+/**
+ * Represents the response structure for GetInfoLabels.
+ */
+type GetInfoLabelsResponse = {
+  [key in InfoLabel]: string;
+};

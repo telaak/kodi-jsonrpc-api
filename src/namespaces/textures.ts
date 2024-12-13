@@ -1,21 +1,4 @@
-// Functions Block
-// These functions correspond to the Textures methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Textures" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiTexturesNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  Texture,
-  TextureType,
-  TextureFormat,
-  TexturesGetTexturesParams,
-  TexturesGetTexturesResponse,
-  TexturesRemoveTextureParams,
-  TexturesRemoveTextureResponse,
-} from "../types/textures"; // Adjust the import path as necessary
 
 export class KodiTexturesNamespace {
   private sendMessage: ISendMessage;
@@ -24,29 +7,84 @@ export class KodiTexturesNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // Textures Namespace Methods
+  // =====================
+
   /**
-   * Retrieves a list of textures based on the specified criteria.
+   * Retrieves a list of textures based on the provided filters.
    *
-   * @param params - The parameters to filter and paginate the textures.
-   * @returns A promise resolving to a list of textures and the total count.
+   * @param category - Optional category to filter textures by type.
+   * @param resolution - Optional resolution to filter textures.
+   * @returns A promise that resolves to an object containing an array of textures.
    */
   async GetTextures(
-    params?: TexturesGetTexturesParams
-  ): Promise<TexturesGetTexturesResponse> {
-    const requestParams = params || {};
-    return this.sendMessage("Textures.GetTextures", requestParams);
+    category?: TextureCategory,
+    resolution?: string
+  ): Promise<GetTexturesResponse> {
+    const params: GetTexturesParams = { category, resolution };
+    return this.sendMessage("Textures.GetTextures", params);
   }
 
   /**
-   * Removes the specified texture from Kodi.
+   * Removes a texture with the specified ID.
    *
-   * @param textureid - The ID of the texture to remove.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param textureId - The ID of the texture to remove.
+   * @returns A promise that resolves to an object indicating the success status and a message.
    */
-  async RemoveTexture(
-    textureid: string
-  ): Promise<TexturesRemoveTextureResponse> {
-    const params: TexturesRemoveTextureParams = { textureid };
+  async RemoveTexture(textureId: string): Promise<RemoveTextureResponse> {
+    const params: RemoveTextureParams = { textureId };
     return this.sendMessage("Textures.RemoveTexture", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available texture categories.
+ */
+type TextureCategory = "Diffuse" | "Specular" | "Normal" | "Ambient";
+
+/**
+ * Represents a texture object.
+ */
+interface Texture {
+  id: string;
+  name: string;
+  filePath: string;
+  category: TextureCategory;
+  resolution: string;
+  createdAt: string; // ISO date string
+}
+
+/**
+ * Represents the parameters for GetTextures.
+ */
+interface GetTexturesParams {
+  category?: TextureCategory;
+  resolution?: string;
+}
+
+/**
+ * Represents the response structure for GetTextures.
+ */
+interface GetTexturesResponse {
+  textures: Texture[];
+}
+
+/**
+ * Represents the parameters for RemoveTexture.
+ */
+interface RemoveTextureParams {
+  textureId: string;
+}
+
+/**
+ * Represents the response structure for RemoveTexture.
+ */
+interface RemoveTextureResponse {
+  success: boolean;
+  message: string;
 }

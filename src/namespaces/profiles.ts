@@ -7,16 +7,6 @@
 // Note: These functions are intended to be methods within the KodiProfilesNamespace class that has access to `sendMessage`.
 
 import { ISendMessage } from "..";
-import {
-  ProfileDetails,
-  ProfilesGetProfilesParams,
-  ProfilesGetProfilesResponse,
-  ProfilesLoadProfileParams,
-  ProfilesLoadProfileResponse,
-  ListLimits,
-  ListLimitsReturned,
-  ListSort,
-} from "../types/profiles"; // Adjust the import path as necessary
 
 export class KodiProfilesNamespace {
   private sendMessage: ISendMessage;
@@ -25,46 +15,86 @@ export class KodiProfilesNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // Profiles Namespace Methods
+  // =====================
+
   /**
    * Retrieves the current active profile.
    *
-   * @returns A promise resolving to the details of the current profile.
+   * @returns A promise that resolves to an object containing the current profile.
    */
-  async GetCurrentProfile(): Promise<ProfileDetails> {
-    return this.sendMessage("Profiles.GetCurrentProfile", {});
+  async GetCurrentProfile(): Promise<GetCurrentProfileResponse> {
+    const params: {} = {};
+    return this.sendMessage("Profiles.GetCurrentProfile", params);
   }
 
   /**
-   * Retrieves all available profiles with optional filtering and pagination.
+   * Retrieves all available profiles.
    *
-   * @param properties - Optional list of properties to retrieve for each profile.
-   * @param limits - Optional pagination limits.
-   * @param sort - Optional sorting options.
-   * @returns A promise resolving to a list of profiles and pagination details.
+   * @returns A promise that resolves to an object containing an array of profiles.
    */
-  async GetProfiles(
-    properties?: string[],
-    limits?: ListLimits,
-    sort?: ListSort
-  ): Promise<ProfilesGetProfilesResponse> {
-    const params: ProfilesGetProfilesParams = { properties, limits, sort };
+  async GetProfiles(): Promise<GetProfilesResponse> {
+    const params: {} = {};
     return this.sendMessage("Profiles.GetProfiles", params);
   }
 
   /**
-   * Loads the specified profile, optionally prompting for a password.
+   * Loads the specified profile.
    *
-   * @param profile - The name of the profile to load.
-   * @param prompt - Whether to prompt for a password if required.
-   * @param password - The password for the profile, if applicable.
-   * @returns A promise resolving to a boolean indicating success.
+   * @param profileId - The unique identifier of the profile to load.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async LoadProfile(
-    profile: string,
-    prompt: boolean = false,
-    password: string = ""
-  ): Promise<ProfilesLoadProfileResponse> {
-    const params: ProfilesLoadProfileParams = { profile, prompt, password };
+  async LoadProfile(profileId: string): Promise<LoadProfileResponse> {
+    const params: LoadProfileParams = { profileId };
     return this.sendMessage("Profiles.LoadProfile", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the type of a profile.
+ */
+type ProfileType = "admin" | "user" | "guest";
+
+/**
+ * Represents a profile object.
+ */
+interface Profile {
+  id: string;
+  name: string;
+  type: ProfileType;
+  settings: any; // Define more specifically if possible
+}
+
+/**
+ * Represents the parameters for LoadProfile.
+ */
+interface LoadProfileParams {
+  profileId: string;
+}
+
+/**
+ * Represents the response structure for LoadProfile.
+ */
+interface LoadProfileResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the response structure for GetCurrentProfile.
+ */
+interface GetCurrentProfileResponse {
+  profile: Profile;
+}
+
+/**
+ * Represents the response structure for GetProfiles.
+ */
+interface GetProfilesResponse {
+  profiles: Profile[];
 }

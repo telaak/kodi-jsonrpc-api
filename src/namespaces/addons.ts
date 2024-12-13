@@ -1,29 +1,4 @@
-// Methods Block
-// These functions correspond to the Addons methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "Addons" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiAddonsNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  AddonFields,
-  AddonDetails,
-  AddonType,
-  AddonContent,
-  ListLimitsReturned,
-  ListLimits,
-  GlobalToggle,
-  AddonsGetAddonsResponse,
-  AddonsGetAddonDetailsResponse,
-  ExecuteAddonParams,
-  ExecuteAddonResponse,
-  GetAddonsParams,
-  GetAddonsResponse,
-  SetAddonEnabledParams,
-  SetAddonEnabledResponse,
-} from "../types/addons"; // Adjust the import path as necessary
 
 export class KodiAddonsNamespace {
   private sendMessage: ISendMessage;
@@ -32,58 +7,62 @@ export class KodiAddonsNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // Addons Namespace Methods
+  // =====================
+
   /**
-   * Executes the specified addon with optional parameters.
+   * Executes the given addon with the provided parameters.
    *
-   * @param addonid - The ID of the addon to execute.
-   * @param params - Optional parameters for the addon.
-   * @param wait - Whether to wait for the addon to finish execution (default is false).
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param addonId - The ID of the addon to execute.
+   * @param params - Optional parameters for the addon execution. Can be an object, an array of strings, or a URL path starting with '/' or '?'.
+   * @param wait - Optional boolean indicating whether to wait for the addon to finish execution. Defaults to false.
+   * @returns A promise that resolves to a confirmation string upon successful execution.
    */
   async ExecuteAddon(
-    addonid: string,
-    params?: string | { [key: string]: string } | string[],
-    wait: boolean = false
-  ): Promise<ExecuteAddonResponse> {
-    const paramsObj: ExecuteAddonParams = { addonid, params, wait };
-    return this.sendMessage("Addons.ExecuteAddon", paramsObj);
+    addonId: string,
+    params?: Record<string, string> | string[] | string,
+    wait?: boolean
+  ): Promise<string> {
+    const payload: ExecuteAddonParams = { addonid: addonId, params, wait };
+    return this.sendMessage("Addons.ExecuteAddon", payload);
   }
 
   /**
    * Retrieves the details of a specific addon.
    *
-   * @param addonid - The ID of the addon.
-   * @param properties - The properties to retrieve.
-   * @returns A promise resolving to the addon details and limits information.
+   * @param addonId - The ID of the addon to retrieve details for.
+   * @param properties - Optional array of property names to include in the response.
+   * @returns A promise that resolves to an object containing the addon details and limits.
    */
   async GetAddonDetails(
-    addonid: string,
-    properties: AddonFields[]
-  ): Promise<AddonsGetAddonDetailsResponse> {
-    const paramsObj = { addonid, properties };
-    return this.sendMessage("Addons.GetAddonDetails", paramsObj);
+    addonId: string,
+    properties?: AddonProperty[]
+  ): Promise<GetAddonDetailsResponse> {
+    const payload: GetAddonDetailsParams = { addonid: addonId, properties };
+    return this.sendMessage("Addons.GetAddonDetails", payload);
   }
 
   /**
-   * Retrieves a list of all available addons based on the specified criteria.
+   * Retrieves all available addons with optional filtering and pagination.
    *
-   * @param type - The type of addons to retrieve (default is "unknown").
-   * @param content - The content type for plugins and scripts (default is "unknown").
-   * @param enabled - Filter addons by their enabled status ("all" to include all).
-   * @param properties - The properties to retrieve for each addon.
-   * @param limits - Pagination limits to apply.
-   * @param installed - Filter addons by their installed status ("all" to include all).
-   * @returns A promise resolving to a list of addons and limits information.
+   * @param type - Optional type of addons to retrieve. Defaults to "unknown".
+   * @param content - Optional content type provided by the addon. Only considered for plugins and scripts. Defaults to "unknown".
+   * @param enabled - Optional filter to retrieve only enabled addons, disabled addons, or all addons. Defaults to "all".
+   * @param properties - Optional array of property names to include in the response.
+   * @param limits - Optional pagination limits with start and end indices.
+   * @param installed - Optional filter to retrieve only installed addons, all addons, or based on specific criteria. Defaults to false.
+   * @returns A promise that resolves to an object containing the list of addons and pagination limits.
    */
   async GetAddons(
-    type: AddonType = "unknown",
-    content: AddonContent = "unknown",
-    enabled: boolean | "all" = "all",
-    properties: AddonFields[] = [],
+    type?: AddonType,
+    content?: "unknown" | "video" | "audio" | "image" | "executable",
+    enabled?: EnabledOption,
+    properties?: AddonProperty[],
     limits?: ListLimits,
-    installed: boolean | "all" = false
+    installed?: boolean | "all"
   ): Promise<GetAddonsResponse> {
-    const paramsObj: GetAddonsParams = {
+    const payload: GetAddonsParams = {
       type,
       content,
       enabled,
@@ -91,21 +70,205 @@ export class KodiAddonsNamespace {
       limits,
       installed,
     };
-    return this.sendMessage("Addons.GetAddons", paramsObj);
+    return this.sendMessage("Addons.GetAddons", payload);
   }
 
   /**
    * Enables or disables a specific addon.
    *
-   * @param addonid - The ID of the addon to enable or disable.
-   * @param enabled - Whether to enable (true) or disable (false) the addon.
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param addonId - The ID of the addon to enable or disable.
+   * @param enabled - A boolean to set the addon as enabled (`true`) or disabled (`false`), or the string "toggle" to switch its current state.
+   * @returns A promise that resolves to a confirmation string upon successful operation.
    */
   async SetAddonEnabled(
-    addonid: string,
+    addonId: string,
     enabled: GlobalToggle
-  ): Promise<SetAddonEnabledResponse> {
-    const paramsObj: SetAddonEnabledParams = { addonid, enabled };
-    return this.sendMessage("Addons.SetAddonEnabled", paramsObj);
+  ): Promise<string> {
+    const payload: SetAddonEnabledParams = { addonid: addonId, enabled };
+    return this.sendMessage("Addons.SetAddonEnabled", payload);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available property names for addons.
+ */
+type AddonProperty =
+  | "name"
+  | "version"
+  | "summary"
+  | "description"
+  | "path"
+  | "author"
+  | "thumbnail"
+  | "disclaimer"
+  | "fanart"
+  | "dependencies"
+  | "broken"
+  | "extrainfo"
+  | "rating"
+  | "enabled"
+  | "installed"
+  | "deprecated";
+
+/**
+ * Represents the addon types.
+ */
+type AddonType =
+  | "unknown"
+  | "xbmc.player.musicviz"
+  | "xbmc.gui.skin"
+  | "kodi.pvrclient"
+  | "kodi.inputstream"
+  | "kodi.gameclient"
+  | "kodi.peripheral"
+  | "xbmc.python.script"
+  | "xbmc.python.weather"
+  | "xbmc.subtitle.module"
+  | "xbmc.python.lyrics"
+  | "xbmc.metadata.scraper.albums"
+  | "xbmc.metadata.scraper.artists"
+  | "xbmc.metadata.scraper.movies"
+  | "xbmc.metadata.scraper.musicvideos"
+  | "xbmc.metadata.scraper.tvshows"
+  | "xbmc.ui.screensaver"
+  | "xbmc.python.pluginsource"
+  | "xbmc.addon.repository"
+  | "xbmc.webinterface"
+  | "xbmc.service"
+  | "kodi.audioencoder"
+  | "kodi.context.item"
+  | "kodi.audiodecoder"
+  | "kodi.resource.images"
+  | "kodi.resource.language"
+  | "kodi.resource.uisounds"
+  | "kodi.resource.games"
+  | "kodi.resource.font"
+  | "kodi.vfs"
+  | "kodi.imagedecoder"
+  | "xbmc.metadata.scraper.library"
+  | "xbmc.python.library"
+  | "xbmc.python.module"
+  | "kodi.game.controller"
+  | ""
+  | "xbmc.addon.video"
+  | "xbmc.addon.audio"
+  | "xbmc.addon.image"
+  | "xbmc.addon.executable"
+  | "kodi.addon.game";
+
+/**
+ * Represents the enabled options.
+ */
+type EnabledOption = boolean | "all";
+
+/**
+ * Represents the global toggle options.
+ */
+type GlobalToggle = boolean | "toggle";
+
+/**
+ * Represents the parameters for ExecuteAddon.
+ */
+interface ExecuteAddonParams {
+  addonid: string;
+  params?: Record<string, string> | string[] | string;
+  wait?: boolean;
+}
+
+/**
+ * Represents the parameters for GetAddonDetails.
+ */
+interface GetAddonDetailsParams {
+  addonid: string;
+  properties?: AddonProperty[];
+}
+
+/**
+ * Represents the response for GetAddonDetails.
+ */
+interface GetAddonDetailsResponse {
+  addon: AddonDetails;
+  limits: ListLimitsReturned;
+}
+
+/**
+ * Represents the details of an addon.
+ */
+interface AddonDetails {
+  addonid: string;
+  author: string;
+  broken: boolean | string | null;
+  dependencies: Dependency[];
+  deprecated: boolean | string | null;
+  description: string;
+  disclaimer: string;
+  enabled: boolean;
+  extrainfo: { key: string; value: string }[];
+  fanart: string;
+  installed: boolean;
+  name: string;
+  path: string;
+  rating: number;
+  summary: string;
+  thumbnail: string;
+  type: AddonType;
+  version: string;
+}
+
+/**
+ * Represents a dependency of an addon.
+ */
+interface Dependency {
+  addonid: string;
+  optional: boolean;
+  version: string;
+}
+
+/**
+ * Represents the limits returned.
+ */
+interface ListLimitsReturned {
+  end: number;
+  start: number;
+  total: number;
+}
+
+/**
+ * Represents the parameters for GetAddons.
+ */
+interface GetAddonsParams {
+  type?: AddonType;
+  content?: "unknown" | "video" | "audio" | "image" | "executable";
+  enabled?: EnabledOption;
+  properties?: AddonProperty[];
+  limits?: ListLimits;
+  installed?: boolean | "all";
+}
+
+/**
+ * Represents the limits for GetAddons.
+ */
+interface ListLimits {
+  end?: number;
+  start?: number;
+}
+
+/**
+ * Represents the response for GetAddons.
+ */
+interface GetAddonsResponse {
+  addons: AddonDetails[];
+  limits: ListLimitsReturned;
+}
+
+/**
+ * Represents the parameters for SetAddonEnabled.
+ */
+interface SetAddonEnabledParams {
+  addonid: string;
+  enabled: GlobalToggle;
 }

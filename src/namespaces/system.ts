@@ -1,13 +1,4 @@
-// Functions Block
-// These functions correspond to the System methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "System" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiSystemNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import { SystemPropertyName, SystemPropertyValue } from "../types/system"; // Adjust the import path as necessary
 
 export class KodiSystemNamespace {
   private sendMessage: ISendMessage;
@@ -16,62 +7,132 @@ export class KodiSystemNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // System Namespace Methods
+  // =====================
+
   /**
-   * Ejects or closes the optical disc drive (if available).
+   * Ejects the specified optical drive.
    *
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param drive - Optional identifier of the optical drive to eject.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async EjectOpticalDrive(): Promise<string> {
-    return this.sendMessage("System.EjectOpticalDrive", {});
+  async EjectOpticalDrive(drive?: string): Promise<EjectOpticalDriveResponse> {
+    const params: EjectOpticalDriveParams = { drive };
+    return this.sendMessage("System.EjectOpticalDrive", params);
   }
 
   /**
-   * Retrieves the values of the given system properties.
+   * Retrieves the specified system properties.
    *
-   * @param properties - An array of system property names to retrieve.
-   * @returns A promise resolving to an object containing the requested system properties and their values.
+   * @param properties - An array of property names to retrieve.
+   * @returns A promise that resolves to an object containing the requested properties and their values.
    */
   async GetProperties(
     properties: SystemPropertyName[]
-  ): Promise<SystemPropertyValue> {
-    const params = { properties };
-    const response = await this.sendMessage("System.GetProperties", params);
-    return response as SystemPropertyValue;
+  ): Promise<GetPropertiesResponse> {
+    const params: GetPropertiesParams = { properties };
+    return this.sendMessage("System.GetProperties", params);
   }
 
   /**
-   * Puts the system running Kodi into hibernate mode.
+   * Puts the system into hibernation mode.
    *
-   * @returns A promise resolving to a string, typically empty on success.
+   * @returns A promise that resolves to a confirmation string upon successful initiation.
    */
   async Hibernate(): Promise<string> {
     return this.sendMessage("System.Hibernate", {});
   }
 
   /**
-   * Reboots the system running Kodi.
+   * Reboots the system.
    *
-   * @returns A promise resolving to a string, typically empty on success.
+   * @returns A promise that resolves to a confirmation string upon successful initiation.
    */
   async Reboot(): Promise<string> {
     return this.sendMessage("System.Reboot", {});
   }
 
   /**
-   * Shuts the system running Kodi down.
+   * Shuts down the system.
    *
-   * @returns A promise resolving to a string, typically empty on success.
+   * @param delay - Optional delay in seconds before shutdown is initiated.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async ShutDown(): Promise<string> {
-    return this.sendMessage("System.ShutDown", {});
+  async Shutdown(delay?: number): Promise<ShutdownResponse> {
+    const params: ShutdownParams = { delay };
+    return this.sendMessage("System.Shutdown", params);
   }
 
   /**
-   * Suspends the system running Kodi.
+   * Suspends the system.
    *
-   * @returns A promise resolving to a string, typically empty on success.
+   * @returns A promise that resolves to a confirmation string upon successful initiation.
    */
   async Suspend(): Promise<string> {
     return this.sendMessage("System.Suspend", {});
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the available system properties that can be retrieved.
+ */
+type SystemPropertyName =
+  | "version"
+  | "name"
+  | "uptime"
+  | "build"
+  | "path"
+  | "volume"
+  | "muted"
+  | "fullscreen"
+  | "loglevel"
+  | "time";
+
+/**
+ * Represents the parameters for GetProperties.
+ */
+interface GetPropertiesParams {
+  properties: SystemPropertyName[];
+}
+
+/**
+ * Represents the response structure for GetProperties.
+ */
+type GetPropertiesResponse = {
+  [key in SystemPropertyName]: string | number | boolean;
+};
+
+/**
+ * Represents the parameters for EjectOpticalDrive.
+ */
+interface EjectOpticalDriveParams {
+  drive?: string;
+}
+
+/**
+ * Represents the response structure for EjectOpticalDrive.
+ */
+interface EjectOpticalDriveResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Shutdown.
+ */
+interface ShutdownParams {
+  delay?: number; // in seconds
+}
+
+/**
+ * Represents the response structure for Shutdown.
+ */
+interface ShutdownResponse {
+  success: boolean;
+  message: string;
 }
