@@ -237,7 +237,7 @@ export type InputButtonEventType = "KB" | "XG" | "R1" | "R2";
  */
 export interface InputButtonEventParams {
   button: string; // Name of the button event
-  action: InputButtonEventType; // Type of button event action
+  keymap: InputButtonEventType; // Type of button event action
   holdtime?: number;
 }
 

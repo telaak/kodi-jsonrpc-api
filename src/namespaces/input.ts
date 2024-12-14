@@ -63,10 +63,10 @@ export class KodiInputNamespace {
    */
   async ButtonEvent(
     button: string,
-    action: InputButtonEventType,
+    keymap: InputButtonEventType,
     holdtime?: number
   ): Promise<InputButtonEventResponse> {
-    const params: InputButtonEventParams = { button, action, holdtime };
+    const params: InputButtonEventParams = { button, keymap, holdtime };
     return this.sendMessage("Input.ButtonEvent", params);
   }
 
