@@ -1,62 +1,4 @@
-// Functions Block
-// These functions correspond to the PVR methods in kodi.json.
-// They connect $ref references to the defined types and follow any "extends" relationships.
-// Functions are returned without the "PVR" prefix and underscore.
-// Existing types and interfaces in koditestExports.ts are omitted.
-
-// Note: These functions are intended to be methods within the KodiPVRNamespace class that has access to `sendMessage`.
-
 import { ISendMessage } from "..";
-import {
-  TimerId,
-  Timer,
-  BroadcastDetails,
-  PVRProperty,
-  PVRProperties,
-  ListLimits,
-  ListLimitsReturned,
-  ListSort,
-  PVRAddTimerParams,
-  PVRAddTimerResponse,
-  PVRDeleteTimerParams,
-  PVRDeleteTimerResponse,
-  PVRGetBroadcastDetailsParams,
-  PVRGetBroadcastDetailsResponse,
-  PVRGetBroadcastIsPlayableParams,
-  PVRGetBroadcastIsPlayableResponse,
-  PVRGetBroadcastsParams,
-  PVRGetBroadcastsResponse,
-  ChannelDetails,
-  PVRGetChannelDetailsParams,
-  PVRGetChannelDetailsResponse,
-  ChannelGroupDetails,
-  PVRGetChannelGroupDetailsParams,
-  PVRGetChannelGroupDetailsResponse,
-  ChannelGroup,
-  PVRGetChannelGroupsParams,
-  PVRGetChannelGroupsResponse,
-  PVRGetChannelsParams,
-  PVRGetChannelsResponse,
-  ClientDetails,
-  PVRGetClientsResponse,
-  PVRGetPropertiesParams,
-  PVRGetPropertiesResponse,
-  RecordingDetails,
-  PVRGetRecordingDetailsParams,
-  PVRGetRecordingDetailsResponse,
-  PVRGetRecordingsParams,
-  PVRGetRecordingsResponse,
-  PVRGetTimerDetailsParams,
-  PVRGetTimerDetailsResponse,
-  PVRGetTimersParams,
-  PVRGetTimersResponse,
-  PVRRecordParams,
-  PVRRecordResponse,
-  PVRScanParams,
-  PVRScanResponse,
-  PVRToggleTimerParams,
-  PVRToggleTimerResponse,
-} from "../types/pvr"; // Adjust the import path as necessary
 
 export class KodiPVRNamespace {
   private sendMessage: ISendMessage;
@@ -65,226 +7,625 @@ export class KodiPVRNamespace {
     this.sendMessage = sendMessage;
   }
 
+  // =====================
+  // PVR Namespace Methods
+  // =====================
+
   /**
-   * Adds a new timer.
+   * Adds a new timer to the PVR system.
    *
    * @param timer - The timer object to add.
-   * @returns A promise resolving to the ID of the added timer.
+   * @returns A promise that resolves to an object indicating success, the new timer ID, and a message.
    */
-  async AddTimer(timer: Timer): Promise<PVRAddTimerResponse> {
-    const params: PVRAddTimerParams = { timer };
+  async AddTimer(timer: Timer): Promise<AddTimerResponse> {
+    const params: AddTimerParams = { timer };
     return this.sendMessage("PVR.AddTimer", params);
   }
 
   /**
-   * Deletes an existing timer.
+   * Deletes an existing timer from the PVR system.
    *
-   * @param timerid - The ID of the timer to delete.
-   * @returns A promise resolving to a boolean indicating success.
+   * @param timerId - The unique identifier of the timer to delete.
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async DeleteTimer(timerid: TimerId): Promise<PVRDeleteTimerResponse> {
-    const params: PVRDeleteTimerParams = { timerid };
+  async DeleteTimer(timerId: string): Promise<DeleteTimerResponse> {
+    const params: DeleteTimerParams = { timerId };
     return this.sendMessage("PVR.DeleteTimer", params);
   }
 
   /**
    * Retrieves detailed information about a specific broadcast.
    *
-   * @param broadcastid - The ID of the broadcast.
-   * @returns A promise resolving to the BroadcastDetails object.
+   * @param broadcastId - The unique identifier of the broadcast.
+   * @returns A promise that resolves to an object containing the broadcast details.
    */
   async GetBroadcastDetails(
-    broadcastid: number
-  ): Promise<PVRGetBroadcastDetailsResponse> {
-    const params: PVRGetBroadcastDetailsParams = { broadcastid };
+    broadcastId: string
+  ): Promise<GetBroadcastDetailsResponse> {
+    const params: GetBroadcastDetailsParams = { broadcastId };
     return this.sendMessage("PVR.GetBroadcastDetails", params);
   }
 
   /**
    * Checks if a specific broadcast is playable.
    *
-   * @param broadcastid - The ID of the broadcast.
-   * @returns A promise resolving to a boolean indicating if the broadcast is playable.
+   * @param broadcastId - The unique identifier of the broadcast.
+   * @returns A promise that resolves to an object indicating if the broadcast is playable.
    */
   async GetBroadcastIsPlayable(
-    broadcastid: number
-  ): Promise<PVRGetBroadcastIsPlayableResponse> {
-    const params: PVRGetBroadcastIsPlayableParams = { broadcastid };
+    broadcastId: string
+  ): Promise<GetBroadcastIsPlayableResponse> {
+    const params: GetBroadcastIsPlayableParams = { broadcastId };
     return this.sendMessage("PVR.GetBroadcastIsPlayable", params);
   }
 
   /**
-   * Retrieves a list of broadcasts with optional filtering and pagination.
+   * Retrieves broadcasts based on the provided filters.
    *
-   * @param params - The parameters to filter and paginate broadcasts.
-   * @returns A promise resolving to the list of broadcasts and pagination details.
+   * @param channelId - Optional channel ID to filter broadcasts.
+   * @param startTime - Optional start time to filter broadcasts (ISO date string).
+   * @param endTime - Optional end time to filter broadcasts (ISO date string).
+   * @param type - Optional type of broadcasts to filter ("live" or "recorded").
+   * @returns A promise that resolves to an object containing the broadcasts and the total count.
    */
   async GetBroadcasts(
-    params: PVRGetBroadcastsParams
-  ): Promise<PVRGetBroadcastsResponse> {
+    channelId?: string,
+    startTime?: string,
+    endTime?: string,
+    type?: BroadcastType
+  ): Promise<GetBroadcastsResponse> {
+    const params: GetBroadcastsParams = { channelId, startTime, endTime, type };
     return this.sendMessage("PVR.GetBroadcasts", params);
   }
 
   /**
    * Retrieves detailed information about a specific channel.
    *
-   * @param channelid - The ID of the channel.
-   * @returns A promise resolving to the ChannelDetails object.
+   * @param channelId - The unique identifier of the channel.
+   * @returns A promise that resolves to an object containing the channel details.
    */
   async GetChannelDetails(
-    channelid: number
-  ): Promise<PVRGetChannelDetailsResponse> {
-    const params: PVRGetChannelDetailsParams = { channelid };
+    channelId: string
+  ): Promise<GetChannelDetailsResponse> {
+    const params: GetChannelDetailsParams = { channelId };
     return this.sendMessage("PVR.GetChannelDetails", params);
   }
 
   /**
    * Retrieves detailed information about a specific channel group.
    *
-   * @param channelgroupid - The ID of the channel group.
-   * @returns A promise resolving to the ChannelGroupDetails object.
+   * @param groupId - The unique identifier of the channel group.
+   * @returns A promise that resolves to an object containing the channel group details.
    */
   async GetChannelGroupDetails(
-    channelgroupid: number
-  ): Promise<PVRGetChannelGroupDetailsResponse> {
-    const params: PVRGetChannelGroupDetailsParams = { channelgroupid };
+    groupId: string
+  ): Promise<GetChannelGroupDetailsResponse> {
+    const params: GetChannelGroupDetailsParams = { groupId };
     return this.sendMessage("PVR.GetChannelGroupDetails", params);
   }
 
   /**
-   * Retrieves a list of channel groups with optional filtering and pagination.
+   * Retrieves all available channel groups.
    *
-   * @param params - The parameters to filter and paginate channel groups.
-   * @returns A promise resolving to the list of channel groups and pagination details.
+   * @param type - Optional type of channel groups to retrieve ("tv", "radio", or "picture").
+   * @returns A promise that resolves to an object containing an array of channel groups and the total count.
    */
   async GetChannelGroups(
-    params: PVRGetChannelGroupsParams
-  ): Promise<PVRGetChannelGroupsResponse> {
+    type?: ChannelGroupType
+  ): Promise<GetChannelGroupsResponse> {
+    const params: GetChannelGroupsParams = { type };
     return this.sendMessage("PVR.GetChannelGroups", params);
   }
 
   /**
-   * Retrieves a list of channels with optional filtering and pagination.
+   * Retrieves all available channels based on the provided filters.
    *
-   * @param params - The parameters to filter and paginate channels.
-   * @returns A promise resolving to the list of channels and pagination details.
+   * @param groupId - Optional group ID to filter channels.
+   * @param type - Optional type of channels to retrieve ("tv", "radio", or "picture").
+   * @returns A promise that resolves to an object containing an array of channels and the total count.
    */
   async GetChannels(
-    params: PVRGetChannelsParams
-  ): Promise<PVRGetChannelsResponse> {
+    groupId?: string,
+    type?: ChannelType
+  ): Promise<GetChannelsResponse> {
+    const params: GetChannelsParams = { groupId, type };
     return this.sendMessage("PVR.GetChannels", params);
   }
 
   /**
-   * Retrieves a list of PVR clients.
+   * Retrieves all connected PVR clients.
    *
-   * @returns A promise resolving to the list of PVR clients.
+   * @returns A promise that resolves to an object containing an array of PVR clients and the total count.
    */
-  async GetClients(): Promise<PVRGetClientsResponse> {
-    return this.sendMessage("PVR.GetClients", {});
+  async GetClients(): Promise<GetClientsResponse> {
+    const params: {} = {};
+    return this.sendMessage("PVR.GetClients", params);
   }
 
   /**
-   * Retrieves specified properties for PVR.
+   * Retrieves specified properties of the PVR system.
    *
-   * @param properties - The list of properties to retrieve.
-   * @returns A promise resolving to the requested properties and their values.
+   * @param properties - An array of property names to retrieve.
+   * @returns A promise that resolves to an object containing the requested properties.
    */
   async GetProperties(
     properties: PVRProperty[]
-  ): Promise<PVRGetPropertiesResponse> {
-    const params: PVRGetPropertiesParams = { properties };
+  ): Promise<GetPropertiesResponse> {
+    const params: GetPropertiesParams = { properties };
     return this.sendMessage("PVR.GetProperties", params);
   }
 
   /**
    * Retrieves detailed information about a specific recording.
    *
-   * @param recordingid - The ID of the recording.
-   * @returns A promise resolving to the RecordingDetails object.
+   * @param recordingId - The unique identifier of the recording.
+   * @returns A promise that resolves to an object containing the recording details.
    */
   async GetRecordingDetails(
-    recordingid: number
-  ): Promise<PVRGetRecordingDetailsResponse> {
-    const params: PVRGetRecordingDetailsParams = { recordingid };
+    recordingId: string
+  ): Promise<GetRecordingDetailsResponse> {
+    const params: GetRecordingDetailsParams = { recordingId };
     return this.sendMessage("PVR.GetRecordingDetails", params);
   }
 
   /**
-   * Retrieves a list of recordings with optional filtering and pagination.
+   * Retrieves recordings based on the provided filters.
    *
-   * @param params - The parameters to filter and paginate recordings.
-   * @returns A promise resolving to the list of recordings and pagination details.
+   * @param status - Optional status to filter recordings ("recording", "completed", "failed", "deleted").
+   * @returns A promise that resolves to an object containing an array of recordings and the total count.
    */
   async GetRecordings(
-    params: PVRGetRecordingsParams
-  ): Promise<PVRGetRecordingsResponse> {
+    status?: RecordingStatus
+  ): Promise<GetRecordingsResponse> {
+    const params: GetRecordingsParams = { status };
     return this.sendMessage("PVR.GetRecordings", params);
   }
 
   /**
    * Retrieves detailed information about a specific timer.
    *
-   * @param timerid - The ID of the timer.
-   * @returns A promise resolving to the Timer object.
+   * @param timerId - The unique identifier of the timer.
+   * @returns A promise that resolves to an object containing the timer details.
    */
-  async GetTimerDetails(timerid: TimerId): Promise<PVRGetTimerDetailsResponse> {
-    const params: PVRGetTimerDetailsParams = { timerid };
+  async GetTimerDetails(timerId: string): Promise<GetTimerDetailsResponse> {
+    const params: GetTimerDetailsParams = { timerId };
     return this.sendMessage("PVR.GetTimerDetails", params);
   }
 
   /**
-   * Retrieves a list of timers with optional filtering and pagination.
+   * Retrieves timers based on the provided filters.
    *
-   * @param params - The parameters to filter and paginate timers.
-   * @returns A promise resolving to the list of timers and pagination details.
+   * @param enabled - Optional filter to retrieve only enabled or disabled timers.
+   * @param repeat - Optional repeat interval to filter timers.
+   * @returns A promise that resolves to an object containing an array of timers and the total count.
    */
-  async GetTimers(params: PVRGetTimersParams): Promise<PVRGetTimersResponse> {
+  async GetTimers(
+    enabled?: boolean,
+    repeat?: TimerRepeat
+  ): Promise<GetTimersResponse> {
+    const params: GetTimersParams = { enabled, repeat };
     return this.sendMessage("PVR.GetTimers", params);
   }
 
   /**
-   * Initiates a recording on a specified channel.
+   * Initiates recording of a specific broadcast.
    *
-   * @param channelid - The ID of the channel to record from.
-   * @param title - The title of the recording.
-   * @param starttime - The start time of the recording in ISO 8601 format.
-   * @param endtime - The end time of the recording in ISO 8601 format.
-   * @returns A promise resolving to the details of the created recording.
+   * @param broadcastId - The unique identifier of the broadcast to record.
+   * @param recordingPath - The file path where the recording will be saved.
+   * @returns A promise that resolves to an object indicating success, the new recording ID, and a message.
    */
   async Record(
-    channelid: number,
-    title: string,
-    starttime: string,
-    endtime: string
-  ): Promise<PVRRecordResponse> {
-    const params: PVRRecordParams = { channelid, title, starttime, endtime };
+    broadcastId: string,
+    recordingPath: string
+  ): Promise<RecordResponse> {
+    const params: RecordParams = { broadcastId, recordingPath };
     return this.sendMessage("PVR.Record", params);
   }
 
   /**
-   * Initiates a scan for new recordings or channels.
+   * Scans for new channels or recordings.
    *
-   * @param clientid - The ID of the PVR client to scan.
-   * @param reset - Whether to reset the existing database before scanning (optional).
-   * @returns A promise resolving to a boolean indicating if the scan was successful.
+   * @param type - The type of scan to perform ("channels" or "recordings").
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async Scan(
-    clientid: number,
-    reset: boolean = false
-  ): Promise<PVRScanResponse> {
-    const params: PVRScanParams = { clientid, reset };
+  async Scan(type: "channels" | "recordings"): Promise<ScanResponse> {
+    const params: ScanParams = { type };
     return this.sendMessage("PVR.Scan", params);
   }
 
   /**
    * Toggles the enabled state of a specific timer.
    *
-   * @param timerid - The ID of the timer to toggle.
-   * @returns A promise resolving to a boolean indicating if the toggle was successful.
+   * @param timerId - The unique identifier of the timer to toggle.
+   * @param enabled - The desired enabled state (true to enable, false to disable).
+   * @returns A promise that resolves to an object indicating success and a message.
    */
-  async ToggleTimer(timerid: TimerId): Promise<PVRToggleTimerResponse> {
-    const params: PVRToggleTimerParams = { timerid };
+  async ToggleTimer(
+    timerId: string,
+    enabled: boolean
+  ): Promise<ToggleTimerResponse> {
+    const params: ToggleTimerParams = { timerId, enabled };
     return this.sendMessage("PVR.ToggleTimer", params);
   }
+}
+
+// =====================
+// Type Definitions
+// =====================
+
+/**
+ * Represents the repeat interval for a timer.
+ */
+type TimerRepeat = "daily" | "weekly" | "monthly" | "once";
+
+/**
+ * Represents the status of a recording.
+ */
+type RecordingStatus = "recording" | "completed" | "failed" | "deleted";
+
+/**
+ * Represents the type of a broadcast.
+ */
+type BroadcastType = "live" | "recorded";
+
+/**
+ * Represents the type of a channel group.
+ */
+type ChannelGroupType = "tv" | "radio" | "picture";
+
+/**
+ * Represents the type of a channel.
+ */
+type ChannelType = "tv" | "radio" | "picture";
+
+/**
+ * Represents the capabilities of a PVR client.
+ */
+type ClientCapability = "recording" | "timeshift" | "livetv" | "epg";
+
+/**
+ * Represents a PVR client.
+ */
+interface Client {
+  id: string;
+  name: string;
+  host: string;
+  port: number;
+  capabilities: ClientCapability[];
+  status: "connected" | "disconnected";
+}
+
+/**
+ * Represents a channel group.
+ */
+interface ChannelGroup {
+  id: string;
+  name: string;
+  type: ChannelGroupType;
+}
+
+/**
+ * Represents a channel.
+ */
+interface Channel {
+  id: string;
+  name: string;
+  groupId: string;
+  type: ChannelType;
+  iconPath?: string;
+}
+
+/**
+ * Represents a broadcast.
+ */
+interface Broadcast {
+  id: string;
+  title: string;
+  channelId: string;
+  startTime: string; // ISO date string
+  endTime: string; // ISO date string
+  type: BroadcastType;
+  isPlayable: boolean;
+}
+
+/**
+ * Represents a recording.
+ */
+interface Recording {
+  id: string;
+  title: string;
+  channelId: string;
+  startTime: string; // ISO date string
+  endTime: string; // ISO date string
+  status: RecordingStatus;
+  filePath: string;
+}
+
+/**
+ * Represents a timer.
+ */
+interface Timer {
+  id: string;
+  title: string;
+  channelId: string;
+  startTime: string; // ISO date string
+  endTime: string; // ISO date string
+  repeat: TimerRepeat;
+  enabled: boolean;
+}
+
+/**
+ * Represents the parameters for AddTimer.
+ */
+interface AddTimerParams {
+  timer: Timer;
+}
+
+/**
+ * Represents the response structure for AddTimer.
+ */
+interface AddTimerResponse {
+  success: boolean;
+  timerId: string;
+  message: string;
+}
+
+/**
+ * Represents the parameters for DeleteTimer.
+ */
+interface DeleteTimerParams {
+  timerId: string;
+}
+
+/**
+ * Represents the response structure for DeleteTimer.
+ */
+interface DeleteTimerResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for GetBroadcastDetails.
+ */
+interface GetBroadcastDetailsParams {
+  broadcastId: string;
+}
+
+/**
+ * Represents the response structure for GetBroadcastDetails.
+ */
+interface GetBroadcastDetailsResponse {
+  broadcast: Broadcast;
+}
+
+/**
+ * Represents the parameters for GetBroadcastIsPlayable.
+ */
+interface GetBroadcastIsPlayableParams {
+  broadcastId: string;
+}
+
+/**
+ * Represents the response structure for GetBroadcastIsPlayable.
+ */
+interface GetBroadcastIsPlayableResponse {
+  isPlayable: boolean;
+}
+
+/**
+ * Represents the parameters for GetBroadcasts.
+ */
+interface GetBroadcastsParams {
+  channelId?: string;
+  startTime?: string; // ISO date string
+  endTime?: string; // ISO date string
+  type?: BroadcastType;
+}
+
+/**
+ * Represents the response structure for GetBroadcasts.
+ */
+interface GetBroadcastsResponse {
+  broadcasts: Broadcast[];
+  total: number;
+}
+
+/**
+ * Represents the parameters for GetChannelDetails.
+ */
+interface GetChannelDetailsParams {
+  channelId: string;
+}
+
+/**
+ * Represents the response structure for GetChannelDetails.
+ */
+interface GetChannelDetailsResponse {
+  channel: Channel;
+}
+
+/**
+ * Represents the parameters for GetChannelGroupDetails.
+ */
+interface GetChannelGroupDetailsParams {
+  groupId: string;
+}
+
+/**
+ * Represents the response structure for GetChannelGroupDetails.
+ */
+interface GetChannelGroupDetailsResponse {
+  group: ChannelGroup;
+}
+
+/**
+ * Represents the parameters for GetChannelGroups.
+ */
+interface GetChannelGroupsParams {
+  type?: ChannelGroupType;
+}
+
+/**
+ * Represents the response structure for GetChannelGroups.
+ */
+interface GetChannelGroupsResponse {
+  groups: ChannelGroup[];
+  total: number;
+}
+
+/**
+ * Represents the parameters for GetChannels.
+ */
+interface GetChannelsParams {
+  groupId?: string;
+  type?: ChannelType;
+}
+
+/**
+ * Represents the response structure for GetChannels.
+ */
+interface GetChannelsResponse {
+  channels: Channel[];
+  total: number;
+}
+
+/**
+ * Represents the response structure for GetClients.
+ */
+interface GetClientsResponse {
+  clients: Client[];
+  total: number;
+}
+
+/**
+ * Represents the available PVR properties that can be retrieved.
+ */
+type PVRProperty =
+  | "recordings"
+  | "timers"
+  | "channels"
+  | "channelGroups"
+  | "broadcasts"
+  | "clients";
+
+/**
+ * Represents the parameters for GetProperties.
+ */
+interface GetPropertiesParams {
+  properties: PVRProperty[];
+}
+
+/**
+ * Represents the response structure for GetProperties.
+ */
+type GetPropertiesResponse = {
+  [key in PVRProperty]?: any; // Define more specifically if possible
+};
+
+/**
+ * Represents the parameters for GetRecordingDetails.
+ */
+interface GetRecordingDetailsParams {
+  recordingId: string;
+}
+
+/**
+ * Represents the response structure for GetRecordingDetails.
+ */
+interface GetRecordingDetailsResponse {
+  recording: Recording;
+}
+
+/**
+ * Represents the parameters for GetRecordings.
+ */
+interface GetRecordingsParams {
+  status?: RecordingStatus;
+}
+
+/**
+ * Represents the response structure for GetRecordings.
+ */
+interface GetRecordingsResponse {
+  recordings: Recording[];
+  total: number;
+}
+
+/**
+ * Represents the parameters for GetTimerDetails.
+ */
+interface GetTimerDetailsParams {
+  timerId: string;
+}
+
+/**
+ * Represents the response structure for GetTimerDetails.
+ */
+interface GetTimerDetailsResponse {
+  timer: Timer;
+}
+
+/**
+ * Represents the parameters for GetTimers.
+ */
+interface GetTimersParams {
+  enabled?: boolean;
+  repeat?: TimerRepeat;
+}
+
+/**
+ * Represents the response structure for GetTimers.
+ */
+interface GetTimersResponse {
+  timers: Timer[];
+  total: number;
+}
+
+/**
+ * Represents the parameters for Record.
+ */
+interface RecordParams {
+  broadcastId: string;
+  recordingPath: string;
+}
+
+/**
+ * Represents the response structure for Record.
+ */
+interface RecordResponse {
+  success: boolean;
+  recordingId: string;
+  message: string;
+}
+
+/**
+ * Represents the parameters for Scan.
+ */
+interface ScanParams {
+  type: "channels" | "recordings";
+}
+
+/**
+ * Represents the response structure for Scan.
+ */
+interface ScanResponse {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Represents the parameters for ToggleTimer.
+ */
+interface ToggleTimerParams {
+  timerId: string;
+  enabled: boolean;
+}
+
+/**
+ * Represents the response structure for ToggleTimer.
+ */
+interface ToggleTimerResponse {
+  success: boolean;
+  message: string;
 }
