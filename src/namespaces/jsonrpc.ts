@@ -26,35 +26,41 @@ export class KodiJSONRPCNamespace {
    *
    * @returns A promise that resolves to an object containing API version and available methods.
    */
-  async Introspect(): Promise<IntrospectResponse> {
-    const params: IntrospectParams = {};
+  async Introspect(
+    filter: IntrospectFilter,
+    getdescriptions = true,
+    getmetadata = false,
+    filterbytransport = true
+  ): Promise<IntrospectResponse> {
+    const params: IntrospectParams = {
+      filter,
+      getdescriptions,
+      getmetadata,
+      filterbytransport,
+    };
     return this.sendMessage("JSONRPC.Introspect", params);
   }
 
   /**
    * Sends a notification to all listeners.
    *
+   * @param sender - Sender name/ID
    * @param message - The notification message.
    * @param data - Optional additional data to include with the notification.
    * @returns A promise that resolves to an object indicating the success status and a message.
    */
-  async NotifyAll(message: string, data?: any): Promise<NotifyAllResponse> {
-    const params: NotifyAllParams = { message, data };
+  async NotifyAll(sender: string, message: string, data?: any): Promise<any> {
+    const params: NotifyAllParams = { sender, message, data };
     return this.sendMessage("JSONRPC.NotifyAll", params);
   }
 
   /**
-   * Checks or sets permissions for a specific action on a resource.
+   * Retrieve the client's permissions
    *
-   * @param action - The action to check or set (e.g., "read", "write", "execute").
-   * @param resource - The resource on which the action is to be performed.
    * @returns A promise that resolves to an object indicating whether the action is allowed.
    */
-  async Permission(
-    action: PermissionAction,
-    resource: string
-  ): Promise<PermissionResponse> {
-    const params: PermissionParams = { action, resource };
+  async Permission(): Promise<PermissionResponse> {
+    const params: PermissionParams = {};
     return this.sendMessage("JSONRPC.Permission", params);
   }
 
@@ -71,15 +77,13 @@ export class KodiJSONRPCNamespace {
   /**
    * Updates a specific system configuration setting.
    *
-   * @param key - The configuration key to set.
-   * @param value - The new value to assign to the configuration key.
+   * @param notifications @type JSONRPCNotifications
    * @returns A promise that resolves to an object indicating the success status and a message.
    */
   async SetConfiguration(
-    key: ConfigurationKey,
-    value: boolean | number | string
+    notifications: Partial<JSONRPCNotifications>
   ): Promise<SetConfigurationResponse> {
-    const params: SetConfigurationParams = { key, value };
+    const params: SetConfigurationParams = { notifications };
     return this.sendMessage("JSONRPC.SetConfiguration", params);
   }
 
@@ -110,18 +114,42 @@ interface GetConfigurationParams {
   // No parameters required for this method.
 }
 
+type IntrospectFilter = {
+  getreferences: boolean;
+  id: string;
+  type: "method" | "namespace" | "type" | "notification";
+};
+
 /**
  * Represents the response structure for GetConfiguration.
  */
 type GetConfigurationResponse = {
-  [key in ConfigurationKey]: boolean | number | string;
+  notifications: JSONRPCNotifications;
+};
+
+type JSONRPCNotifications = {
+  Application: boolean;
+  AudioLibrary: boolean;
+  GUI: boolean;
+  Info: boolean;
+  Input: boolean;
+  Other: boolean;
+  PVR: boolean;
+  Player: boolean;
+  Playlist: boolean;
+  Sources: boolean;
+  System: boolean;
+  VideoLibrary: boolean;
 };
 
 /**
  * Represents the parameters for Introspect.
  */
 interface IntrospectParams {
-  // No parameters required for this method.
+  filter: IntrospectFilter;
+  getdescriptions?: boolean;
+  getmetadata?: boolean;
+  filterbytransport?: boolean;
 }
 
 /**
@@ -136,16 +164,9 @@ interface IntrospectResponse {
  * Represents the parameters for NotifyAll.
  */
 interface NotifyAllParams {
+  sender: string;
   message: string;
   data?: any;
-}
-
-/**
- * Represents the response structure for NotifyAll.
- */
-interface NotifyAllResponse {
-  success: boolean;
-  message: string;
 }
 
 /**
@@ -156,17 +177,28 @@ type PermissionAction = "read" | "write" | "execute";
 /**
  * Represents the parameters for Permission.
  */
-interface PermissionParams {
-  action: PermissionAction;
-  resource: string;
-}
+interface PermissionParams {}
 
 /**
  * Represents the response structure for Permission.
  */
-interface PermissionResponse {
-  allowed: boolean;
-}
+type PermissionResponse = JSONRPCNotifications;
+
+type JSONPermissions = {
+  ControlGUI: boolean;
+  ControlNotify: boolean;
+  ControlPVR: boolean;
+  ControlPlayback: boolean;
+  ControlPower: boolean;
+  ControlSystem: boolean;
+  ExecuteAddon: boolean;
+  ManageAddon: boolean;
+  Navigate: boolean;
+  ReadData: boolean;
+  RemoveData: boolean;
+  UpdateData: boolean;
+  WriteFile: boolean;
+};
 
 /**
  * Represents the parameters for Ping.
@@ -179,17 +211,15 @@ interface PingParams {
  * Represents the parameters for SetConfiguration.
  */
 interface SetConfigurationParams {
-  key: ConfigurationKey;
-  value: boolean | number | string;
+  notifications: Partial<JSONRPCNotifications>;
 }
 
 /**
  * Represents the response structure for SetConfiguration.
  */
-interface SetConfigurationResponse {
-  success: boolean;
-  message: string;
-}
+type SetConfigurationResponse = {
+  notifications: JSONRPCNotifications;
+};
 
 /**
  * Represents the parameters for Version.
@@ -202,6 +232,9 @@ interface VersionParams {
  * Represents the response structure for Version.
  */
 interface VersionResponse {
-  version: string;
-  build: string;
+  version: {
+    major: number;
+    minor: number;
+    patch: number;
+  };
 }

@@ -16,8 +16,12 @@ export class KodiSettingsNamespace {
    *
    * @returns A promise that resolves to an object containing an array of settings categories.
    */
-  async GetCategories(): Promise<GetCategoriesResponse> {
-    const params: GetCategoriesParams = {};
+  async GetCategories(
+    level?: SettingLevel,
+    section?: string,
+    properties?: "settings"
+  ): Promise<GetCategoriesResponse> {
+    const params: GetCategoriesParams = { level, section, properties };
     return this.sendMessage("Settings.GetCategories", params);
   }
 
@@ -27,8 +31,11 @@ export class KodiSettingsNamespace {
    * @param category - The category to retrieve sections for.
    * @returns A promise that resolves to an object containing an array of settings sections.
    */
-  async GetSections(category: SettingsCategory): Promise<GetSectionsResponse> {
-    const params: GetSectionsParams = { category };
+  async GetSections(
+    level?: SettingLevel,
+    properties?: "categories"
+  ): Promise<GetSectionsResponse> {
+    const params: GetSectionsParams = { level, properties };
     return this.sendMessage("Settings.GetSections", params);
   }
 
@@ -38,8 +45,8 @@ export class KodiSettingsNamespace {
    * @param settingId - The unique identifier of the setting.
    * @returns A promise that resolves to an object containing the value of the setting.
    */
-  async GetSettingValue(settingId: string): Promise<GetSettingValueResponse> {
-    const params: GetSettingValueParams = { settingId };
+  async GetSettingValue(setting: string): Promise<GetSettingValueResponse> {
+    const params: GetSettingValueParams = { setting };
     return this.sendMessage("Settings.GetSettingValue", params);
   }
 
@@ -50,11 +57,8 @@ export class KodiSettingsNamespace {
    * @param section - Optional section to filter settings.
    * @returns A promise that resolves to an object containing an array of settings.
    */
-  async GetSettings(
-    category: SettingsCategory,
-    section?: SettingsSection
-  ): Promise<GetSettingsResponse> {
-    const params: GetSettingsParams = { category, section };
+  async GetSettings(level: SettingLevel): Promise<GetSettingsResponse> {
+    const params: GetSettingsParams = { level };
     return this.sendMessage("Settings.GetSettings", params);
   }
 
@@ -65,20 +69,19 @@ export class KodiSettingsNamespace {
    * @returns A promise that resolves to an object containing the value of the skin setting.
    */
   async GetSkinSettingValue(
-    settingId: string
+    setting: string
   ): Promise<GetSkinSettingValueResponse> {
-    const params: GetSkinSettingValueParams = { settingId };
+    const params: GetSkinSettingValueParams = { setting };
     return this.sendMessage("Settings.GetSkinSettingValue", params);
   }
 
   /**
    * Retrieves all skin settings for a specified skin.
    *
-   * @param skinId - The unique identifier of the skin.
    * @returns A promise that resolves to an object containing an array of skin settings.
    */
-  async GetSkinSettings(skinId: string): Promise<GetSkinSettingsResponse> {
-    const params: GetSkinSettingsParams = { skinId };
+  async GetSkinSettings(): Promise<GetSkinSettingsResponse> {
+    const params: GetSkinSettingsParams = {};
     return this.sendMessage("Settings.GetSkinSettings", params);
   }
 
@@ -88,10 +91,8 @@ export class KodiSettingsNamespace {
    * @param settingId - The unique identifier of the setting to reset.
    * @returns A promise that resolves to an object indicating success and a message.
    */
-  async ResetSettingValue(
-    settingId: string
-  ): Promise<ResetSettingValueResponse> {
-    const params: ResetSettingValueParams = { settingId };
+  async ResetSettingValue(setting: string): Promise<ResetSettingValueResponse> {
+    const params: ResetSettingValueParams = { setting };
     return this.sendMessage("Settings.ResetSettingValue", params);
   }
 
@@ -103,10 +104,10 @@ export class KodiSettingsNamespace {
    * @returns A promise that resolves to an object indicating success and a message.
    */
   async SetSettingValue(
-    settingId: string,
+    setting: string,
     value: boolean | number | string | any[]
   ): Promise<SetSettingValueResponse> {
-    const params: SetSettingValueParams = { settingId, value };
+    const params: SetSettingValueParams = { setting, value };
     return this.sendMessage("Settings.SetSettingValue", params);
   }
 
@@ -118,10 +119,10 @@ export class KodiSettingsNamespace {
    * @returns A promise that resolves to an object indicating success and a message.
    */
   async SetSkinSettingValue(
-    settingId: string,
+    setting: string,
     value: boolean | number | string | any[]
   ): Promise<SetSkinSettingValueResponse> {
-    const params: SetSkinSettingValueParams = { settingId, value };
+    const params: SetSkinSettingValueParams = { setting, value };
     return this.sendMessage("Settings.SetSkinSettingValue", params);
   }
 }
@@ -172,7 +173,9 @@ interface Setting {
  * Represents the parameters for GetCategories.
  */
 interface GetCategoriesParams {
-  // No parameters required for this method.
+  level?: SettingLevel;
+  section?: string;
+  properties?: "settings";
 }
 
 /**
@@ -186,7 +189,8 @@ interface GetCategoriesResponse {
  * Represents the parameters for GetSections.
  */
 interface GetSectionsParams {
-  category: SettingsCategory;
+  level?: SettingLevel;
+  properties?: "categories";
 }
 
 /**
@@ -200,7 +204,7 @@ interface GetSectionsResponse {
  * Represents the parameters for GetSettingValue.
  */
 interface GetSettingValueParams {
-  settingId: string;
+  setting: string;
 }
 
 /**
@@ -213,10 +217,9 @@ interface GetSettingValueResponse {
 /**
  * Represents the parameters for GetSettings.
  */
-interface GetSettingsParams {
-  category: SettingsCategory;
-  section?: SettingsSection;
-}
+type GetSettingsParams = {
+  level?: SettingLevel;
+};
 
 /**
  * Represents the response structure for GetSettings.
@@ -229,7 +232,7 @@ interface GetSettingsResponse {
  * Represents the parameters for GetSkinSettingValue.
  */
 interface GetSkinSettingValueParams {
-  settingId: string;
+  setting: string;
 }
 
 /**
@@ -242,9 +245,7 @@ interface GetSkinSettingValueResponse {
 /**
  * Represents the parameters for GetSkinSettings.
  */
-interface GetSkinSettingsParams {
-  skinId: string;
-}
+interface GetSkinSettingsParams {}
 
 /**
  * Represents the response structure for GetSkinSettings.
@@ -257,7 +258,7 @@ interface GetSkinSettingsResponse {
  * Represents the parameters for ResetSettingValue.
  */
 interface ResetSettingValueParams {
-  settingId: string;
+  setting: string;
 }
 
 /**
@@ -272,7 +273,7 @@ interface ResetSettingValueResponse {
  * Represents the parameters for SetSettingValue.
  */
 interface SetSettingValueParams {
-  settingId: string;
+  setting: string;
   value: boolean | number | string | any[];
 }
 
@@ -288,7 +289,7 @@ interface SetSettingValueResponse {
  * Represents the parameters for SetSkinSettingValue.
  */
 interface SetSkinSettingValueParams {
-  settingId: string;
+  setting: string;
   value: boolean | number | string | any[];
 }
 
@@ -299,3 +300,5 @@ interface SetSkinSettingValueResponse {
   success: boolean;
   message: string;
 }
+
+type SettingLevel = "basic" | "standard" | "advanced" | "expert";

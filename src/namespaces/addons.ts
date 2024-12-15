@@ -173,7 +173,7 @@ type GlobalToggle = boolean | "toggle";
 /**
  * Represents the parameters for ExecuteAddon.
  */
-interface ExecuteAddonParams {
+type ExecuteAddonParams = {
   addonid: string;
   params?: Record<string, string> | string[] | string;
   wait?: boolean;
@@ -182,7 +182,7 @@ interface ExecuteAddonParams {
 /**
  * Represents the parameters for GetAddonDetails.
  */
-interface GetAddonDetailsParams {
+type GetAddonDetailsParams = {
   addonid: string;
   properties?: AddonProperty[];
 }
@@ -190,7 +190,7 @@ interface GetAddonDetailsParams {
 /**
  * Represents the response for GetAddonDetails.
  */
-interface GetAddonDetailsResponse {
+type GetAddonDetailsResponse = {
   addon: AddonDetails;
   limits: ListLimitsReturned;
 }
@@ -198,7 +198,7 @@ interface GetAddonDetailsResponse {
 /**
  * Represents the details of an addon.
  */
-interface AddonDetails {
+type AddonDetails = {
   addonid: string;
   author: string;
   broken: boolean | string | null;
@@ -222,7 +222,7 @@ interface AddonDetails {
 /**
  * Represents a dependency of an addon.
  */
-interface Dependency {
+type Dependency = {
   addonid: string;
   optional: boolean;
   version: string;
@@ -231,7 +231,7 @@ interface Dependency {
 /**
  * Represents the limits returned.
  */
-interface ListLimitsReturned {
+type ListLimitsReturned = {
   end: number;
   start: number;
   total: number;
@@ -240,7 +240,7 @@ interface ListLimitsReturned {
 /**
  * Represents the parameters for GetAddons.
  */
-interface GetAddonsParams {
+type GetAddonsParams = {
   type?: AddonType;
   content?: "unknown" | "video" | "audio" | "image" | "executable";
   enabled?: EnabledOption;
@@ -252,7 +252,7 @@ interface GetAddonsParams {
 /**
  * Represents the limits for GetAddons.
  */
-interface ListLimits {
+type ListLimits = {
   end?: number;
   start?: number;
 }
@@ -260,7 +260,7 @@ interface ListLimits {
 /**
  * Represents the response for GetAddons.
  */
-interface GetAddonsResponse {
+type GetAddonsResponse = {
   addons: AddonDetails[];
   limits: ListLimitsReturned;
 }
@@ -268,7 +268,7 @@ interface GetAddonsResponse {
 /**
  * Represents the parameters for SetAddonEnabled.
  */
-interface SetAddonEnabledParams {
+type SetAddonEnabledParams = {
   addonid: string;
   enabled: GlobalToggle;
 }

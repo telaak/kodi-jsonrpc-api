@@ -38,7 +38,7 @@ export class KodiApplicationNamespace {
    * @param mute - A boolean to set mute (`true` to mute, `false` to unmute) or `"toggle"` to switch the current state.
    * @returns A promise that resolves to the new mute state.
    */
-  async SetMute(mute: MuteToggle): Promise<SetMuteResponse> {
+  async SetMute(mute: MuteToggle): Promise<boolean> {
     const params = { mute };
     return this.sendMessage("Application.SetMute", params);
   }
@@ -49,7 +49,7 @@ export class KodiApplicationNamespace {
    * @param volume - A number between 0 and 100 to set the volume, or `"increment"`/`"decrement"` to adjust the volume by a predefined step.
    * @returns A promise that resolves to the new volume level.
    */
-  async SetVolume(volume: VolumeControl): Promise<SetVolumeResponse> {
+  async SetVolume(volume: VolumeControl): Promise<number> {
     const params = { volume };
     return this.sendMessage("Application.SetVolume", params);
   }
@@ -65,9 +65,10 @@ export class KodiApplicationNamespace {
 type ApplicationPropertyName =
   | "muted"
   | "volume"
-  | "fullscreen"
-  | "activeWindow"
-  | "canExit";
+  | "name"
+  | "version"
+  | "sorttokens"
+  | "language";
 
 /**
  * Represents the options for muting/unmuting the application.
@@ -82,24 +83,10 @@ type VolumeControl = number | "increment" | "decrement";
 /**
  * Represents the response structure for the GetProperties method.
  */
-interface GetPropertiesResponse {
+type GetPropertiesResponse = {
   muted?: boolean;
   volume?: number;
   fullscreen?: boolean;
   activeWindow?: string;
   canExit?: boolean;
-}
-
-/**
- * Represents the response structure for the SetMute method.
- */
-interface SetMuteResponse {
-  muted: boolean;
-}
-
-/**
- * Represents the response structure for the SetVolume method.
- */
-interface SetVolumeResponse {
-  volume: number;
-}
+};

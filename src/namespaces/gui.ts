@@ -285,7 +285,7 @@ type GUIPropertyName =
 /**
  * Represents the response structure for GUI.GetProperties.
  */
-interface GetPropertiesResponse {
+type GetPropertiesResponse = {
   fullscreen: boolean;
   currentwindow: {
     id: number;
@@ -303,29 +303,29 @@ interface GetPropertiesResponse {
     id: string;
     name: string;
   };
-}
+};
 
 /**
  * Represents the response structure for GUI.GetStereoscopicModes.
  */
-interface GetStereoscopicModesResponse {
+type GetStereoscopicModesResponse = {
   stereoscopicmodes: StereoscopicMode[];
-}
+};
 
 /**
  * Represents the parameters for ShowNotification.
  */
-interface ShowNotificationParams {
+type ShowNotificationParams = {
   title: string;
   message: string;
   image?: "info" | "warning" | "error" | string;
   displaytime?: number; // in milliseconds
-}
+};
 
 /**
  * Represents the parameters for ActivateWindow.
  */
-interface ActivateWindowParams {
+type ActivateWindowParams = {
   window: GUIWindow;
   parameters: string[];
-}
+};

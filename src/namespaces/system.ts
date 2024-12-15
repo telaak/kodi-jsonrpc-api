@@ -14,11 +14,10 @@ export class KodiSystemNamespace {
   /**
    * Ejects the specified optical drive.
    *
-   * @param drive - Optional identifier of the optical drive to eject.
    * @returns A promise that resolves to an object indicating success and a message.
    */
-  async EjectOpticalDrive(drive?: string): Promise<EjectOpticalDriveResponse> {
-    const params: EjectOpticalDriveParams = { drive };
+  async EjectOpticalDrive(): Promise<EjectOpticalDriveResponse> {
+    const params: EjectOpticalDriveParams = {};
     return this.sendMessage("System.EjectOpticalDrive", params);
   }
 
@@ -56,11 +55,10 @@ export class KodiSystemNamespace {
   /**
    * Shuts down the system.
    *
-   * @param delay - Optional delay in seconds before shutdown is initiated.
    * @returns A promise that resolves to an object indicating success and a message.
    */
-  async Shutdown(delay?: number): Promise<ShutdownResponse> {
-    const params: ShutdownParams = { delay };
+  async Shutdown(): Promise<ShutdownResponse> {
+    const params: ShutdownParams = {};
     return this.sendMessage("System.Shutdown", params);
   }
 
@@ -82,16 +80,10 @@ export class KodiSystemNamespace {
  * Represents the available system properties that can be retrieved.
  */
 type SystemPropertyName =
-  | "version"
-  | "name"
-  | "uptime"
-  | "build"
-  | "path"
-  | "volume"
-  | "muted"
-  | "fullscreen"
-  | "loglevel"
-  | "time";
+  | "canshutdown"
+  | "cansuspend"
+  | "canhibernate"
+  | "canreboot";
 
 /**
  * Represents the parameters for GetProperties.

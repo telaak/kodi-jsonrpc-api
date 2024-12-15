@@ -19,21 +19,20 @@ export class KodiTexturesNamespace {
    * @returns A promise that resolves to an object containing an array of textures.
    */
   async GetTextures(
-    category?: TextureCategory,
-    resolution?: string
+    properties: TextureProperties
   ): Promise<GetTexturesResponse> {
-    const params: GetTexturesParams = { category, resolution };
+    const params: GetTexturesParams = { properties };
     return this.sendMessage("Textures.GetTextures", params);
   }
 
   /**
    * Removes a texture with the specified ID.
    *
-   * @param textureId - The ID of the texture to remove.
+   * @param textureid - The ID of the texture to remove.
    * @returns A promise that resolves to an object indicating the success status and a message.
    */
-  async RemoveTexture(textureId: string): Promise<RemoveTextureResponse> {
-    const params: RemoveTextureParams = { textureId };
+  async RemoveTexture(textureid: number): Promise<RemoveTextureResponse> {
+    const params: RemoveTextureParams = { textureid };
     return this.sendMessage("Textures.RemoveTexture", params);
   }
 }
@@ -59,12 +58,18 @@ interface Texture {
   createdAt: string; // ISO date string
 }
 
+type TextureProperties =
+  | "url"
+  | "cachedurl"
+  | "lasthashcheck"
+  | "imagehash"
+  | "sizes";
+
 /**
  * Represents the parameters for GetTextures.
  */
 interface GetTexturesParams {
-  category?: TextureCategory;
-  resolution?: string;
+  properties: TextureProperties;
 }
 
 /**
@@ -78,7 +83,7 @@ interface GetTexturesResponse {
  * Represents the parameters for RemoveTexture.
  */
 interface RemoveTextureParams {
-  textureId: string;
+  textureid: number;
 }
 
 /**

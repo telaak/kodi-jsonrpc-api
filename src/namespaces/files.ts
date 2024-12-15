@@ -20,9 +20,10 @@ export class KodiFilesNamespace {
    */
   async GetDirectory(
     directory: string,
-    media?: MediaType
+    media?: MediaType,
+    properties?: FileProperty[]
   ): Promise<GetDirectoryResponse> {
-    const params: GetDirectoryParams = { directory, media };
+    const params: GetDirectoryParams = { directory, media, properties };
     return this.sendMessage("Files.GetDirectory", params);
   }
 
@@ -46,10 +47,11 @@ export class KodiFilesNamespace {
   /**
    * Retrieves all available media sources.
    *
+   * @param media - Optional media type to provide context for the file details.
    * @returns A promise that resolves to an object containing the list of sources and pagination limits.
    */
-  async GetSources(): Promise<GetSourcesResponse> {
-    return this.sendMessage("Files.GetSources", {});
+  async GetSources(media: MediaType): Promise<GetSourcesResponse> {
+    return this.sendMessage("Files.GetSources", { media });
   }
 
   /**
@@ -61,9 +63,18 @@ export class KodiFilesNamespace {
    */
   async SetFileDetails(
     file: string,
-    details: Partial<FileDetails>
+    media: MediaType = "video",
+    playcount?: number,
+    lastplayed?: string,
+    resume?: ResumeType
   ): Promise<string> {
-    const params: SetFileDetailsParams = { file, details };
+    const params: SetFileDetailsParams = {
+      file,
+      media,
+      playcount,
+      lastplayed,
+      resume,
+    };
     return this.sendMessage("Files.SetFileDetails", params);
   }
 }
@@ -75,42 +86,113 @@ export class KodiFilesNamespace {
 /**
  * Represents the available media types.
  */
-type MediaType = "unknown" | "video" | "music" | "image" | "program";
+type MediaType = "video" | "music" | "pictures" | "files" | "programs";
 
 /**
  * Represents the properties that can be retrieved for a file.
  */
 type FileProperty =
-  | "label"
-  | "thumbnail"
-  | "path"
-  | "type"
-  | "size"
-  | "mtime"
-  | "is_dir"
-  | "user"
-  | "group"
-  | "perm"
-  | "duration"
-  | "genre"
+  | "title"
   | "artist"
-  | "album"
+  | "albumartist"
+  | "genre"
   | "year"
   | "rating"
-  | "resumepoint";
+  | "album"
+  | "track"
+  | "duration"
+  | "comment"
+  | "lyrics"
+  | "musicbrainztrackid"
+  | "musicbrainzartistid"
+  | "musicbrainzalbumid"
+  | "musicbrainzalbumartistid"
+  | "playcount"
+  | "fanart"
+  | "director"
+  | "trailer"
+  | "tagline"
+  | "plot"
+  | "plotoutline"
+  | "originaltitle"
+  | "lastplayed"
+  | "writer"
+  | "studio"
+  | "mpaa"
+  | "cast"
+  | "country"
+  | "imdbnumber"
+  | "premiered"
+  | "productioncode"
+  | "runtime"
+  | "set"
+  | "showlink"
+  | "streamdetails"
+  | "top250"
+  | "votes"
+  | "firstaired"
+  | "season"
+  | "episode"
+  | "showtitle"
+  | "thumbnail"
+  | "file"
+  | "resume"
+  | "artistid"
+  | "albumid"
+  | "tvshowid"
+  | "setid"
+  | "watchedepisodes"
+  | "disc"
+  | "tag"
+  | "art"
+  | "genreid"
+  | "displayartist"
+  | "albumartistid"
+  | "description"
+  | "theme"
+  | "mood"
+  | "style"
+  | "albumlabel"
+  | "sorttitle"
+  | "episodeguide"
+  | "uniqueid"
+  | "dateadded"
+  | "size"
+  | "lastmodified"
+  | "mimetype"
+  | "specialsortseason"
+  | "specialsortepisode"
+  | "sortartist"
+  | "musicbrainzreleasegroupid"
+  | "isboxset"
+  | "totaldiscs"
+  | "disctitle"
+  | "releasedate"
+  | "originaldate"
+  | "bpm"
+  | "bitrate"
+  | "samplerate"
+  | "channels"
+  | "datemodified"
+  | "datenew"
+  | "customproperties"
+  | "albumduration"
+  | "userrating"
+  | "songvideourl";
 
 /**
  * Represents the parameters for the GetDirectory method.
  */
-interface GetDirectoryParams {
+type GetDirectoryParams = {
   directory: string;
   media?: MediaType;
-}
+  properties?: FileProperty[];
+};
 
 /**
  * Represents a single file or directory in the response.
  */
-interface File {
+type File = {
   label: string;
   thumbnail: string;
   path: string;
@@ -128,7 +210,7 @@ interface File {
   year?: number;
   rating?: number;
   resumepoint?: number;
-}
+};
 
 /**
  * Represents the limits returned in responses that support pagination.
@@ -159,7 +241,7 @@ interface GetFileDetailsParams {
 /**
  * Represents the detailed information of a file.
  */
-interface FileDetails {
+type FileDetails = {
   label: string;
   thumbnail: string;
   path: string;
@@ -177,37 +259,45 @@ interface FileDetails {
   year?: number;
   rating?: number;
   resumepoint?: number;
-}
+};
 
 /**
  * Represents the response structure for the GetFileDetails method.
  */
-interface GetFileDetailsResponse {
+type GetFileDetailsResponse = {
   filedetails: FileDetails;
-}
+};
 
 /**
  * Represents the source of media.
  */
-interface Source {
+type Source = {
   id: string;
   label: string;
   path: string;
   type: string;
-}
+};
 
 /**
  * Represents the response structure for the GetSources method.
  */
-interface GetSourcesResponse {
+type GetSourcesResponse = {
   sources: Source[];
   limits: ListLimits;
-}
+};
 
 /**
  * Represents the parameters for the SetFileDetails method.
  */
-interface SetFileDetailsParams {
+type SetFileDetailsParams = {
   file: string;
-  details: Partial<FileDetails>;
-}
+  media: MediaType;
+  playcount?: number;
+  lastplayed?: string;
+  resume?: ResumeType;
+};
+
+type ResumeType = {
+  position: number;
+  total: number;
+};

@@ -20,11 +20,21 @@ export class KodiFavouritesNamespace {
    * @returns A promise that resolves to a confirmation string upon successful addition.
    */
   async AddFavourite(
-    name: string,
-    path: string,
+    title: string,
+    type: FavouriteType,
+    path?: string,
+    window?: string,
+    windowparameter?: string,
     thumbnail?: string
   ): Promise<string> {
-    const params: AddFavouriteParams = { name, path, thumbnail };
+    const params: AddFavouriteParams = {
+      title,
+      type,
+      path,
+      window,
+      windowparameter,
+      thumbnail,
+    };
     return this.sendMessage("Favourites.AddFavourite", params);
   }
 
@@ -45,21 +55,24 @@ export class KodiFavouritesNamespace {
 /**
  * Represents the available properties for a favourite.
  */
-type FavouriteProperty = "name" | "path" | "thumbnail";
+type FavouriteType = "media" | "window" | "script" | "androidapp" | "unknown";
 
 /**
  * Represents the parameters for adding a favourite.
  */
-interface AddFavouriteParams {
-  name: string;
-  path: string;
+type AddFavouriteParams = {
+  title: string;
+  type: FavouriteType;
+  path?: string;
+  window?: string;
+  windowparameter?: string;
   thumbnail?: string;
 }
 
 /**
  * Represents a single favourite item.
  */
-interface Favourite {
+type Favourite  ={
   name: string;
   path: string;
   thumbnail?: string;
@@ -68,6 +81,6 @@ interface Favourite {
 /**
  * Represents the response structure for getting favourites.
  */
-interface GetFavouritesResponse {
+type GetFavouritesResponse ={
   favourites: Favourite[];
 }

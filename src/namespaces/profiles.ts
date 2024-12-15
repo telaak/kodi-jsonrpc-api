@@ -42,11 +42,15 @@ export class KodiProfilesNamespace {
   /**
    * Loads the specified profile.
    *
-   * @param profileId - The unique identifier of the profile to load.
+   * @param profile - The unique name of the profile
    * @returns A promise that resolves to an object indicating success and a message.
    */
-  async LoadProfile(profileId: string): Promise<LoadProfileResponse> {
-    const params: LoadProfileParams = { profileId };
+  async LoadProfile(
+    profile: string,
+    prompt?: boolean,
+    password?: Password
+  ): Promise<LoadProfileResponse> {
+    const params: LoadProfileParams = { profile, prompt, password };
     return this.sendMessage("Profiles.LoadProfile", params);
   }
 }
@@ -63,38 +67,45 @@ type ProfileType = "admin" | "user" | "guest";
 /**
  * Represents a profile object.
  */
-interface Profile {
+type Profile = {
   id: string;
   name: string;
   type: ProfileType;
   settings: any; // Define more specifically if possible
-}
+};
 
 /**
  * Represents the parameters for LoadProfile.
  */
-interface LoadProfileParams {
-  profileId: string;
-}
+type LoadProfileParams = {
+  profile: string;
+  prompt?: boolean;
+  password?: Password;
+};
 
 /**
  * Represents the response structure for LoadProfile.
  */
-interface LoadProfileResponse {
+type LoadProfileResponse = {
   success: boolean;
   message: string;
-}
+};
 
 /**
  * Represents the response structure for GetCurrentProfile.
  */
-interface GetCurrentProfileResponse {
+type GetCurrentProfileResponse = {
   profile: Profile;
-}
+};
 
 /**
  * Represents the response structure for GetProfiles.
  */
-interface GetProfilesResponse {
+type GetProfilesResponse = {
   profiles: Profile[];
-}
+};
+
+type Password = {
+  encryption: "md5" | "none";
+  value: string;
+};

@@ -22,7 +22,7 @@ export class KodiInputNamespace {
   async ButtonEvent(
     button: string,
     keymap: Keymap,
-    holdtime: number
+    holdtime?: number
   ): Promise<string> {
     const params: ButtonEventParams = { button, keymap, holdtime };
     return this.sendMessage("Input.ButtonEvent", params);
@@ -409,7 +409,7 @@ type Keymap = "KB" | "XG" | "R1" | "R2";
 interface ButtonEventParams {
   button: string;
   keymap: Keymap;
-  holdtime: number;
+  holdtime?: number;
 }
 
 /**
