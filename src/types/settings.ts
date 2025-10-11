@@ -85,17 +85,34 @@ export interface SettingsGetSectionsParams {
 
 export type SettingsGetCategoriesProperty = "settings";
 export const settingsGetCategoriesProps = ["settings"] as const;
+/** Typed const list for Settings.GetCategories() properties */
 export function makeSettingsGetCategoriesProps<P extends readonly SettingsGetCategoriesProperty[]>(...p: P): P {
   return p;
 }
 export const asSettingsGetCategoriesProps = makeSettingsGetCategoriesProps;
+/**
+ * @example
+ * ```ts
+ * import { makeSettingsGetCategoriesProps } from "../types/settings";
+ * const props = makeSettingsGetCategoriesProps("settings");
+ * // const resp = await kodi.Settings.GetCategories({ properties: props });
+ * ```
+ */
 
 export type SettingsGetSectionsProperty = "categories";
 export const settingsGetSectionsProps = ["categories"] as const;
+/** Typed const list for Settings.GetSections() properties */
 export function makeSettingsGetSectionsProps<P extends readonly SettingsGetSectionsProperty[]>(...p: P): P {
   return p;
 }
 export const asSettingsGetSectionsProps = makeSettingsGetSectionsProps;
+/**
+ * @example
+ * ```ts
+ * import { makeSettingsGetSectionsProps } from "../types/settings";
+ * const props = makeSettingsGetSectionsProps("categories");
+ * ```
+ */
 
 /**
  * SettingsGetSectionsResponse ($ref: "Settings.GetSections.Response")

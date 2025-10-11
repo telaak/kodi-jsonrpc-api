@@ -49,7 +49,17 @@ export const profilesProps = ["thumbnail", "lockmode"] as const;
 
 /**
  * Create a readonly tuple of profile property names preserving literal types.
- * Example: makeProfilesProps("thumbnail", "lockmode") -> readonly ["thumbnail","lockmode"]
+ *
+ * Example:
+ *   const p = makeProfilesProps("thumbnail", "lockmode");
+ *   // p is typed as readonly ["thumbnail","lockmode"]
+ *
+ * @example
+ * ```ts
+ * import { makeProfilesProps, profilesProps } from "../types/profiles";
+ * const props = makeProfilesProps("thumbnail");
+ * // const resp = await kodi.Profiles.GetProfiles({ properties: props });
+ * ```
  */
 export function makeProfilesProps<P extends readonly ProfilesPropertyName[]>(
   ...props: P

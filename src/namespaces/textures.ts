@@ -30,11 +30,26 @@ export class KodiTexturesNamespace {
    * @param params - The parameters to filter and paginate the textures.
    * @returns A promise resolving to a list of textures and the total count.
    */
-  async GetTextures(
-    params?: TexturesGetTexturesParams
-  ): Promise<TexturesGetTexturesResponse> {
+  // Overload: properties passed as a readonly tuple -> return narrowed Pick<> types
+  async GetTextures<const P extends readonly (keyof Texture)[]>(
+    params?: Omit<TexturesGetTexturesParams, "properties"> & { properties?: P }
+  ): Promise<{
+    textures: Pick<Texture, Extract<P[number], keyof Texture>>[];
+    total: number;
+  }>;
+
+  // Fallback overload: no readonly-tuple inference
+  async GetTextures(params?: TexturesGetTexturesParams): Promise<TexturesGetTexturesResponse>;
+
+  // Implementation
+  async GetTextures(params?: TexturesGetTexturesParams): Promise<any> {
     const requestParams = params || {};
-    return this.sendMessage("Textures.GetTextures", requestParams);
+    // `properties` may be a readonly tuple at compile-time; cast to runtime-friendly string[]
+    const castParams = {
+      ...requestParams,
+      properties: (requestParams.properties as unknown) as string[] | undefined,
+    };
+    return this.sendMessage("Textures.GetTextures", castParams);
   }
 
   /**
@@ -43,9 +58,7 @@ export class KodiTexturesNamespace {
    * @param textureid - The ID of the texture to remove.
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async RemoveTexture(
-    textureid: string
-  ): Promise<TexturesRemoveTextureResponse> {
+  async RemoveTexture(textureid: number): Promise<TexturesRemoveTextureResponse> {
     const params: TexturesRemoveTextureParams = { textureid };
     return this.sendMessage("Textures.RemoveTexture", params);
   }

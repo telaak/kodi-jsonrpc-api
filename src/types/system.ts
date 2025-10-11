@@ -18,3 +18,33 @@ export type SystemPropertyName =
 export type SystemPropertyValue = {
   [key in SystemPropertyName]?: boolean;
 };
+
+/** Typed const for System property names */
+export const systemProps = [
+  "canshutdown",
+  "cansuspend",
+  "canhibernate",
+  "canreboot",
+] as const;
+
+/**
+ * Create a readonly tuple of SystemPropertyName values.
+ * Example: makeSystemProps("canshutdown", "canreboot") -> readonly ["canshutdown","canreboot"]
+ */
+export function makeSystemProps<P extends readonly SystemPropertyName[]>(
+  ...p: P
+): P {
+  return p;
+}
+
+/** Alias for makeSystemProps */
+export const asSystemProps = makeSystemProps;
+
+/**
+ * @example
+ * ```ts
+ * import { makeSystemProps } from "../types/system";
+ * const props = makeSystemProps("canshutdown", "canreboot");
+ * // const resp = await kodi.System.GetProperties({ properties: props });
+ * ```
+ */

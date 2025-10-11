@@ -18,3 +18,75 @@ export interface GetInfoBooleansResponse {
 export interface GetInfoLabelsResponse {
   [key: string]: string;
 }
+
+/**
+ * InfoLabelName represents the name of an info label accepted by XBMC.GetInfoLabels.
+ * Kodi exposes many labels (see http://kodi.wiki/view/InfoLabels). We keep this
+ * open as `string` for completeness but provide helpers to preserve literal tuple
+ * inference for common usage patterns.
+ */
+/** Curated common info labels (non-exhaustive). These are convenient to
+ * surface as literal types so callers get autocompletion and narrowing. The
+ * API still accepts arbitrary labels, so `InfoLabelName` falls back to `string`.
+ */
+export type CommonInfoLabel =
+  | "Player.Title"
+  | "Player.Artist"
+  | "Player.Album"
+  | "Player.Year"
+  | "Player.Season"
+  | "Player.Episode"
+  | "Player.Duration"
+  | "Player.Position"
+  | "Player.Art"
+  | "Player.Genre"
+  | "Player.Rating"
+  | "Player.Subtitle"
+  | "System.BuildVersion"
+  | "System.Home"
+  | "System.ProfileName"
+  | "System.FriendlyName"
+  | "System.Language"
+  | "System.Time"
+  | "System.Date";
+
+/** InfoLabelName accepts a curated common label or any string. */
+export type InfoLabelName = CommonInfoLabel | (string & {});
+
+export const infoLabelCommon = [
+  "Player.Title",
+  "Player.Artist",
+  "Player.Album",
+  "Player.Year",
+  "Player.Duration",
+  "Player.Art",
+  "Player.Genre",
+  "Player.Rating",
+  "Player.Subtitle",
+  "System.BuildVersion",
+  "System.Home",
+  "System.ProfileName",
+  "System.FriendlyName",
+  "System.Language",
+  "System.Time",
+  "System.Date",
+] as const;
+
+/**
+ * Create a typed readonly tuple of InfoLabelName values.
+ * Example: makeInfoLabels("Player.Title", "System.BuildVersion") -> readonly ["Player.Title","System.BuildVersion"]
+ *
+ * @example
+ * ```ts
+ * import { makeInfoLabels } from "../types/xbmc";
+ * const labels = makeInfoLabels("Player.Title", "System.BuildVersion");
+ * // const resp = await kodi.XBMC.GetInfoLabels(labels);
+ * // resp[labels[0]] // typed as string
+ * ```
+ */
+export function makeInfoLabels<const P extends readonly InfoLabelName[]>(...p: P): P {
+  return p;
+}
+
+/** Alias for makeInfoLabels. Useful for casting existing arrays to a readonly tuple. */
+export const asInfoLabels = makeInfoLabels;

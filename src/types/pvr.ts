@@ -270,10 +270,21 @@ export const pvrBroadcastProps = [
   "seasonnum",
 ] as const;
 
+/**
+ * Typed const list of broadcast properties. Use with `makePvrBroadcastProps`.
+ */
 export function makePvrBroadcastProps<P extends readonly PVRBroadcastProperty[]>(...p: P): P {
   return p;
 }
 export const asPvrBroadcastProps = makePvrBroadcastProps;
+/**
+ * @example
+ * ```ts
+ * import { makePvrBroadcastProps, pvrBroadcastProps } from "../types/pvr";
+ * const props = makePvrBroadcastProps("title", "starttime");
+ * // const resp = await kodi.PVR.GetBroadcasts({ properties: props });
+ * ```
+ */
 
 export type PVRChannelProperty =
   | "thumbnail"
@@ -310,10 +321,18 @@ export const pvrChannelProps = [
   "clientid",
 ] as const;
 
+/** Create a readonly tuple of PVRChannelProperty values. */
 export function makePvrChannelProps<P extends readonly PVRChannelProperty[]>(...p: P): P {
   return p;
 }
 export const asPvrChannelProps = makePvrChannelProps;
+/**
+ * @example
+ * ```ts
+ * import { makePvrChannelProps } from "../types/pvr";
+ * const props = makePvrChannelProps("thumbnail", "channelnumber");
+ * ```
+ */
 
 export type PVRRecordingProperty =
   | "title"
@@ -368,10 +387,18 @@ export const pvrRecordingProps = [
   "clientid",
 ] as const;
 
+/** Create a readonly tuple of PVRRecordingProperty values. */
 export function makePvrRecordingProps<P extends readonly PVRRecordingProperty[]>(...p: P): P {
   return p;
 }
 export const asPvrRecordingProps = makePvrRecordingProps;
+/**
+ * @example
+ * ```ts
+ * import { makePvrRecordingProps } from "../types/pvr";
+ * const props = makePvrRecordingProps("title", "filepath");
+ * ```
+ */
 
 export type PVRTimerProperty =
   | "title"
@@ -438,10 +465,18 @@ export const pvrTimerProps = [
   "broadcastid",
 ] as const;
 
+/** Create a readonly tuple of PVRTimerProperty values. */
 export function makePvrTimerProps<P extends readonly PVRTimerProperty[]>(...p: P): P {
   return p;
 }
 export const asPvrTimerProps = makePvrTimerProps;
+/**
+ * @example
+ * ```ts
+ * import { makePvrTimerProps } from "../types/pvr";
+ * const props = makePvrTimerProps("title", "starttime");
+ * ```
+ */
 
 export type PVRClientProperty =
   | "addonid"
@@ -464,10 +499,18 @@ export const pvrClientProps = [
   "supportschannelscan",
 ] as const;
 
+/** Create a readonly tuple of PVRClientProperty values. */
 export function makePvrClientProps<P extends readonly PVRClientProperty[]>(...p: P): P {
   return p;
 }
 export const asPvrClientProps = makePvrClientProps;
+/**
+ * @example
+ * ```ts
+ * import { makePvrClientProps } from "../types/pvr";
+ * const props = makePvrClientProps("addonid", "supportsrecordings");
+ * ```
+ */
 
 /**
  * PVRAddTimerParams ($ref: "PVR.AddTimer.Params")

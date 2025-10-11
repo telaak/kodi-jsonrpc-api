@@ -210,9 +210,24 @@ export interface ListSort {
  */
 export const playlistProps = ["type", "size"] as const;
 
-/**
- * Create a typed readonly tuple of PlaylistPropertyName values.
- * Usage: makePlaylistProps("type", "size") -> readonly ["type","size"]
+/** Create a typed readonly tuple of PlaylistPropertyName values.
+ *
+ * Example:
+ *   const p = makePlaylistProps("type", "size");
+ *   // p is typed as readonly ["type","size"]
+ *
+ * @example
+ * ```ts
+ * import { makePlaylistProps, playlistProps } from "../types/playlist";
+ *
+ * const props = makePlaylistProps("type", "size");
+ * // or use playlistProps for a reference list
+ * // const props2 = playlistProps;
+ *
+ * // Typical usage:
+ * // const resp = await kodi.Playlist.GetItems({ playlistid: 0, properties: props });
+ * // resp.items[0].type // typed as string when 'type' included in props
+ * ```
  */
 export function makePlaylistProps<P extends readonly PlaylistPropertyName[]>(
   ...props: P
@@ -222,6 +237,7 @@ export function makePlaylistProps<P extends readonly PlaylistPropertyName[]>(
 
 /**
  * Cast an existing array to a readonly tuple of PlaylistPropertyName for inference.
+ * Useful when you already have a string[] but want the narrower tuple typing.
  */
 export function asPlaylistProps<P extends readonly PlaylistPropertyName[]>(
   props: P

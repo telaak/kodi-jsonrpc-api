@@ -31,10 +31,10 @@ export class KodiSystemNamespace {
    * @param properties - An array of system property names to retrieve.
    * @returns A promise resolving to an object containing the requested system properties and their values.
    */
-  async GetProperties(
-    properties: SystemPropertyName[]
-  ): Promise<SystemPropertyValue> {
-    const params = { properties };
+  async GetProperties(properties: SystemPropertyName[]): Promise<SystemPropertyValue>;
+  async GetProperties<P extends readonly SystemPropertyName[] | undefined>(properties?: P): Promise<SystemPropertyValue>;
+  async GetProperties(properties?: readonly SystemPropertyName[] | SystemPropertyName[]): Promise<SystemPropertyValue> {
+    const params = { properties: properties as unknown as SystemPropertyName[] | undefined };
     const response = await this.sendMessage("System.GetProperties", params);
     return response as SystemPropertyValue;
   }
