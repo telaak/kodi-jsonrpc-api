@@ -238,6 +238,18 @@ export function makePlaylistProps<P extends readonly PlaylistPropertyName[]>(
 /**
  * Cast an existing array to a readonly tuple of PlaylistPropertyName for inference.
  * Useful when you already have a string[] but want the narrower tuple typing.
+ *
+ * Note: at runtime these readonly tuples are typically sent over the wire as
+ * plain string[] values. Namespace wrappers in `src/namespaces` will cast them
+ * to `string[] | undefined` before sending the JSON-RPC request.
+ *
+ * @example
+ * ```ts
+ * import { makePlaylistProps, playlistProps } from "../types/playlist";
+ * const props = makePlaylistProps("type", "size");
+ * // const resp = await kodi.Playlist.GetItems({ playlistid: 0, properties: props });
+ * // resp.items[0].type // typed as string when 'type' included in props
+ * ```
  */
 export function asPlaylistProps<P extends readonly PlaylistPropertyName[]>(
   props: P

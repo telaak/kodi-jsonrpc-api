@@ -18,11 +18,10 @@ import {
   AddonsGetAddonsResponse,
   AddonsGetAddonDetailsResponse,
   ExecuteAddonParams,
-  ExecuteAddonResponse,
   GetAddonsParams,
   GetAddonsResponse,
   SetAddonEnabledParams,
-  SetAddonEnabledResponse,
+  
 } from "../types/addons"; // Adjust the import path as necessary
 
 export class KodiAddonsNamespace {
@@ -44,7 +43,7 @@ export class KodiAddonsNamespace {
     addonid: string,
     params?: string | { [key: string]: string } | string[],
     wait: boolean = false
-  ): Promise<ExecuteAddonResponse> {
+  ): Promise<string> {
     const paramsObj: ExecuteAddonParams = { addonid, params, wait };
     return this.sendMessage("Addons.ExecuteAddon", paramsObj);
   }
@@ -56,11 +55,18 @@ export class KodiAddonsNamespace {
    * @param properties - The properties to retrieve.
    * @returns A promise resolving to the addon details and limits information.
    */
-  async GetAddonDetails(
+  // Overload: accept readonly tuple for properties to preserve literal types
+  async GetAddonDetails<const P extends readonly AddonFields[]>(
     addonid: string,
-    properties: AddonFields[]
-  ): Promise<AddonsGetAddonDetailsResponse> {
-    const paramsObj = { addonid, properties };
+    properties?: P
+  ): Promise<{ addon: Pick<AddonDetails, P[number]> } & { limits: ListLimitsReturned }>;
+
+  // Fallback
+  async GetAddonDetails(addonid: string, properties?: AddonFields[]): Promise<AddonsGetAddonDetailsResponse>;
+
+  async GetAddonDetails(addonid: string, properties?: AddonFields[]): Promise<any> {
+    const paramsObj: any = { addonid };
+    if (properties) paramsObj.properties = (properties as unknown) as string[];
     return this.sendMessage("Addons.GetAddonDetails", paramsObj);
   }
 
@@ -75,19 +81,31 @@ export class KodiAddonsNamespace {
    * @param installed - Filter addons by their installed status ("all" to include all).
    * @returns A promise resolving to a list of addons and limits information.
    */
+  // Overload: properties as readonly tuple
+  async GetAddons<const P extends readonly AddonFields[]>(
+    type?: AddonType,
+    content?: AddonContent,
+    enabled?: boolean | "all",
+    properties?: P,
+    limits?: ListLimits,
+    installed?: boolean | "all"
+  ): Promise<{ addons: Pick<AddonDetails, P[number]>[]; limits: ListLimitsReturned }>;
+
+  // Fallback
   async GetAddons(
     type: AddonType = "unknown",
     content: AddonContent = "unknown",
     enabled: boolean | "all" = "all",
     properties: AddonFields[] = [],
     limits?: ListLimits,
-    installed: boolean | "all" = false
+    installed: boolean | "all" = true
   ): Promise<GetAddonsResponse> {
-    const paramsObj: GetAddonsParams = {
+    const paramsObj: any = {
       type,
       content,
       enabled,
-      properties,
+      // cast readonly tuple (narrow) to string[] for runtime transport
+      properties: (properties as unknown) as string[] | undefined,
       limits,
       installed,
     };
@@ -104,7 +122,7 @@ export class KodiAddonsNamespace {
   async SetAddonEnabled(
     addonid: string,
     enabled: GlobalToggle
-  ): Promise<SetAddonEnabledResponse> {
+  ): Promise<string> {
     const paramsObj: SetAddonEnabledParams = { addonid, enabled };
     return this.sendMessage("Addons.SetAddonEnabled", paramsObj);
   }

@@ -47,4 +47,7 @@ export const asSystemProps = makeSystemProps;
  * const props = makeSystemProps("canshutdown", "canreboot");
  * // const resp = await kodi.System.GetProperties({ properties: props });
  * ```
+ *
+ * Note: runtime transport expects plain string[]; use the helper to preserve
+ * compile-time literal tuple types.
  */

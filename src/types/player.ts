@@ -623,6 +623,11 @@ export function makeProps<P extends readonly (keyof PlayerGetItem)[]>(
 
 /** Alias for makeProps */
 export const asProps = makeProps;
+/**
+ * Note: these helpers return readonly tuples which help TypeScript preserve
+ * literal types for stronger inference. Namespace wrappers will typically
+ * convert them to plain string[] when sending requests.
+ */
 
 /** Getter helpers that return the exported consts (preserve literal types). */
 export function getCommonProps(): CommonProps {

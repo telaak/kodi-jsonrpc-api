@@ -71,6 +71,12 @@ export function makeProfilesProps<P extends readonly ProfilesPropertyName[]>(
 export const asProfilesProps = makeProfilesProps;
 
 /**
+ * Note: at runtime these readonly tuples are sent as plain string[] values. Use
+ * `asProfilesProps` when you need to cast an existing array to a readonly tuple
+ * for stronger compile-time inference.
+ */
+
+/**
  * ProfilesLoadProfileResponse ($ref: "Profiles.LoadProfile.Response")
  * Response structure for the LoadProfile method.
  */

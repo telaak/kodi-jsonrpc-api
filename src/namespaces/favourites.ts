@@ -11,8 +11,9 @@ import {
   FavouriteType,
   Favourite,
   FavouritesGetFavouritesResponse,
+  FavouriteFields,
   FavouritesAddFavouriteParams,
-  FavouritesAddFavouriteResponse,
+  
 } from "../types/favourites"; // Adjust the import path as necessary
 
 export class KodiFavouritesNamespace {
@@ -40,14 +41,14 @@ export class KodiFavouritesNamespace {
     window?: string,
     windowparameter?: string,
     thumbnail?: string
-  ): Promise<FavouritesAddFavouriteResponse> {
+  ): Promise<string> {
     const params: FavouritesAddFavouriteParams = {
       title,
       type,
-      path,
-      window,
-      windowparameter,
-      thumbnail,
+      path: path ?? null,
+      window: window ?? null,
+      windowparameter: windowparameter ?? null,
+      thumbnail: thumbnail ?? null,
     };
     return this.sendMessage("Favourites.AddFavourite", params);
   }
@@ -57,7 +58,12 @@ export class KodiFavouritesNamespace {
    *
    * @returns A promise resolving to a list of favourites.
    */
-  async GetFavourites(): Promise<FavouritesGetFavouritesResponse> {
-    return this.sendMessage("Favourites.GetFavourites", {});
+  async GetFavourites(
+    type: FavouriteType | null = null,
+    properties?: FavouriteFields[]
+  ): Promise<FavouritesGetFavouritesResponse> {
+    const params: any = { type };
+    if (properties) params.properties = (properties as unknown) as string[];
+    return this.sendMessage("Favourites.GetFavourites", params);
   }
 }

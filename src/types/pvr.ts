@@ -273,6 +273,21 @@ export const pvrBroadcastProps = [
 /**
  * Typed const list of broadcast properties. Use with `makePvrBroadcastProps`.
  */
+/**
+ * Create a typed readonly tuple of PVRBroadcastProperty values.
+ * Preserves literal types for callers so TypeScript infers narrow tuple types
+ * without requiring `as const` at each call site.
+ *
+ * Note: at runtime the readonly tuple will be sent as a plain string[]; the
+ * namespace wrapper will cast it to `string[] | undefined` before sending.
+ *
+ * @example
+ * ```ts
+ * import { makePvrBroadcastProps } from "../types/pvr";
+ * const props = makePvrBroadcastProps("title", "starttime");
+ * // const resp = await kodi.PVR.GetBroadcasts({ properties: props });
+ * ```
+ */
 export function makePvrBroadcastProps<P extends readonly PVRBroadcastProperty[]>(...p: P): P {
   return p;
 }
@@ -321,7 +336,11 @@ export const pvrChannelProps = [
   "clientid",
 ] as const;
 
-/** Create a readonly tuple of PVRChannelProperty values. */
+/**
+ * Create a typed readonly tuple of PVRChannelProperty values.
+ * Note: runtime transport sends these as plain string[]; use the helper to
+ * preserve compile-time literal tuple types.
+ */
 export function makePvrChannelProps<P extends readonly PVRChannelProperty[]>(...p: P): P {
   return p;
 }
@@ -387,7 +406,11 @@ export const pvrRecordingProps = [
   "clientid",
 ] as const;
 
-/** Create a readonly tuple of PVRRecordingProperty values. */
+/**
+ * Create a typed readonly tuple of PVRRecordingProperty values.
+ * Preserves literal types for callers; runtime transport will convert to
+ * string[] before sending.
+ */
 export function makePvrRecordingProps<P extends readonly PVRRecordingProperty[]>(...p: P): P {
   return p;
 }
@@ -465,7 +488,9 @@ export const pvrTimerProps = [
   "broadcastid",
 ] as const;
 
-/** Create a readonly tuple of PVRTimerProperty values. */
+/**
+ * Create a typed readonly tuple of PVRTimerProperty values.
+ */
 export function makePvrTimerProps<P extends readonly PVRTimerProperty[]>(...p: P): P {
   return p;
 }
@@ -499,7 +524,9 @@ export const pvrClientProps = [
   "supportschannelscan",
 ] as const;
 
-/** Create a readonly tuple of PVRClientProperty values. */
+/**
+ * Create a typed readonly tuple of PVRClientProperty values.
+ */
 export function makePvrClientProps<P extends readonly PVRClientProperty[]>(...p: P): P {
   return p;
 }

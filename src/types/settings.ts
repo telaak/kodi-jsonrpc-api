@@ -106,6 +106,12 @@ export function makeSettingsGetSectionsProps<P extends readonly SettingsGetSecti
   return p;
 }
 export const asSettingsGetSectionsProps = makeSettingsGetSectionsProps;
+
+/**
+ * Note: these helpers return readonly tuples for strong compile-time
+ * inference. At runtime namespace wrappers will convert them to `string[]`
+ * when sending over JSON-RPC.
+ */
 /**
  * @example
  * ```ts

@@ -90,3 +90,8 @@ export function makeInfoLabels<const P extends readonly InfoLabelName[]>(...p: P
 
 /** Alias for makeInfoLabels. Useful for casting existing arrays to a readonly tuple. */
 export const asInfoLabels = makeInfoLabels;
+/**
+ * Note: readonly tuple helpers preserve compile-time literal types. Namespace
+ * wrappers will convert them to plain string[] when sending the JSON-RPC
+ * request.
+ */

@@ -87,14 +87,27 @@ export type AddonContent =
  */
 export interface AddonDetails {
   addonid: string; // Unique identifier for the addon
-  name: string; // Name of the addon
-  version: string; // Version of the addon
-  path: string; // Filesystem path to the addon
-  description: string; // Description of the addon
-  type: AddonType; // Type of the addon
-  enabled: boolean; // Whether the addon is enabled
-  dependencies: string[]; // List of addon dependencies
-  properties: { [key: string]: any }; // Additional properties
+  author?: string;
+  broken?: boolean | string | null;
+  dependencies?: {
+    addonid: string;
+    optional: boolean;
+    version: string;
+  }[];
+  deprecated?: boolean | string | null;
+  description?: string;
+  disclaimer?: string;
+  enabled?: boolean;
+  extrainfo?: { key: string; value: string }[];
+  fanart?: string;
+  installed?: boolean;
+  name?: string;
+  path?: string;
+  rating?: number;
+  summary?: string;
+  thumbnail?: string;
+  type?: AddonType;
+  version?: string;
 }
 
 /**
@@ -105,7 +118,6 @@ export interface ListLimitsReturned {
   total: number; // Total number of items
   start: number; // Starting index
   end: number; // Ending index
-  limit: number; // Limit applied
 }
 
 /**
@@ -138,7 +150,7 @@ export interface ExecuteAddonParams {
  * ExecuteAddonResponse ($ref: "Addons.ExecuteAddon.Response")
  * Response structure for the ExecuteAddon method.
  */
-export type ExecuteAddonResponse = string;
+// ExecuteAddon returns a plain string per kodi.json - use primitive string where needed
 
 /**
  * AddonsGetAddonDetailsResponse ($ref: "Addons.GetAddonDetails.Response")
@@ -193,4 +205,43 @@ export interface SetAddonEnabledParams {
  * SetAddonEnabledResponse ($ref: "Addons.SetAddonEnabled.Response")
  * Response structure for the SetAddonEnabled method.
  */
-export type SetAddonEnabledResponse = string;
+// SetAddonEnabled returns a plain string per kodi.json - use primitive string where needed
+
+// --- Helpers: typed const and factories for AddonFields ---
+/**
+ * Typed readonly const array of available addon properties (AddonFields).
+ * Use this to reference available fields or to pick subsets for requests.
+ */
+export const addonFields = [
+  "name",
+  "version",
+  "summary",
+  "description",
+  "path",
+  "author",
+  "thumbnail",
+  "disclaimer",
+  "fanart",
+  "dependencies",
+  "broken",
+  "extrainfo",
+  "rating",
+  "enabled",
+  "installed",
+  "deprecated",
+] as const;
+
+/**
+ * Create a typed readonly tuple of AddonFields.
+ * Preserves literal types for callers so TypeScript infers narrow tuple types
+ * without requiring `as const` at each call site.
+ *
+ * Note: at runtime the readonly tuple is cast to `string[]` before sending
+ * the RPC payload because the transport expects a plain array of strings.
+ */
+export function makeAddonFields<const P extends readonly AddonFields[]>(...p: P) {
+  return p;
+}
+
+/** Alias for makeAddonFields to match helper naming patterns */
+export const asAddonFields = makeAddonFields;

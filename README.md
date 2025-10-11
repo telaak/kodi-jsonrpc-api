@@ -87,6 +87,38 @@ test();
 
 [TypeDoc](https://telaak.github.io/kodi-jsonrpc-api/)
 
+## Addons helpers (typed properties)
+
+This project exposes typed helper factories for Addons properties so you can
+construct readonly tuples that preserve literal types — useful when calling
+the `GetAddons` / `GetAddonDetails` overloads which accept readonly tuples
+and return narrowed response types.
+
+Example usage:
+
+```ts
+import { KodiAddonsNamespace } from "kodi-jsonrpc-api/src/namespaces/addons";
+import { makeAddonFields, addonFields } from "kodi-jsonrpc-api/src/types/addons";
+
+const kodi = new KodiAddonsNamespace(sendMessageImpl);
+
+// Narrow inference without `as const`
+const props = makeAddonFields("name", "version", "installed");
+
+// Or pick from the exported const (slice returns string[] so cast)
+const common = makeAddonFields(...(addonFields.slice(0, 3) as any));
+
+// Call the namespace method using the readonly tuple — response properties are narrowed
+const resp = await kodi.GetAddons(undefined, undefined, "all", props);
+console.log(resp.addons[0].name); // typed when 'name' included in props
+```
+
+The helpers are:
+- `addonFields` — readonly const array of all available Addon fields.
+- `makeAddonFields(...p)` — factory that returns a readonly tuple preserving literal types.
+- `asAddonFields` — alias for `makeAddonFields`.
+
+
 ## License
 
 ```

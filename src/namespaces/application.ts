@@ -12,12 +12,8 @@ import {
   ApplicationPropertyValue,
   GlobalToggle,
   GlobalIncrementDecrement,
-  AddonSource,
-  AudioOutput,
-  SleepTimer,
-  SetMuteParams,
-  SetVolumeParams,
-} from "../types/application"; // Adjust the import path as necessary
+  
+} from "../types/application";
 
 export class KodiApplicationNamespace {
   private sendMessage: ISendMessage;
@@ -36,9 +32,8 @@ export class KodiApplicationNamespace {
   async GetProperties(
     properties: ApplicationPropertyName[]
   ): Promise<ApplicationPropertyValue> {
-    return this.sendMessage("Application.GetProperties", {
-      properties,
-    });
+    const params: any = { properties };
+    return this.sendMessage("Application.GetProperties", params);
   }
 
   /**
@@ -59,8 +54,7 @@ export class KodiApplicationNamespace {
    * @returns A promise resolving to a boolean indicating the mute state.
    */
   async SetMute(mute: GlobalToggle): Promise<boolean> {
-    const paramsObj: SetMuteParams = { mute };
-    return this.sendMessage("Application.SetMute", paramsObj);
+    return this.sendMessage("Application.SetMute", { mute });
   }
 
   /**
