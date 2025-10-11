@@ -5,20 +5,53 @@
  * TimerId ($ref: "PVR.TimerId")
  * Represents the unique identifier for a timer.
  */
-export type TimerId = string;
+// Library.Id is an integer in kodi.json (minimum 1, default -1). Use number here.
+export type TimerId = number;
 
 /**
  * Timer ($ref: "PVR.Timer")
  * Represents a PVR timer.
  */
 export interface Timer {
-  timerid: TimerId; // Unique identifier for the timer
-  channelid: number; // ID of the channel associated with the timer
-  title: string; // Title of the program
-  starttime: string; // Start time of the program in ISO 8601 format
-  endtime: string; // End time of the program in ISO 8601 format
-  enabled: boolean; // Whether the timer is enabled
-  // Additional properties can be added here as defined in kodi.json
+  timerid: TimerId;
+  broadcastid?: number;
+  channelid?: number;
+  clientid?: number;
+  directory?: string;
+  endanytime?: boolean;
+  endmargin?: number;
+  endtime?: string;
+  epgsearchstring?: string;
+  epguid?: number;
+  file?: string;
+  firstday?: string;
+  fulltextepgsearch?: boolean;
+  ismanual?: boolean;
+  isradio?: boolean;
+  isreadonly?: boolean;
+  isreminder?: boolean;
+  istimerrule?: boolean;
+  lifetime?: number;
+  maxrecordings?: number;
+  preventduplicateepisodes?: number;
+  priority?: number;
+  recordinggroup?: number;
+  runtime?: number;
+  startanytime?: boolean;
+  startmargin?: number;
+  starttime?: string;
+  state?: string; // PVR.TimerState enum (string)
+  summary?: string;
+  title?: string;
+  weekdays?: Array<
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday"
+  >;
 }
 
 /**
@@ -26,14 +59,13 @@ export interface Timer {
  * Represents the details of a broadcast.
  */
 export interface BroadcastDetails {
-  broadcastid: number; // Unique identifier for the broadcast
-  channelid: number; // ID of the channel
-  title: string; // Title of the broadcast
-  description: string; // Description of the broadcast
-  starttime: string; // Start time of the broadcast in ISO 8601 format
-  endtime: string; // End time of the broadcast in ISO 8601 format
-  isPlayable: boolean; // Whether the broadcast is playable
-  // Additional properties can be added here as defined in kodi.json
+  broadcastid: number;
+  channelid?: number;
+  title?: string;
+  description?: string;
+  starttime?: string;
+  endtime?: string;
+  isPlayable?: boolean;
 }
 
 /**
@@ -41,11 +73,23 @@ export interface BroadcastDetails {
  * Represents the details of a PVR channel.
  */
 export interface ChannelDetails {
-  channelid: number; // Unique identifier for the channel
-  name: string; // Name of the channel
-  icon: string; // URL to the channel's icon
-  hidden: boolean; // Whether the channel is hidden
-  // Additional properties can be added here as defined in kodi.json
+  channelid: number;
+  name?: string;
+  icon?: string;
+  hidden?: boolean;
+  thumbnail?: string;
+  channeltype?: string;
+  locked?: boolean;
+  channel?: string;
+  lastplayed?: string;
+  broadcastnow?: string;
+  broadcastnext?: string;
+  uniqueid?: string;
+  channelnumber?: number;
+  subchannelnumber?: number;
+  isrecording?: boolean;
+  hasarchive?: boolean;
+  clientid?: number;
 }
 
 /**
@@ -53,10 +97,9 @@ export interface ChannelDetails {
  * Represents the details of a channel group.
  */
 export interface ChannelGroupDetails {
-  channelgroupid: number; // Unique identifier for the channel group
-  name: string; // Name of the channel group
-  hidden: boolean; // Whether the channel group is hidden
-  // Additional properties can be added here as defined in kodi.json
+  channelgroupid: number;
+  name?: string;
+  hidden?: boolean;
 }
 
 /**
@@ -64,11 +107,10 @@ export interface ChannelGroupDetails {
  * Represents the details of a PVR client.
  */
 export interface ClientDetails {
-  clientid: number; // Unique identifier for the client
-  name: string; // Name of the client
-  version: string; // Version of the client
-  capabilities: string[]; // Capabilities of the client
-  // Additional properties can be added here as defined in kodi.json
+  clientid: number;
+  name?: string;
+  version?: string;
+  capabilities?: string[];
 }
 
 /**
@@ -76,13 +118,12 @@ export interface ClientDetails {
  * Represents the details of a recording.
  */
 export interface RecordingDetails {
-  recordingid: number; // Unique identifier for the recording
-  title: string; // Title of the recording
-  channelid: number; // ID of the channel
-  starttime: string; // Start time of the recording in ISO 8601 format
-  endtime: string; // End time of the recording in ISO 8601 format
-  filepath: string; // File path of the recording
-  // Additional properties can be added here as defined in kodi.json
+  recordingid: number;
+  title?: string;
+  channelid?: number;
+  starttime?: string;
+  endtime?: string;
+  filepath?: string;
 }
 
 /**
@@ -90,13 +131,12 @@ export interface RecordingDetails {
  * Represents a PVR broadcast.
  */
 export interface Broadcast {
-  broadcastid: number; // Unique identifier for the broadcast
-  channelid: number; // ID of the channel
-  title: string; // Title of the broadcast
-  description: string; // Description of the broadcast
-  starttime: string; // Start time of the broadcast in ISO 8601 format
-  endtime: string; // End time of the broadcast in ISO 8601 format
-  // Additional properties can be added here as defined in kodi.json
+  broadcastid: number;
+  channelid?: number;
+  title?: string;
+  description?: string;
+  starttime?: string;
+  endtime?: string;
 }
 
 /**
@@ -104,43 +144,330 @@ export interface Broadcast {
  * Represents a group of PVR channels.
  */
 export interface ChannelGroup {
-  channelgroupid: number; // Unique identifier for the channel group
-  name: string; // Name of the channel group
-  hidden: boolean; // Whether the channel group is hidden
-  // Additional properties can be added here as defined in kodi.json
+  channelgroupid: number;
+  name?: string;
+  hidden?: boolean;
 }
 
 /**
  * PVRProperty ($ref: "PVR.Property")
  * Enum for PVR property names.
  */
+// Narrow the PVR property names to the Timer/Channel/Broadcast fields where possible.
 export type PVRProperty =
-  | "timerid"
-  | "channelid"
   | "title"
+  | "summary"
+  | "channelid"
+  | "isradio"
+  | "istimerrule"
+  | "ismanual"
   | "starttime"
   | "endtime"
-  | "enabled"
-  | "broadcastid"
-  | "description"
-  | "isPlayable"
-  | "name"
-  | "icon"
-  | "hidden"
+  | "runtime"
+  | "lifetime"
+  | "firstday"
+  | "weekdays"
+  | "priority"
+  | "startmargin"
+  | "endmargin"
+  | "state"
+  | "file"
+  | "directory"
+  | "preventduplicateepisodes"
+  | "startanytime"
+  | "endanytime"
+  | "epgsearchstring"
+  | "fulltextepgsearch"
+  | "recordinggroup"
+  | "maxrecordings"
+  | "epguid"
+  | "isreadonly"
+  | "isreminder"
   | "clientid"
-  | "version"
-  | "capabilities"
-  | "recordingid"
-  | "filepath";
+  | "broadcastid";
 
 /**
  * PVRProperties ($ref: "PVR.Properties")
  * Represents a set of properties for PVR methods.
  */
-export interface PVRProperties {
-  // Define properties as per kodi.json
-  [key: string]: any;
+export type PVRProperties = Partial<Record<PVRProperty, boolean | number | string | any>>;
+
+/** Property name unions for PVR field sets (from kodi.json)
+ * - PVR.Fields.Broadcast
+ * - PVR.Fields.Channel
+ * - PVR.Fields.Recording
+ * - PVR.Fields.Timer
+ * - PVR.Fields.Client
+ */
+export type PVRBroadcastProperty =
+  | "title"
+  | "plot"
+  | "plotoutline"
+  | "starttime"
+  | "endtime"
+  | "runtime"
+  | "progress"
+  | "progresspercentage"
+  | "genre"
+  | "episodename"
+  | "episodenum"
+  | "episodepart"
+  | "firstaired"
+  | "hastimer"
+  | "isactive"
+  | "parentalrating"
+  | "wasactive"
+  | "thumbnail"
+  | "rating"
+  | "originaltitle"
+  | "cast"
+  | "director"
+  | "writer"
+  | "year"
+  | "imdbnumber"
+  | "hastimerrule"
+  | "hasrecording"
+  | "recording"
+  | "isseries"
+  | "isplayable"
+  | "clientid"
+  | "hasreminder"
+  | "seasonnum";
+
+export const pvrBroadcastProps = [
+  "title",
+  "plot",
+  "plotoutline",
+  "starttime",
+  "endtime",
+  "runtime",
+  "progress",
+  "progresspercentage",
+  "genre",
+  "episodename",
+  "episodenum",
+  "episodepart",
+  "firstaired",
+  "hastimer",
+  "isactive",
+  "parentalrating",
+  "wasactive",
+  "thumbnail",
+  "rating",
+  "originaltitle",
+  "cast",
+  "director",
+  "writer",
+  "year",
+  "imdbnumber",
+  "hastimerrule",
+  "hasrecording",
+  "recording",
+  "isseries",
+  "isplayable",
+  "clientid",
+  "hasreminder",
+  "seasonnum",
+] as const;
+
+export function makePvrBroadcastProps<P extends readonly PVRBroadcastProperty[]>(...p: P): P {
+  return p;
 }
+export const asPvrBroadcastProps = makePvrBroadcastProps;
+
+export type PVRChannelProperty =
+  | "thumbnail"
+  | "channeltype"
+  | "hidden"
+  | "locked"
+  | "channel"
+  | "lastplayed"
+  | "broadcastnow"
+  | "broadcastnext"
+  | "uniqueid"
+  | "icon"
+  | "channelnumber"
+  | "subchannelnumber"
+  | "isrecording"
+  | "hasarchive"
+  | "clientid";
+
+export const pvrChannelProps = [
+  "thumbnail",
+  "channeltype",
+  "hidden",
+  "locked",
+  "channel",
+  "lastplayed",
+  "broadcastnow",
+  "broadcastnext",
+  "uniqueid",
+  "icon",
+  "channelnumber",
+  "subchannelnumber",
+  "isrecording",
+  "hasarchive",
+  "clientid",
+] as const;
+
+export function makePvrChannelProps<P extends readonly PVRChannelProperty[]>(...p: P): P {
+  return p;
+}
+export const asPvrChannelProps = makePvrChannelProps;
+
+export type PVRRecordingProperty =
+  | "title"
+  | "plot"
+  | "plotoutline"
+  | "genre"
+  | "playcount"
+  | "resume"
+  | "channel"
+  | "starttime"
+  | "endtime"
+  | "runtime"
+  | "lifetime"
+  | "icon"
+  | "art"
+  | "streamurl"
+  | "file"
+  | "directory"
+  | "radio"
+  | "isdeleted"
+  | "epgeventid"
+  | "channeluid"
+  | "season"
+  | "episode"
+  | "showtitle"
+  | "clientid";
+
+export const pvrRecordingProps = [
+  "title",
+  "plot",
+  "plotoutline",
+  "genre",
+  "playcount",
+  "resume",
+  "channel",
+  "starttime",
+  "endtime",
+  "runtime",
+  "lifetime",
+  "icon",
+  "art",
+  "streamurl",
+  "file",
+  "directory",
+  "radio",
+  "isdeleted",
+  "epgeventid",
+  "channeluid",
+  "season",
+  "episode",
+  "showtitle",
+  "clientid",
+] as const;
+
+export function makePvrRecordingProps<P extends readonly PVRRecordingProperty[]>(...p: P): P {
+  return p;
+}
+export const asPvrRecordingProps = makePvrRecordingProps;
+
+export type PVRTimerProperty =
+  | "title"
+  | "summary"
+  | "channelid"
+  | "isradio"
+  | "istimerrule"
+  | "ismanual"
+  | "starttime"
+  | "endtime"
+  | "runtime"
+  | "lifetime"
+  | "firstday"
+  | "weekdays"
+  | "priority"
+  | "startmargin"
+  | "endmargin"
+  | "state"
+  | "file"
+  | "directory"
+  | "preventduplicateepisodes"
+  | "startanytime"
+  | "endanytime"
+  | "epgsearchstring"
+  | "fulltextepgsearch"
+  | "recordinggroup"
+  | "maxrecordings"
+  | "epguid"
+  | "isreadonly"
+  | "isreminder"
+  | "clientid"
+  | "broadcastid";
+
+export const pvrTimerProps = [
+  "title",
+  "summary",
+  "channelid",
+  "isradio",
+  "istimerrule",
+  "ismanual",
+  "starttime",
+  "endtime",
+  "runtime",
+  "lifetime",
+  "firstday",
+  "weekdays",
+  "priority",
+  "startmargin",
+  "endmargin",
+  "state",
+  "file",
+  "directory",
+  "preventduplicateepisodes",
+  "startanytime",
+  "endanytime",
+  "epgsearchstring",
+  "fulltextepgsearch",
+  "recordinggroup",
+  "maxrecordings",
+  "epguid",
+  "isreadonly",
+  "isreminder",
+  "clientid",
+  "broadcastid",
+] as const;
+
+export function makePvrTimerProps<P extends readonly PVRTimerProperty[]>(...p: P): P {
+  return p;
+}
+export const asPvrTimerProps = makePvrTimerProps;
+
+export type PVRClientProperty =
+  | "addonid"
+  | "supportstv"
+  | "supportsradio"
+  | "supportsepg"
+  | "supportsrecordings"
+  | "supportstimers"
+  | "supportschannelgroups"
+  | "supportschannelscan";
+
+export const pvrClientProps = [
+  "addonid",
+  "supportstv",
+  "supportsradio",
+  "supportsepg",
+  "supportsrecordings",
+  "supportstimers",
+  "supportschannelgroups",
+  "supportschannelscan",
+] as const;
+
+export function makePvrClientProps<P extends readonly PVRClientProperty[]>(...p: P): P {
+  return p;
+}
+export const asPvrClientProps = makePvrClientProps;
 
 /**
  * PVRAddTimerParams ($ref: "PVR.AddTimer.Params")
@@ -206,7 +533,7 @@ export interface PVRGetBroadcastsParams {
   channelid?: number; // Optional ID of the channel to filter broadcasts
   starttime?: string; // Optional start time in ISO 8601 format
   endtime?: string; // Optional end time in ISO 8601 format
-  properties?: PVRProperty[]; // Optional list of properties to retrieve
+  properties?: PVRBroadcastProperty[]; // Optional list of properties to retrieve
   limits?: ListLimits; // Optional pagination limits
   sort?: ListSort; // Optional sorting options
 }
@@ -253,7 +580,7 @@ export type PVRGetChannelGroupDetailsResponse = ChannelGroupDetails;
  * Parameters for the GetChannelGroups method.
  */
 export interface PVRGetChannelGroupsParams {
-  properties?: PVRProperty[]; // Optional list of properties to retrieve
+  properties?: PVRChannelProperty[]; // Optional list of properties to retrieve
   limits?: ListLimits; // Optional pagination limits
   sort?: ListSort; // Optional sorting options
 }
@@ -273,7 +600,7 @@ export interface PVRGetChannelGroupsResponse {
  */
 export interface PVRGetChannelsParams {
   channelgroupid?: number; // Optional ID of the channel group to filter channels
-  properties?: PVRProperty[]; // Optional list of properties to retrieve
+  properties?: PVRChannelProperty[]; // Optional list of properties to retrieve
   limits?: ListLimits; // Optional pagination limits
   sort?: ListSort; // Optional sorting options
 }
@@ -300,7 +627,7 @@ export interface PVRGetClientsResponse {
  * Parameters for the GetProperties method.
  */
 export interface PVRGetPropertiesParams {
-  properties: PVRProperty[]; // List of properties to retrieve
+  properties?: PVRProperty[]; // List of properties to retrieve
 }
 
 /**
@@ -328,7 +655,7 @@ export type PVRGetRecordingDetailsResponse = RecordingDetails;
  * Parameters for the GetRecordings method.
  */
 export interface PVRGetRecordingsParams {
-  properties?: PVRProperty[]; // Optional list of properties to retrieve
+  properties?: PVRRecordingProperty[]; // Optional list of properties to retrieve
   limits?: ListLimits; // Optional pagination limits
   sort?: ListSort; // Optional sorting options
 }
@@ -361,7 +688,7 @@ export type PVRGetTimerDetailsResponse = Timer;
  * Parameters for the GetTimers method.
  */
 export interface PVRGetTimersParams {
-  properties?: PVRProperty[]; // Optional list of properties to retrieve
+  properties?: PVRTimerProperty[]; // Optional list of properties to retrieve
   limits?: ListLimits; // Optional pagination limits
   sort?: ListSort; // Optional sorting options
 }

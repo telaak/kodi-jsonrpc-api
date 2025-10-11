@@ -5,7 +5,7 @@
  * PlaylistId ($ref: "Playlist.Id")
  * Represents the unique identifier for a playlist.
  */
-export type PlaylistId = string;
+// PlaylistId reduced to primitive number — use `number` directly where needed.
 
 /**
  * PlaylistItem ($ref: "Playlist.Item")
@@ -58,15 +58,20 @@ export interface PlaylistMediaItemOptions {
 
 /**
  * PlaylistPosition ($ref: "Playlist.Position")
- * Represents the position of an item within a playlist.
+ * Use primitive `number` for positions within a playlist.
  */
-export type PlaylistPosition = number;
 
 /**
  * PlaylistType ($ref: "Playlist.Type")
  * Enum for types of playlists.
  */
-export type PlaylistType = "video" | "audio" | "musicvideo";
+export type PlaylistType = "unknown" | "video" | "audio" | "picture" | "mixed";
+
+/**
+ * PlaylistPropertyName ($ref: "Playlist.Property.Name")
+ * Allowed property names for playlist operations.
+ */
+export type PlaylistPropertyName = "type" | "size";
 
 /**
  * PlaylistSwapOptions ($ref: "Playlist.SwapOptions")
@@ -76,17 +81,17 @@ export interface PlaylistSwapOptions {
   /**
    * The ID of the playlist.
    */
-  playlistid: PlaylistId;
+  playlistid: number;
 
   /**
    * The first position to swap.
    */
-  position1: PlaylistPosition;
+  position1: number;
 
   /**
    * The second position to swap.
    */
-  position2: PlaylistPosition;
+  position2: number;
 }
 
 /**
@@ -94,8 +99,8 @@ export interface PlaylistSwapOptions {
  * Parameters for the GetItems method.
  */
 export interface PlaylistGetItemsParams {
-  playlistid: PlaylistId; // ID of the playlist
-  properties?: string[]; // Optional list of properties to retrieve for each item
+  playlistid: number; // ID of the playlist
+  properties?: PlaylistPropertyName[]; // Optional list of properties to retrieve for each item
   limits?: ListLimits; // Optional limits for pagination
   sort?: ListSort; // Optional sorting options
 }
@@ -122,7 +127,7 @@ export interface PlaylistGetPlaylistsResponse {
  * Represents the details of a playlist.
  */
 export interface PlaylistDetails {
-  playlistid: PlaylistId; // Unique identifier for the playlist
+  playlistid: number; // Unique identifier for the playlist
   type: PlaylistType; // Type of the playlist
   name: string; // Name of the playlist
 }
@@ -132,25 +137,23 @@ export interface PlaylistDetails {
  * Parameters for the GetProperties method.
  */
 export interface PlaylistGetPropertiesParams {
-  playlistid: PlaylistId; // ID of the playlist
-  properties: string[]; // List of properties to retrieve
+  playlistid: number; // ID of the playlist
+  properties: PlaylistPropertyName[]; // List of properties to retrieve
 }
 
 /**
  * PlaylistGetPropertiesResponse ($ref: "Playlist.GetProperties.Response")
  * Response structure for the GetProperties method.
  */
-export interface PlaylistGetPropertiesResponse {
-  [key: string]: any; // Dynamic properties based on requested properties
-}
+export type PlaylistGetPropertiesResponse = Partial<Record<PlaylistPropertyName, any>>;
 
 /**
  * PlaylistInsertParams ($ref: "Playlist.Insert.Params")
  * Parameters for the Insert method.
  */
 export interface PlaylistInsertParams {
-  playlistid: PlaylistId; // ID of the playlist
-  position: PlaylistPosition; // Position at which to insert the item
+  playlistid: number; // ID of the playlist
+  position: number; // Position at which to insert the item
   item: PlaylistMediaItem | PlaylistMediaItem[]; // Item(s) to insert
 }
 
@@ -159,8 +162,8 @@ export interface PlaylistInsertParams {
  * Parameters for the Remove method.
  */
 export interface PlaylistRemoveParams {
-  playlistid: PlaylistId; // ID of the playlist
-  position: PlaylistPosition; // Position of the item to remove
+  playlistid: number; // ID of the playlist
+  position: number; // Position of the item to remove
 }
 
 /**
@@ -168,9 +171,9 @@ export interface PlaylistRemoveParams {
  * Parameters for the Swap method.
  */
 export interface PlaylistSwapParams {
-  playlistid: PlaylistId; // ID of the playlist
-  position1: PlaylistPosition; // First position to swap
-  position2: PlaylistPosition; // Second position to swap
+  playlistid: number; // ID of the playlist
+  position1: number; // First position to swap
+  position2: number; // Second position to swap
 }
 
 /**
@@ -199,4 +202,29 @@ export interface ListLimitsReturned {
 export interface ListSort {
   method: string; // Field by which to sort
   order: "ascending" | "descending"; // Order of sorting
+}
+
+/**
+ * Exported playlist property constants for ergonomic usage.
+ * Example: import { playlistProps, makePlaylistProps } from "../types/playlist";
+ */
+export const playlistProps = ["type", "size"] as const;
+
+/**
+ * Create a typed readonly tuple of PlaylistPropertyName values.
+ * Usage: makePlaylistProps("type", "size") -> readonly ["type","size"]
+ */
+export function makePlaylistProps<P extends readonly PlaylistPropertyName[]>(
+  ...props: P
+): P {
+  return props;
+}
+
+/**
+ * Cast an existing array to a readonly tuple of PlaylistPropertyName for inference.
+ */
+export function asPlaylistProps<P extends readonly PlaylistPropertyName[]>(
+  props: P
+): P {
+  return props;
 }

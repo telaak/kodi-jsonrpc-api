@@ -78,12 +78,16 @@ export class KodiSettingsNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to a list of setting categories.
    */
-  async GetCategories(
+  async GetCategories<P extends readonly ("settings")[] | undefined>(
     level?: SettingLevel,
     section?: string,
-    properties?: string[]
+    properties?: P
   ): Promise<SettingsGetCategoriesResponse> {
-    const params: SettingsGetCategoriesParams = { level, section, properties };
+    const params: SettingsGetCategoriesParams = {
+      level,
+      section,
+      properties: properties as unknown as import("../types/settings").SettingsGetCategoriesProperty[] | undefined,
+    };
     return this.sendMessage("Settings.GetCategories", params);
   }
 
@@ -94,11 +98,11 @@ export class KodiSettingsNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to a list of setting sections.
    */
-  async GetSections(
+  async GetSections<P extends readonly ("categories")[] | undefined>(
     level?: SettingLevel,
-    properties?: string[]
+    properties?: P
   ): Promise<SettingsGetSectionsResponse> {
-    const params: SettingsGetSectionsParams = { level, properties };
+    const params: SettingsGetSectionsParams = { level, properties: properties as unknown as import("../types/settings").SettingsGetSectionsProperty[] | undefined };
     return this.sendMessage("Settings.GetSections", params);
   }
 

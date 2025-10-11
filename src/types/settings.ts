@@ -5,16 +5,17 @@
  * SettingLevel ($ref: "Setting.Level")
  * Enum for setting levels.
  */
-export type SettingLevel = "standard" | "advanced" | "expert";
+export type SettingLevel = "basic" | "standard" | "advanced" | "expert";
 
 /**
  * SettingCategory ($ref: "Setting.Details.Category")
  * Represents a setting category.
  */
 export interface SettingCategory {
-  id: string; // Unique identifier for the category
-  name: string; // Name of the category
-  // Additional properties can be added here as defined in kodi.json
+  id: string;
+  label: string;
+  help?: string;
+  groups?: SettingGroup[];
 }
 
 /**
@@ -22,28 +23,38 @@ export interface SettingCategory {
  * Represents a setting section.
  */
 export interface SettingSection {
-  id: string; // Unique identifier for the section
-  name: string; // Name of the section
-  // Additional properties can be added here as defined in kodi.json
+  id: string;
+  label: string;
+  help?: string;
+  categories?: SettingCategory[];
+}
+
+export interface SettingGroup {
+  id: string;
+  settings: Setting[];
 }
 
 /**
  * SettingName ($ref: "Setting.Property.Name")
  * Enum for setting property names.
  */
-export type SettingName = string; // Replace with specific strings if available
+// Setting names are dynamic in many addons; keep as string but document the shape.
+export type SettingName = string;
 
 /**
  * SettingValue ($ref: "Setting.Value.Extended")
  * Represents the value of a setting.
  */
-export type SettingValue = boolean | string | number; // Extend as necessary based on kodi.json
+// Follow kodi.json Setting.Value.Extended (boolean | integer | number | string | Setting.Value.List)
+export type SettingValue = boolean | number | string | SettingValueList | null;
+
+export type SettingValueList = Array<boolean | number | string>;
 
 /**
  * SkinSettingValue ($ref: "Skin.Setting.Value")
  * Represents the value of a skin setting.
  */
-export type SkinSettingValue = boolean | string | number; // Extend as necessary based on kodi.json
+export type SkinSettingValue = boolean | number | string | null;
 
 /**
  * SettingsGetCategoriesParams ($ref: "Settings.GetCategories.Params")
@@ -52,7 +63,7 @@ export type SkinSettingValue = boolean | string | number; // Extend as necessary
 export interface SettingsGetCategoriesParams {
   level?: SettingLevel; // Optional filter by setting level
   section?: string; // Optional filter by section
-  properties?: string[]; // Optional list of properties to retrieve
+  properties?: SettingsGetCategoriesProperty[]; // Optional list of properties to retrieve
 }
 
 /**
@@ -69,8 +80,22 @@ export interface SettingsGetCategoriesResponse {
  */
 export interface SettingsGetSectionsParams {
   level?: SettingLevel; // Optional filter by setting level
-  properties?: string[]; // Optional list of properties to retrieve
+  properties?: SettingsGetSectionsProperty[]; // Optional list of properties to retrieve
 }
+
+export type SettingsGetCategoriesProperty = "settings";
+export const settingsGetCategoriesProps = ["settings"] as const;
+export function makeSettingsGetCategoriesProps<P extends readonly SettingsGetCategoriesProperty[]>(...p: P): P {
+  return p;
+}
+export const asSettingsGetCategoriesProps = makeSettingsGetCategoriesProps;
+
+export type SettingsGetSectionsProperty = "categories";
+export const settingsGetSectionsProps = ["categories"] as const;
+export function makeSettingsGetSectionsProps<P extends readonly SettingsGetSectionsProperty[]>(...p: P): P {
+  return p;
+}
+export const asSettingsGetSectionsProps = makeSettingsGetSectionsProps;
 
 /**
  * SettingsGetSectionsResponse ($ref: "Settings.GetSections.Response")
@@ -120,13 +145,121 @@ export interface SettingsGetSettingsResponse {
  * Setting ($ref: "Setting.Details.Setting")
  * Represents a setting.
  */
-export interface Setting {
-  id: string; // Unique identifier for the setting
-  name: string; // Name of the setting
-  type: string; // Type of the setting (e.g., 'boolean', 'string')
-  value: SettingValue; // Current value of the setting
-  // Additional properties can be added here as defined in kodi.json
+// Minimal representation of Setting.Details.Setting and its common base
+export interface SettingBase {
+  id: string;
+  label: string;
+  help?: string;
+  type: "boolean" | "integer" | "number" | "string" | "action" | "list" | "path" | "addon" | "date" | "time";
+  enabled: boolean;
+  level: SettingLevel;
+  parent?: string;
+  control?: SettingControl;
 }
+
+/** Controls as defined in Setting.Details.Control */
+export type SettingControl =
+  | ControlCheckmark
+  | ControlSpinner
+  | ControlEdit
+  | ControlButton
+  | ControlList
+  | ControlSlider
+  | ControlRange
+  | ControlLabel
+  | ControlBase;
+
+export interface ControlBase {
+  delayed: boolean;
+  format: string;
+  type: string;
+}
+
+export interface ControlCheckmark extends ControlBase {
+  format: "boolean";
+  type: "toggle";
+}
+
+export interface ControlSpinner extends ControlBase {
+  format: string;
+  minimumlabel?: string;
+  formatlabel?: string;
+  type: "spinner";
+}
+
+export interface ControlEdit extends ControlBase {
+  hidden: boolean;
+  verifynewvalue: boolean;
+  type: "edit";
+}
+
+export interface ControlButton extends ControlBase {
+  type: "button";
+}
+
+export interface ControlList extends ControlBase {
+  multiselect: boolean;
+  type: "list";
+}
+
+export interface ControlSlider extends ControlBase {
+  formatlabel: string;
+  popup: boolean;
+  type: "slider";
+}
+
+export interface ControlRange extends ControlBase {
+  formatlabel: string;
+  formatvalue: string;
+  type: "range";
+}
+
+export interface ControlLabel extends ControlBase {
+  format: "string";
+  type: "label";
+}
+
+export interface SettingBool extends SettingBase {
+  type: "boolean";
+  default: boolean;
+  value: boolean;
+}
+
+export interface SettingInt extends SettingBase {
+  type: "integer";
+  default: number;
+  minimum?: number;
+  maximum?: number;
+  step?: number;
+  value: number;
+}
+
+export interface SettingNumber extends SettingBase {
+  type: "number";
+  default: number;
+  minimum: number;
+  maximum: number;
+  step: number;
+  value: number;
+}
+
+export interface SettingString extends SettingBase {
+  type: "string" | "date" | "time" | "path" | "addon";
+  default: string;
+  allowempty: boolean;
+  value: string;
+}
+
+export interface SettingList extends SettingBase {
+  type: "list";
+  default: SettingValueList;
+  value: SettingValueList;
+  definition: Setting; // nested definition (required)
+  delimiter: string;
+  elementtype: SettingBase["type"];
+}
+
+export type Setting = SettingBool | SettingInt | SettingNumber | SettingString | SettingList | SettingBase;
 
 /**
  * SettingsGetSkinSettingValueParams ($ref: "Settings.GetSkinSettingValue.Params")
@@ -150,11 +283,11 @@ export interface SettingsGetSkinSettingValueResponse {
  */
 export interface SettingsGetSkinSettingsResponse {
   settings: {
-    id: string; // Unique identifier for the skin setting
-    type: "boolean" | "string"; // Type of the skin setting
-    value: boolean | string; // Current value of the skin setting
+    id: string;
+    type: "boolean" | "integer" | "number" | "string";
+    value: boolean | number | string | null;
   }[];
-  skin: string; // Name of the currently used skin
+  skin: string;
 }
 
 /**

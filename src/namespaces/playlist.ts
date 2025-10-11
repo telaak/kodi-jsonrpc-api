@@ -8,13 +8,10 @@
 
 import { ISendMessage } from "..";
 import {
-  PlaylistId,
+  
   PlaylistItem,
   PlaylistMediaItem,
-  PlaylistMediaItemOptions,
-  PlaylistPosition,
-  PlaylistType,
-  PlaylistSwapOptions,
+  PlaylistPropertyName,
   PlaylistGetItemsParams,
   PlaylistGetItemsResponse,
   PlaylistGetPlaylistsResponse,
@@ -44,7 +41,7 @@ export class KodiPlaylistNamespace {
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Add(
-    playlistid: PlaylistId,
+    playlistid: number,
     item: PlaylistMediaItem | PlaylistMediaItem[]
   ): Promise<string> {
     const params: PlaylistItem = { item };
@@ -57,7 +54,7 @@ export class KodiPlaylistNamespace {
    * @param playlistid - The ID of the playlist to clear.
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async Clear(playlistid: PlaylistId): Promise<string> {
+  async Clear(playlistid: number): Promise<string> {
     return this.sendMessage("Playlist.Clear", { playlistid });
   }
 
@@ -70,15 +67,25 @@ export class KodiPlaylistNamespace {
    * @param sort - Optional sorting options.
    * @returns A promise resolving to a list of playlist items and pagination details.
    */
+  async GetItems(playlistid: number): Promise<PlaylistGetItemsResponse>;
+  async GetItems<P extends readonly PlaylistPropertyName[]>(
+    playlistid: number,
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort
+  ): Promise<{
+    items: PlaylistMediaItem[];
+    limits: ListLimitsReturned;
+  }>;
   async GetItems(
-    playlistid: PlaylistId,
-    properties?: string[],
+    playlistid: number,
+    properties?: PlaylistPropertyName[] | readonly PlaylistPropertyName[],
     limits?: ListLimits,
     sort?: ListSort
   ): Promise<PlaylistGetItemsResponse> {
     const params: PlaylistGetItemsParams = {
       playlistid,
-      properties,
+      properties: properties as PlaylistPropertyName[] | undefined,
       limits,
       sort,
     };
@@ -102,10 +109,18 @@ export class KodiPlaylistNamespace {
    * @returns A promise resolving to the requested properties and their values.
    */
   async GetProperties(
-    playlistid: PlaylistId,
+    playlistid: number,
     properties: string[]
+  ): Promise<PlaylistGetPropertiesResponse>;
+  async GetProperties<P extends readonly (keyof PlaylistDetails)[]>(
+    playlistid: number,
+    properties: P
+  ): Promise<Pick<PlaylistDetails, Extract<P[number], keyof PlaylistDetails>>>;
+  async GetProperties(
+    playlistid: number,
+    properties: string[] | readonly (keyof PlaylistDetails)[]
   ): Promise<PlaylistGetPropertiesResponse> {
-    const params: PlaylistGetPropertiesParams = { playlistid, properties };
+    const params: PlaylistGetPropertiesParams = { playlistid, properties: properties as PlaylistPropertyName[] };
     return this.sendMessage("Playlist.GetProperties", params);
   }
 
@@ -118,8 +133,8 @@ export class KodiPlaylistNamespace {
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Insert(
-    playlistid: PlaylistId,
-    position: PlaylistPosition,
+    playlistid: number,
+    position: number,
     item: PlaylistMediaItem | PlaylistMediaItem[]
   ): Promise<string> {
     const params: PlaylistInsertParams = { playlistid, position, item };
@@ -134,8 +149,8 @@ export class KodiPlaylistNamespace {
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Remove(
-    playlistid: PlaylistId,
-    position: PlaylistPosition
+    playlistid: number,
+    position: number
   ): Promise<string> {
     const params: PlaylistRemoveParams = { playlistid, position };
     return this.sendMessage("Playlist.Remove", params);
@@ -150,9 +165,9 @@ export class KodiPlaylistNamespace {
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Swap(
-    playlistid: PlaylistId,
-    position1: PlaylistPosition,
-    position2: PlaylistPosition
+    playlistid: number,
+    position1: number,
+    position2: number
   ): Promise<string> {
     const params: PlaylistSwapParams = { playlistid, position1, position2 };
     return this.sendMessage("Playlist.Swap", params);

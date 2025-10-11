@@ -42,12 +42,19 @@ export class KodiProfilesNamespace {
    * @param sort - Optional sorting options.
    * @returns A promise resolving to a list of profiles and pagination details.
    */
-  async GetProfiles(
-    properties?: string[],
+  async GetProfiles<
+    P extends readonly ("thumbnail" | "lockmode")[] | undefined
+  >(
+    properties?: P,
     limits?: ListLimits,
     sort?: ListSort
   ): Promise<ProfilesGetProfilesResponse> {
-    const params: ProfilesGetProfilesParams = { properties, limits, sort };
+    // cast to the declared runtime shape (string[] | undefined)
+    const params: ProfilesGetProfilesParams = {
+      properties: properties as unknown as Array<"thumbnail" | "lockmode"> | undefined,
+      limits,
+      sort,
+    };
     return this.sendMessage("Profiles.GetProfiles", params);
   }
 
@@ -62,8 +69,8 @@ export class KodiProfilesNamespace {
   async LoadProfile(
     profile: string,
     prompt: boolean = false,
-    password: string = ""
-  ): Promise<ProfilesLoadProfileResponse> {
+    password?: { encryption?: "none" | "md5"; value?: string } | string
+  ): Promise<string> {
     const params: ProfilesLoadProfileParams = { profile, prompt, password };
     return this.sendMessage("Profiles.LoadProfile", params);
   }

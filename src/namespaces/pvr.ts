@@ -8,14 +8,12 @@
 
 import { ISendMessage } from "..";
 import {
-  TimerId,
   Timer,
-  BroadcastDetails,
   PVRProperty,
-  PVRProperties,
-  ListLimits,
-  ListLimitsReturned,
-  ListSort,
+  PVRBroadcastProperty,
+  PVRChannelProperty,
+  PVRRecordingProperty,
+  PVRTimerProperty,
   PVRAddTimerParams,
   PVRAddTimerResponse,
   PVRDeleteTimerParams,
@@ -26,22 +24,17 @@ import {
   PVRGetBroadcastIsPlayableResponse,
   PVRGetBroadcastsParams,
   PVRGetBroadcastsResponse,
-  ChannelDetails,
   PVRGetChannelDetailsParams,
   PVRGetChannelDetailsResponse,
-  ChannelGroupDetails,
   PVRGetChannelGroupDetailsParams,
   PVRGetChannelGroupDetailsResponse,
-  ChannelGroup,
   PVRGetChannelGroupsParams,
   PVRGetChannelGroupsResponse,
   PVRGetChannelsParams,
   PVRGetChannelsResponse,
-  ClientDetails,
   PVRGetClientsResponse,
   PVRGetPropertiesParams,
   PVRGetPropertiesResponse,
-  RecordingDetails,
   PVRGetRecordingDetailsParams,
   PVRGetRecordingDetailsResponse,
   PVRGetRecordingsParams,
@@ -82,8 +75,8 @@ export class KodiPVRNamespace {
    * @param timerid - The ID of the timer to delete.
    * @returns A promise resolving to a boolean indicating success.
    */
-  async DeleteTimer(timerid: TimerId): Promise<PVRDeleteTimerResponse> {
-    const params: PVRDeleteTimerParams = { timerid };
+  async DeleteTimer(timerid: number): Promise<PVRDeleteTimerResponse> {
+    const params: PVRDeleteTimerParams = { timerid } as any;
     return this.sendMessage("PVR.DeleteTimer", params);
   }
 
@@ -119,10 +112,12 @@ export class KodiPVRNamespace {
    * @param params - The parameters to filter and paginate broadcasts.
    * @returns A promise resolving to the list of broadcasts and pagination details.
    */
-  async GetBroadcasts(
-    params: PVRGetBroadcastsParams
-  ): Promise<PVRGetBroadcastsResponse> {
-    return this.sendMessage("PVR.GetBroadcasts", params);
+  async GetBroadcasts<
+    P extends readonly PVRBroadcastProperty[] | undefined
+  >(params: Omit<PVRGetBroadcastsParams, "properties"> & { properties?: P }): Promise<PVRGetBroadcastsResponse> {
+    // cast properties to runtime shape
+    const castParams = { ...(params as any), properties: (params as any).properties as unknown as string[] | undefined } as PVRGetBroadcastsParams;
+    return this.sendMessage("PVR.GetBroadcasts", castParams);
   }
 
   /**
@@ -157,10 +152,11 @@ export class KodiPVRNamespace {
    * @param params - The parameters to filter and paginate channel groups.
    * @returns A promise resolving to the list of channel groups and pagination details.
    */
-  async GetChannelGroups(
-    params: PVRGetChannelGroupsParams
-  ): Promise<PVRGetChannelGroupsResponse> {
-    return this.sendMessage("PVR.GetChannelGroups", params);
+  async GetChannelGroups<
+    P extends readonly PVRChannelProperty[] | undefined
+  >(params: Omit<PVRGetChannelGroupsParams, "properties"> & { properties?: P }): Promise<PVRGetChannelGroupsResponse> {
+    const castParams = { ...(params as any), properties: (params as any).properties as unknown as string[] | undefined } as PVRGetChannelGroupsParams;
+    return this.sendMessage("PVR.GetChannelGroups", castParams);
   }
 
   /**
@@ -169,10 +165,11 @@ export class KodiPVRNamespace {
    * @param params - The parameters to filter and paginate channels.
    * @returns A promise resolving to the list of channels and pagination details.
    */
-  async GetChannels(
-    params: PVRGetChannelsParams
-  ): Promise<PVRGetChannelsResponse> {
-    return this.sendMessage("PVR.GetChannels", params);
+  async GetChannels<
+    P extends readonly PVRChannelProperty[] | undefined
+  >(params: Omit<PVRGetChannelsParams, "properties"> & { properties?: P }): Promise<PVRGetChannelsResponse> {
+    const castParams = { ...(params as any), properties: (params as any).properties as unknown as string[] | undefined } as PVRGetChannelsParams;
+    return this.sendMessage("PVR.GetChannels", castParams);
   }
 
   /**
@@ -190,10 +187,10 @@ export class KodiPVRNamespace {
    * @param properties - The list of properties to retrieve.
    * @returns A promise resolving to the requested properties and their values.
    */
-  async GetProperties(
-    properties: PVRProperty[]
-  ): Promise<PVRGetPropertiesResponse> {
-    const params: PVRGetPropertiesParams = { properties };
+  async GetProperties(properties: PVRProperty[]): Promise<PVRGetPropertiesResponse>;
+  async GetProperties<P extends readonly PVRProperty[] | undefined>(properties?: P): Promise<PVRGetPropertiesResponse>;
+  async GetProperties(properties?: readonly PVRProperty[] | PVRProperty[]): Promise<PVRGetPropertiesResponse> {
+    const params: PVRGetPropertiesParams = { properties: properties as unknown as PVRProperty[] | undefined };
     return this.sendMessage("PVR.GetProperties", params);
   }
 
@@ -216,10 +213,11 @@ export class KodiPVRNamespace {
    * @param params - The parameters to filter and paginate recordings.
    * @returns A promise resolving to the list of recordings and pagination details.
    */
-  async GetRecordings(
-    params: PVRGetRecordingsParams
-  ): Promise<PVRGetRecordingsResponse> {
-    return this.sendMessage("PVR.GetRecordings", params);
+  async GetRecordings<
+    P extends readonly PVRRecordingProperty[] | undefined
+  >(params: Omit<PVRGetRecordingsParams, "properties"> & { properties?: P }): Promise<PVRGetRecordingsResponse> {
+    const castParams = { ...(params as any), properties: (params as any).properties as unknown as string[] | undefined } as PVRGetRecordingsParams;
+    return this.sendMessage("PVR.GetRecordings", castParams);
   }
 
   /**
@@ -228,8 +226,8 @@ export class KodiPVRNamespace {
    * @param timerid - The ID of the timer.
    * @returns A promise resolving to the Timer object.
    */
-  async GetTimerDetails(timerid: TimerId): Promise<PVRGetTimerDetailsResponse> {
-    const params: PVRGetTimerDetailsParams = { timerid };
+  async GetTimerDetails(timerid: number): Promise<PVRGetTimerDetailsResponse> {
+    const params: PVRGetTimerDetailsParams = { timerid } as any;
     return this.sendMessage("PVR.GetTimerDetails", params);
   }
 
@@ -239,8 +237,11 @@ export class KodiPVRNamespace {
    * @param params - The parameters to filter and paginate timers.
    * @returns A promise resolving to the list of timers and pagination details.
    */
-  async GetTimers(params: PVRGetTimersParams): Promise<PVRGetTimersResponse> {
-    return this.sendMessage("PVR.GetTimers", params);
+  async GetTimers<
+    P extends readonly PVRTimerProperty[] | undefined
+  >(params: Omit<PVRGetTimersParams, "properties"> & { properties?: P }): Promise<PVRGetTimersResponse> {
+    const castParams = { ...(params as any), properties: (params as any).properties as unknown as string[] | undefined } as PVRGetTimersParams;
+    return this.sendMessage("PVR.GetTimers", castParams);
   }
 
   /**
@@ -283,8 +284,8 @@ export class KodiPVRNamespace {
    * @param timerid - The ID of the timer to toggle.
    * @returns A promise resolving to a boolean indicating if the toggle was successful.
    */
-  async ToggleTimer(timerid: TimerId): Promise<PVRToggleTimerResponse> {
-    const params: PVRToggleTimerParams = { timerid };
+  async ToggleTimer(timerid: number): Promise<PVRToggleTimerResponse> {
+    const params: PVRToggleTimerParams = { timerid } as any;
     return this.sendMessage("PVR.ToggleTimer", params);
   }
 }

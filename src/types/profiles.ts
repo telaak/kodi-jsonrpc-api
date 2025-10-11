@@ -6,11 +6,10 @@
  * Represents the details of a user profile.
  */
 export interface ProfileDetails {
-  id: string; // Unique identifier for the profile
-  name: string; // Name of the profile
-  thumbnail: string; // URL to the profile's thumbnail image
-  theme: string; // Theme applied to the profile
-  // Additional properties can be added here as defined in kodi.json
+  // Item.Details.Base provides `label` — keep that shape and add profile-specific fields
+  label?: string;
+  lockmode?: number; // Lock mode as defined in kodi.json
+  thumbnail?: string; // URL to the profile's thumbnail image
 }
 
 /**
@@ -18,7 +17,7 @@ export interface ProfileDetails {
  * Parameters for the GetProfiles method.
  */
 export interface ProfilesGetProfilesParams {
-  properties?: string[]; // Optional list of properties to retrieve for each profile
+  properties?: ProfilesPropertyName[]; // Optional list of properties to retrieve for each profile (Profiles.Fields.Profile)
   limits?: ListLimits; // Optional limits for pagination
   sort?: ListSort; // Optional sorting options
 }
@@ -39,15 +38,35 @@ export interface ProfilesGetProfilesResponse {
 export interface ProfilesLoadProfileParams {
   profile: string; // Name of the profile to load
   prompt?: boolean; // Whether to prompt for a password if required
-  password?: string; // Password for the profile, if applicable
+  password?: { encryption?: "none" | "md5"; value?: string } | string; // Accept either the Profiles.Password object or raw string
 }
+
+/** Property names available on Profiles.Fields.Profile */
+export type ProfilesPropertyName = "thumbnail" | "lockmode";
+
+/** Typed const list of available profile properties */
+export const profilesProps = ["thumbnail", "lockmode"] as const;
+
+/**
+ * Create a readonly tuple of profile property names preserving literal types.
+ * Example: makeProfilesProps("thumbnail", "lockmode") -> readonly ["thumbnail","lockmode"]
+ */
+export function makeProfilesProps<P extends readonly ProfilesPropertyName[]>(
+  ...props: P
+): P {
+  return props;
+}
+
+/** Alias for makeProfilesProps */
+export const asProfilesProps = makeProfilesProps;
 
 /**
  * ProfilesLoadProfileResponse ($ref: "Profiles.LoadProfile.Response")
  * Response structure for the LoadProfile method.
  */
 export interface ProfilesLoadProfileResponse {
-  success: boolean; // Indicates whether the profile was loaded successfully
+  // The Kodi API returns a string on success per kodi.json; this type kept for compatibility but namespace will return string
+  success?: boolean;
 }
 
 /**
