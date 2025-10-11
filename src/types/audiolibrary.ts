@@ -229,7 +229,7 @@ export interface SourcesResponse {
  */
 export interface PVRProperties {
   // Define properties as per kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -292,7 +292,7 @@ export interface SetSongDetailsParams {
  * Represents the response structure for the GetProperties method.
  */
 export interface GetPropertiesResponse {
-  [key: string]: any; // Dynamic properties based on requested AudioProperty
+  [key: string]: unknown; // Dynamic properties based on requested AudioProperty
 }
 
 /**
@@ -350,7 +350,7 @@ export type GetArtistsFilter =
  */
 export interface ListFilterAlbums {
   // Define specific filter properties based on kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -359,7 +359,7 @@ export interface ListFilterAlbums {
  */
 export interface ListFilterArtists {
   // Define specific filter properties based on kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

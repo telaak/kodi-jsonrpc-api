@@ -98,13 +98,18 @@ export class KodiVideoLibraryNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to the EpisodeDetails object.
    */
+  async GetEpisodeDetails(episodeid: EpisodeId): Promise<EpisodeDetailsResponse>;
+  async GetEpisodeDetails<P extends readonly (keyof EpisodeDetails)[]>(
+    episodeid: EpisodeId,
+    properties: P
+  ): Promise<{ episodetails: Pick<EpisodeDetails, Extract<P[number], keyof EpisodeDetails>> }>
   async GetEpisodeDetails(
     episodeid: EpisodeId,
-    properties?: VideoProperty[]
+    properties?: VideoProperty[] | readonly (keyof EpisodeDetails)[]
   ): Promise<EpisodeDetailsResponse> {
     return this.sendMessage("VideoLibrary.GetEpisodeDetails", {
       episodeid,
-      properties,
+      properties: properties as VideoProperty[] | undefined,
     });
   }
 
@@ -119,10 +124,19 @@ export class KodiVideoLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the EpisodesResponse object.
    */
+  async GetEpisodes(tvshowid: TVShowId, season?: number): Promise<EpisodesResponse>;
+  async GetEpisodes<P extends readonly (keyof EpisodeDetails)[]>(
+    tvshowid: TVShowId,
+    season: number | undefined,
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: any
+  ): Promise<{ episodes: Array<Pick<EpisodeDetails, Extract<P[number], keyof EpisodeDetails>>>; limits: ListLimitsReturned }>;
   async GetEpisodes(
     tvshowid: TVShowId,
     season?: number,
-    properties?: VideoProperty[],
+    properties?: VideoProperty[] | readonly (keyof EpisodeDetails)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: any // Define a specific type if available
@@ -130,7 +144,7 @@ export class KodiVideoLibraryNamespace {
     const params: GetEpisodesParams = {
       tvshowid,
       season,
-      properties,
+      properties: properties as VideoProperty[] | undefined,
       limits,
       sort,
       filter,
@@ -158,11 +172,16 @@ export class KodiVideoLibraryNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to the MovieDetails object.
    */
+  async GetMovieDetails(movieid: MovieId): Promise<MovieDetailsResponse>;
+  async GetMovieDetails<P extends readonly (keyof MovieDetails)[]>(
+    movieid: MovieId,
+    properties: P
+  ): Promise<{ moviedetails: Pick<MovieDetails, Extract<P[number], keyof MovieDetails>> }>;
   async GetMovieDetails(
     movieid: MovieId,
-    properties?: VideoProperty[]
+    properties?: VideoProperty[] | readonly (keyof MovieDetails)[]
   ): Promise<MovieDetailsResponse> {
-    const params: GetMovieDetailsParams = { movieid, properties };
+  const params: GetMovieDetailsParams = { movieid, properties: properties as VideoProperty[] | undefined };
     return this.sendMessage("VideoLibrary.GetMovieDetails", params);
   }
 
@@ -175,13 +194,20 @@ export class KodiVideoLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the MoviesResponse object.
    */
+  async GetMovies(): Promise<MoviesResponse>;
+  async GetMovies<P extends readonly (keyof MovieDetails)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: ListFilterMovies
+  ): Promise<{ movies: Array<Pick<MovieDetails, Extract<P[number], keyof MovieDetails>>>; limits: ListLimitsReturned }>;
   async GetMovies(
-    properties?: VideoProperty[],
+    properties?: VideoProperty[] | readonly (keyof MovieDetails)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: ListFilterMovies
   ): Promise<MoviesResponse> {
-    const params: GetMoviesParams = { properties, limits, sort, filter };
+  const params: GetMoviesParams = { properties: properties as VideoProperty[] | undefined, limits, sort, filter };
     const response = await this.sendMessage("VideoLibrary.GetMovies", params);
     return {
       movies: response.movies,
@@ -196,11 +222,16 @@ export class KodiVideoLibraryNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to the MusicVideoDetails object.
    */
+  async GetMusicVideoDetails(musicvideoid: MusicVideoId): Promise<MusicVideoDetailsResponse>;
+  async GetMusicVideoDetails<P extends readonly (keyof MusicVideoDetails)[]>(
+    musicvideoid: MusicVideoId,
+    properties: P
+  ): Promise<{ musicvideodetails: Pick<MusicVideoDetails, Extract<P[number], keyof MusicVideoDetails>> }>;
   async GetMusicVideoDetails(
     musicvideoid: MusicVideoId,
-    properties?: VideoProperty[]
+    properties?: VideoProperty[] | readonly (keyof MusicVideoDetails)[]
   ): Promise<MusicVideoDetailsResponse> {
-    const params: GetMusicVideoDetailsParams = { musicvideoid, properties };
+  const params: GetMusicVideoDetailsParams = { musicvideoid, properties: properties as VideoProperty[] | undefined };
     return this.sendMessage("VideoLibrary.GetMusicVideoDetails", params);
   }
 
@@ -213,8 +244,15 @@ export class KodiVideoLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the MusicVideosResponse object.
    */
+  async GetMusicVideos(): Promise<MusicVideosResponse>;
+  async GetMusicVideos<P extends readonly (keyof MusicVideoDetails)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: ListFilterMusicVideos
+  ): Promise<{ musicvideos: Array<Pick<MusicVideoDetails, Extract<P[number], keyof MusicVideoDetails>>>; limits: ListLimitsReturned }>;
   async GetMusicVideos(
-    properties?: VideoProperty[],
+    properties?: VideoProperty[] | readonly (keyof MusicVideoDetails)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: ListFilterMusicVideos
@@ -292,11 +330,16 @@ export class KodiVideoLibraryNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to the TVShowDetails object.
    */
+  async GetTVShowDetails(tvshowid: TVShowId): Promise<TVShowDetailsResponse>;
+  async GetTVShowDetails<P extends readonly (keyof TVShowDetails)[]>(
+    tvshowid: TVShowId,
+    properties: P
+  ): Promise<{ tvshowdetails: Pick<TVShowDetails, Extract<P[number], keyof TVShowDetails>> }>;
   async GetTVShowDetails(
     tvshowid: TVShowId,
-    properties?: VideoProperty[]
+    properties?: VideoProperty[] | readonly (keyof TVShowDetails)[]
   ): Promise<TVShowDetailsResponse> {
-    const params: GetTVShowDetailsParams = { tvshowid, properties };
+  const params: GetTVShowDetailsParams = { tvshowid, properties: properties as VideoProperty[] | undefined };
     return this.sendMessage("VideoLibrary.GetTVShowDetails", params);
   }
 
@@ -309,8 +352,15 @@ export class KodiVideoLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the TVShowsResponse object.
    */
+  async GetTVShows(): Promise<TVShowsResponse>;
+  async GetTVShows<P extends readonly (keyof TVShowDetails)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: ListFilterTVShows
+  ): Promise<{ tvshows: Array<Pick<TVShowDetails, Extract<P[number], keyof TVShowDetails>>>; limits: ListLimitsReturned }>;
   async GetTVShows(
-    properties?: VideoProperty[],
+    properties?: VideoProperty[] | readonly (keyof TVShowDetails)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: ListFilterTVShows
@@ -344,11 +394,16 @@ export class KodiVideoLibraryNamespace {
    * @param properties - Optional list of properties to retrieve.
    * @returns A promise resolving to the VideoDetails object.
    */
+  async GetVideoDetails(videoid: string): Promise<VideoDetailsResponse>;
+  async GetVideoDetails<P extends readonly (keyof VideoDetails)[]>(
+    videoid: string,
+    properties: P
+  ): Promise<{ videodetails: Pick<VideoDetails, Extract<P[number], keyof VideoDetails>> }>;
   async GetVideoDetails(
     videoid: string,
-    properties?: VideoProperty[]
+    properties?: VideoProperty[] | readonly (keyof VideoDetails)[]
   ): Promise<VideoDetailsResponse> {
-    const params: GetVideoDetailsParams = { videoid, properties };
+  const params: GetVideoDetailsParams = { videoid, properties: properties as VideoProperty[] | undefined };
     return this.sendMessage("VideoLibrary.GetVideoDetails", params);
   }
 

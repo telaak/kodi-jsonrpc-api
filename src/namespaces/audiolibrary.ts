@@ -204,8 +204,18 @@ export class KodiAudioLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the list of albums and pagination details.
    */
+  async GetAlbums(): Promise<AlbumsResponse>;
+  async GetAlbums<P extends readonly (keyof Album)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: GetAlbumsFilter
+  ): Promise<{
+    albums: Array<Pick<Album, Extract<P[number], keyof Album>>>;
+    limits: ListLimitsReturned;
+  }>;
   async GetAlbums(
-    properties?: AudioProperty[],
+    properties?: AudioProperty[] | readonly (keyof Album)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: GetAlbumsFilter
@@ -223,8 +233,18 @@ export class KodiAudioLibraryNamespace {
    * @param filter - Optional filter criteria.
    * @returns A promise resolving to the list of artists and pagination details.
    */
+  async GetArtists(): Promise<ArtistsResponse>;
+  async GetArtists<P extends readonly (keyof Artist)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: GetArtistsFilter
+  ): Promise<{
+    artists: Array<Pick<Artist, Extract<P[number], keyof Artist>>>;
+    limits: ListLimitsReturned;
+  }>;
   async GetArtists(
-    properties?: AudioProperty[],
+    properties?: AudioProperty[] | readonly (keyof Artist)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: GetArtistsFilter
@@ -258,8 +278,21 @@ export class KodiAudioLibraryNamespace {
    * @param singlesonly - Whether to include only single songs.
    * @returns A promise resolving to the list of songs and pagination details.
    */
+  async GetSongs(): Promise<SongsResponse>;
+  async GetSongs<P extends readonly (keyof Song)[]>(
+    properties: P,
+    limits?: ListLimits,
+    sort?: ListSort,
+    filter?: any, // Define a specific type if available
+    includesingles?: boolean,
+    allroles?: boolean,
+    singlesonly?: boolean
+  ): Promise<{
+    songs: Array<Pick<Song, Extract<P[number], keyof Song>>>;
+    limits: ListLimitsReturned;
+  }>;
   async GetSongs(
-    properties?: AudioProperty[],
+    properties?: AudioProperty[] | readonly (keyof Song)[],
     limits?: ListLimits,
     sort?: ListSort,
     filter?: any, // Define a specific type if available

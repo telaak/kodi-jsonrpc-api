@@ -8,36 +8,19 @@
 
 import { ISendMessage } from "..";
 import {
-  PlayerId,
-  PlayerType,
+  PlayerPlayertype,
   PlayerRepeat,
   PlayerViewMode,
   PlayerCustomViewMode,
-  PlayerPositionPercentage,
-  PlayerPositionTime,
-  PlayerTempo,
-  PlayerSpeed,
   PlayerPropertyName,
   PlayerPropertyValue,
-  PlayerFieldsBroadcast,
-  PlayerFieldsChannel,
-  PlayerFieldsRecording,
-  PlayerFieldsTimer,
-  PlayerFieldsMovie,
-  PlayerFieldsTVShow,
-  PlayerFieldsAll,
   PlayerMediaItem,
   PlayerOptions,
+  PlayerOpenItem,
   PlayerGoTo,
   PlayerMoveDirection,
   PlayerSeekValue,
-  PlayerSetSubtitleOptions,
-  PlayerSetViewModeOptions,
-  PlayerFieldsCustomViewMode,
-  PlayerFieldsViewMode,
-  PlayerFieldsAllProperties,
   PlayerDetails,
-  PlayerDetailsExtended,
 } from "../types/player"; // Adjust the import path as necessary
 
 export class KodiPlayerNamespace {
@@ -50,12 +33,12 @@ export class KodiPlayerNamespace {
   /**
    * Adds a subtitle to the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param subtitle - The local path or remote URL to the subtitle file to load.
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async AddSubtitle(playerid: PlayerId, subtitle: string): Promise<string> {
-    const params = { playerid, subtitle };
+  async AddSubtitle(number: number, subtitle: string): Promise<string> {
+    const params = { number, subtitle };
     return this.sendMessage("Player.AddSubtitle", params);
   }
 
@@ -80,15 +63,23 @@ export class KodiPlayerNamespace {
   /**
    * Retrieves the currently played item.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param properties - The properties to retrieve for the item.
    * @returns A promise resolving to the currently played item.
    */
-  async GetItem(
-    playerid: PlayerId,
-    properties?: string[]
-  ): Promise<{ item: PlayerMediaItem }> {
-    const params = { playerid, properties };
+  // Overloads: when no properties are requested return the full item; when
+  // a literal tuple of property names is provided, return a Pick of those keys.
+  async GetItem(number: number): Promise<{ item: PlayerMediaItem }>;
+  async GetItem<
+    P extends readonly (keyof import("../types/player").PlayerGetItem)[]
+  >(
+    number: number,
+    properties: P
+  ): Promise<{
+    item: Pick<import("../types/player").PlayerGetItem, Extract<P[number], keyof import("../types/player").PlayerGetItem>>;
+  }>;
+  async GetItem(number: number, properties?: readonly string[]) {
+    const params = { number, properties };
     return this.sendMessage("Player.GetItem", params);
   }
 
@@ -103,7 +94,7 @@ export class KodiPlayerNamespace {
       name: string;
       playsaudio: boolean;
       playsvideo: boolean;
-      type: PlayerType;
+      type: PlayerPlayertype;
     }>
   > {
     const params = { media };
@@ -113,15 +104,15 @@ export class KodiPlayerNamespace {
   /**
    * Retrieves the values of the given properties for a player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param properties - The properties to retrieve.
    * @returns A promise resolving to the requested properties and their values.
    */
   async GetProperties(
-    playerid: PlayerId,
+    number: number,
     properties: PlayerPropertyName[]
   ): Promise<PlayerPropertyValue> {
-    const params = { playerid, properties };
+    const params = { number, properties };
     return this.sendMessage("Player.GetProperties", params);
   }
 
@@ -143,27 +134,27 @@ export class KodiPlayerNamespace {
   /**
    * Goes to the previous, next, or a specific position in the playlist.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param to - The target to go to ('previous', 'next', or a specific position).
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async GoTo(playerid: PlayerId, to: PlayerGoTo): Promise<string> {
-    const params = { playerid, to };
+  async GoTo(number: number, to: PlayerGoTo): Promise<string> {
+    const params = { number, to };
     return this.sendMessage("Player.GoTo", params);
   }
 
   /**
    * Moves the viewport or skips playback based on the current state.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param direction - The direction to move ('left', 'right', 'up', 'down').
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Move(
-    playerid: PlayerId,
+    number: number,
     direction: PlayerMoveDirection
   ): Promise<string> {
-    const params = { playerid, direction };
+    const params = { number, direction };
     return this.sendMessage("Player.Move", params);
   }
 
@@ -175,7 +166,7 @@ export class KodiPlayerNamespace {
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Open(
-    item: any, // Replace 'any' with specific types if available
+    item: PlayerOpenItem,
     options?: PlayerOptions
   ): Promise<string> {
     const params = { item, options };
@@ -185,132 +176,132 @@ export class KodiPlayerNamespace {
   /**
    * Pauses or unpauses playback and returns the new state.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param play - The toggle state ('toggle' by default).
    * @returns A promise resolving to the new playback speed.
    */
   async PlayPause(
-    playerid: PlayerId,
+    number: number,
     play: boolean | "toggle" = "toggle"
-  ): Promise<PlayerSpeed> {
-    const params = { playerid, play };
+  ): Promise<number> {
+    const params = { number, play };
     return this.sendMessage("Player.PlayPause", params);
   }
 
   /**
    * Rotates the current picture.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param value - The direction to rotate ('clockwise' or 'counterclockwise').
    * @returns A promise resolving to a string, typically empty on success.
    */
   async Rotate(
-    playerid: PlayerId,
+    number: number,
     value: "clockwise" | "counterclockwise"
   ): Promise<string> {
-    const params = { playerid, value };
+    const params = { number, value };
     return this.sendMessage("Player.Rotate", params);
   }
 
   /**
    * Seeks through the playing item.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param value - The seek value (percentage, time, step, or seconds).
    * @returns A promise resolving to the new playback position.
    */
   async Seek(
-    playerid: PlayerId,
+    number: number,
     value: PlayerSeekValue
   ): Promise<{ percentage?: number; time?: string; totaltime?: string }> {
-    const params = { playerid, value };
+    const params = { number, value };
     return this.sendMessage("Player.Seek", params);
   }
 
   /**
    * Sets the audio delay for the current playback.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param offset - The offset value to set.
    * @returns A promise resolving to the new audio delay offset.
    */
   async SetAudioDelay(
-    playerid: PlayerId,
+    number: number,
     offset: number | "increment" | "decrement"
   ): Promise<{ offset: number }> {
-    const params = { playerid, offset };
+    const params = { number, offset };
     return this.sendMessage("Player.SetAudioDelay", params);
   }
 
   /**
    * Sets the audio stream played by the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param stream - The audio stream to set ('previous', 'next', or stream index).
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetAudioStream(
-    playerid: PlayerId,
+    number: number,
     stream: "previous" | "next" | number
   ): Promise<string> {
-    const params = { playerid, stream };
+    const params = { number, stream };
     return this.sendMessage("Player.SetAudioStream", params);
   }
 
   /**
    * Turns partymode on or off.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param partymode - The toggle state ('toggle' by default).
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetPartymode(
-    playerid: PlayerId,
+    number: number,
     partymode: boolean | "toggle"
   ): Promise<string> {
-    const params = { playerid, partymode };
+    const params = { number, partymode };
     return this.sendMessage("Player.SetPartymode", params);
   }
 
   /**
    * Sets the repeat mode of the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param repeat - The repeat mode ('off', 'one', 'all', or 'cycle').
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetRepeat(
-    playerid: PlayerId,
+    number: number,
     repeat: PlayerRepeat | "cycle"
   ): Promise<string> {
-    const params = { playerid, repeat };
+    const params = { number, repeat };
     return this.sendMessage("Player.SetRepeat", params);
   }
 
   /**
    * Shuffles or unshuffles items in the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param shuffle - The toggle state ('toggle' by default).
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetShuffle(
-    playerid: PlayerId,
+    number: number,
     shuffle: boolean | "toggle"
   ): Promise<string> {
-    const params = { playerid, shuffle };
+    const params = { number, shuffle };
     return this.sendMessage("Player.SetShuffle", params);
   }
 
   /**
    * Sets the speed of the current playback.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param speed - The speed value to set (-32 to 32 or increment/decrement).
    * @returns A promise resolving to the new playback speed.
    */
   async SetSpeed(
-    playerid: PlayerId,
+    number: number,
     speed:
       | -32
       | -16
@@ -327,55 +318,55 @@ export class KodiPlayerNamespace {
       | 32
       | "increment"
       | "decrement"
-  ): Promise<PlayerSpeed> {
-    const params = { playerid, speed };
+  ): Promise<number> {
+    const params = { number, speed };
     return this.sendMessage("Player.SetSpeed", params);
   }
 
   /**
    * Sets the subtitle displayed by the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param subtitle - The subtitle to set ('previous', 'next', 'off', 'on', or subtitle index).
    * @param enable - Whether to enable subtitles after setting (default: false).
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetSubtitle(
-    playerid: PlayerId,
+    number: number,
     subtitle: "previous" | "next" | "off" | "on" | number,
     enable: boolean = false
   ): Promise<string> {
-    const params = { playerid, subtitle, enable };
+    const params = { number, subtitle, enable };
     return this.sendMessage("Player.SetSubtitle", params);
   }
 
   /**
    * Sets the tempo of the current playback.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param tempo - The tempo value to set.
    * @returns A promise resolving to the new tempo.
    */
   async SetTempo(
-    playerid: PlayerId,
+    number: number,
     tempo: number | "increment" | "decrement"
-  ): Promise<PlayerTempo> {
-    const params = { playerid, tempo };
+  ): Promise<number> {
+    const params = { number, tempo };
     return this.sendMessage("Player.SetTempo", params);
   }
 
   /**
    * Sets the video stream played by the player.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param stream - The video stream to set ('previous', 'next', or stream index).
    * @returns A promise resolving to a string, typically empty on success.
    */
   async SetVideoStream(
-    playerid: PlayerId,
+    number: number,
     stream: "previous" | "next" | number
   ): Promise<string> {
-    const params = { playerid, stream };
+    const params = { number, stream };
     return this.sendMessage("Player.SetVideoStream", params);
   }
 
@@ -395,23 +386,23 @@ export class KodiPlayerNamespace {
   /**
    * Stops playback.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async Stop(playerid: PlayerId): Promise<string> {
-    const params = { playerid };
+  async Stop(number: number): Promise<string> {
+    const params = { number };
     return this.sendMessage("Player.Stop", params);
   }
 
   /**
    * Zooms the current picture.
    *
-   * @param playerid - The ID of the player.
+   * @param number - The ID of the player.
    * @param zoom - The zoom action ('in', 'out', or zoom level).
    * @returns A promise resolving to a string, typically empty on success.
    */
-  async Zoom(playerid: PlayerId, zoom: "in" | "out" | number): Promise<string> {
-    const params = { playerid, zoom };
+  async Zoom(number: number, zoom: "in" | "out" | number): Promise<string> {
+    const params = { number, zoom };
     return this.sendMessage("Player.Zoom", params);
   }
 }

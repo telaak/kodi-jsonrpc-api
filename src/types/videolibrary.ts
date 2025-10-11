@@ -7,6 +7,7 @@ import {
   ListLimitsReturned,
   ListSort,
 } from "./audiolibrary";
+import { MediaStreamDetails } from "./media";
 
 /**
  * MovieId ($ref: "Library.Id")
@@ -122,11 +123,11 @@ export interface MovieDetails {
   ratingimage?: string; // Rating image URL
   lastplayed?: string; // Last played timestamp
   playcount?: number; // Number of times the movie has been played
-  streamdetails?: any; // Stream details object
+  streamdetails?: MediaStreamDetails; // Stream details object
   country?: string[]; // Countries associated with the movie
   language?: string[]; // Languages of the movie
   season?: number; // Season number if applicable
-  [key: string]: any; // Additional properties as defined in kodi.json
+  [key: string]: unknown; // Additional properties as defined in kodi.json
 }
 
 /**
@@ -162,13 +163,13 @@ export interface EpisodeDetails {
   ratingimage?: string; // Rating image URL
   lastplayed?: string; // Last played timestamp
   playcount?: number; // Number of times the episode has been played
-  streamdetails?: any; // Stream details object
+  streamdetails?: MediaStreamDetails; // Stream details object
   country?: string[]; // Countries associated with the episode
   language?: string[]; // Languages of the episode
   season?: number; // Season number
   episode?: number; // Episode number
   showtitle?: string; // Title of the TV show
-  [key: string]: any; // Additional properties as defined in kodi.json
+  [key: string]: unknown; // Additional properties as defined in kodi.json
 }
 
 /**
@@ -204,11 +205,11 @@ export interface TVShowDetails {
   ratingimage?: string; // Rating image URL
   lastplayed?: string; // Last played timestamp
   playcount?: number; // Number of times the TV show has been played
-  streamdetails?: any; // Stream details object
+  streamdetails?: MediaStreamDetails; // Stream details object
   country?: string[]; // Countries associated with the TV show
   language?: string[]; // Languages of the TV show
   seasons?: number; // Number of seasons
-  [key: string]: any; // Additional properties as defined in kodi.json
+  [key: string]: unknown; // Additional properties as defined in kodi.json
 }
 
 /**
@@ -244,10 +245,10 @@ export interface MusicVideoDetails {
   ratingimage?: string; // Rating image URL
   lastplayed?: string; // Last played timestamp
   playcount?: number; // Number of times the music video has been played
-  streamdetails?: any; // Stream details object
+  streamdetails?: MediaStreamDetails; // Stream details object
   country?: string[]; // Countries associated with the music video
   language?: string[]; // Languages of the music video
-  [key: string]: any; // Additional properties as defined in kodi.json
+  [key: string]: unknown; // Additional properties as defined in kodi.json
 }
 
 /**
@@ -301,10 +302,10 @@ export interface VideoDetails {
   ratingimage?: string; // Rating image URL
   lastplayed?: string; // Last played timestamp
   playcount?: number; // Number of times the video has been played
-  streamdetails?: any; // Stream details object
+  streamdetails?: MediaStreamDetails; // Stream details object
   country?: string[]; // Countries associated with the video
   language?: string[]; // Languages of the video
-  [key: string]: any; // Additional properties as defined in kodi.json
+  [key: string]: unknown; // Additional properties as defined in kodi.json
 }
 
 /**
@@ -313,7 +314,7 @@ export interface VideoDetails {
  */
 export interface ListFilterMovies {
   // Define specific filter properties as per kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -322,7 +323,7 @@ export interface ListFilterMovies {
  */
 export interface ListFilterEpisodes {
   // Define specific filter properties as per kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -331,7 +332,7 @@ export interface ListFilterEpisodes {
  */
 export interface ListFilterTVShows {
   // Define specific filter properties as per kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -340,7 +341,7 @@ export interface ListFilterTVShows {
  */
 export interface ListFilterMusicVideos {
   // Define specific filter properties as per kodi.json
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -426,7 +427,7 @@ export interface GetArtistsResponse {
  * Response structure for the GetProperties method.
  */
 export interface GetPropertiesResponse {
-  [key: string]: any; // Dynamic properties based on requested VideoProperty
+  [key: string]: unknown; // Dynamic properties based on requested VideoProperty
 }
 
 /**
