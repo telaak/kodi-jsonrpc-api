@@ -2,11 +2,11 @@ import { WebsocketKodiClient } from ".";
 
 const kodiClient = new WebsocketKodiClient("ws://192.168.0.28:9090/jsonrpc");
 
-kodiClient.events.on("json", async (event) => {
+kodiClient.on("json", async (msg) => {
   try {
-    if (event.method === "Player.OnAVStart") {
-      signsAndSongsCheck();
-      HDRCheck();
+    if (msg.method === "Player.OnAVStart") {
+      await signsAndSongsCheck();
+      await HDRCheck();
     }
   } catch (error) {
     console.error(error);

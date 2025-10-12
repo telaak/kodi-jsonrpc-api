@@ -30,6 +30,14 @@ export type KodiWebsocketMessage = {
   sender: string;
 };
 
+export type KodiWebsocketEvents = {
+  open: () => void;
+  close: () => void;
+  error: (err: any) => void;
+  message: (event: MessageEvent) => void;
+  json: (payload: KodiWebsocketMessage) => void;
+};
+
 abstract class BaseKodiClient {
   public Addons!: KodiAddonsNamespace;
   public Application!: KodiApplicationNamespace;
@@ -138,6 +146,30 @@ export class WebsocketKodiClient extends BaseKodiClient {
   public isOpen: boolean;
   public events: EventEmitter;
 
+  on<K extends keyof KodiWebsocketEvents>(
+    event: K,
+    listener: KodiWebsocketEvents[K]
+  ): this {
+    this.events.on(event as string, listener);
+    return this;
+  }
+
+  off<K extends keyof KodiWebsocketEvents>(
+    event: K,
+    listener: KodiWebsocketEvents[K]
+  ): this {
+    this.events.off(event as string, listener);
+    return this;
+  }
+
+  once<K extends keyof KodiWebsocketEvents>(
+    event: K,
+    listener: KodiWebsocketEvents[K]
+  ): this {
+    this.events.once(event as string, listener);
+    return this;
+  }
+
   /**
    * The sendMessage method, the actual JSON sent to Kodi
    * @param method name of the method e.g. "Addons.ExecuteAddon"
@@ -212,13 +244,9 @@ export class WebsocketKodiClient extends BaseKodiClient {
     this.webSocket.addEventListener("message", (event: MessageEvent) => {
       this.events.emit("message", event);
       try {
-        const json = JSON.parse(event.data.toString());
-        this.events.emit("json", json as KodiWebsocketMessage);
-
-        // JSON-RPC notification (no id)
-        if (!json.id && json.method) {
-          this.events.emit("notification", json);
-        }
+        const parsed = JSON.parse(event.data.toString()) as unknown;
+        const json = parsed as KodiWebsocketMessage;
+        this.events.emit("json", json);
       } catch (e) {
         // non-JSON payload, ignore parse error but still emit
       }
