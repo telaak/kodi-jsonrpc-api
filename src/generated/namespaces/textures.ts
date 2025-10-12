@@ -19,14 +19,14 @@ export class KodiTexturesNamespace {
    * Retrieve all textures
    */
   async GetTextures(params: TexturesGetTexturesParams): Promise<TexturesGetTexturesResponse> {
-    return this.sendMessage("Textures.GetTextures", params);
+    return this.sendMessage<TexturesGetTexturesResponse>("Textures.GetTextures", params);
   }
 
   /**
    * Remove the specified texture
    */
   async RemoveTexture(params: TexturesRemoveTextureParams): Promise<string> {
-    return this.sendMessage("Textures.RemoveTexture", params);
+    return this.sendMessage<string>("Textures.RemoveTexture", params);
   }
 
 }

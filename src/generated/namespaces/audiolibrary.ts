@@ -74,156 +74,156 @@ export class KodiAudioLibraryNamespace {
    * Cleans the audio library from non-existent items
    */
   async Clean(params: AudioLibraryCleanParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.Clean", params);
+    return this.sendMessage<string>("AudioLibrary.Clean", params);
   }
 
   /**
    * Exports all items from the audio library
    */
   async Export(params: AudioLibraryExportParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.Export", params);
+    return this.sendMessage<string>("AudioLibrary.Export", params);
   }
 
   /**
    * Retrieve details about a specific album
    */
   async GetAlbumDetails(params: AudioLibraryGetAlbumDetailsParams): Promise<AudioLibraryGetAlbumDetailsResponse> {
-    return this.sendMessage("AudioLibrary.GetAlbumDetails", params);
+    return this.sendMessage<AudioLibraryGetAlbumDetailsResponse>("AudioLibrary.GetAlbumDetails", params);
   }
 
   /**
    * Retrieve all albums from specified artist (and role) or that has songs of the specified genre
    */
   async GetAlbums(params: AudioLibraryGetAlbumsParams): Promise<AudioLibraryGetAlbumsResponse> {
-    return this.sendMessage("AudioLibrary.GetAlbums", params);
+    return this.sendMessage<AudioLibraryGetAlbumsResponse>("AudioLibrary.GetAlbums", params);
   }
 
   /**
    * Retrieve details about a specific artist
    */
   async GetArtistDetails(params: AudioLibraryGetArtistDetailsParams): Promise<AudioLibraryGetArtistDetailsResponse> {
-    return this.sendMessage("AudioLibrary.GetArtistDetails", params);
+    return this.sendMessage<AudioLibraryGetArtistDetailsResponse>("AudioLibrary.GetArtistDetails", params);
   }
 
   /**
    * Retrieve all artists. For backward compatibility by default this implicitly does not include those that only contribute other roles, however absolutely all artists can be returned using allroles=true
    */
   async GetArtists(params: AudioLibraryGetArtistsParams): Promise<AudioLibraryGetArtistsResponse> {
-    return this.sendMessage("AudioLibrary.GetArtists", params);
+    return this.sendMessage<AudioLibraryGetArtistsResponse>("AudioLibrary.GetArtists", params);
   }
 
   /**
    * Retrieve all potential art URLs for a media item by art type
    */
   async GetAvailableArt(params: AudioLibraryGetAvailableArtParams): Promise<AudioLibraryGetAvailableArtResponse> {
-    return this.sendMessage("AudioLibrary.GetAvailableArt", params);
+    return this.sendMessage<AudioLibraryGetAvailableArtResponse>("AudioLibrary.GetAvailableArt", params);
   }
 
   /**
    * Retrieve a list of potential art types for a media item
    */
   async GetAvailableArtTypes(params: AudioLibraryGetAvailableArtTypesParams): Promise<AudioLibraryGetAvailableArtTypesResponse> {
-    return this.sendMessage("AudioLibrary.GetAvailableArtTypes", params);
+    return this.sendMessage<AudioLibraryGetAvailableArtTypesResponse>("AudioLibrary.GetAvailableArtTypes", params);
   }
 
   /**
    * Retrieve all genres
    */
   async GetGenres(params: AudioLibraryGetGenresParams): Promise<AudioLibraryGetGenresResponse> {
-    return this.sendMessage("AudioLibrary.GetGenres", params);
+    return this.sendMessage<AudioLibraryGetGenresResponse>("AudioLibrary.GetGenres", params);
   }
 
-  async GetProperties<P extends readonly __AudioPropertyValueKeys[]>(params: { properties: P}): Promise<{ item: Pick<AudioPropertyValue, Extract<P[number], __AudioPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __AudioPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<AudioPropertyValue, Extract<P[number], __AudioPropertyValueKeys>>>;
   /**
    * Retrieves the values of the music library properties
    */
   async GetProperties(params: AudioLibraryGetPropertiesParams): Promise<AudioPropertyValue>;
-  async GetProperties(params: AudioLibraryGetPropertiesParams) {
-    return this.sendMessage("AudioLibrary.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<AudioPropertyValue>("AudioLibrary.GetProperties", params);
   }
 
   /**
    * Retrieve recently added albums
    */
   async GetRecentlyAddedAlbums(params: AudioLibraryGetRecentlyAddedAlbumsParams): Promise<AudioLibraryGetRecentlyAddedAlbumsResponse> {
-    return this.sendMessage("AudioLibrary.GetRecentlyAddedAlbums", params);
+    return this.sendMessage<AudioLibraryGetRecentlyAddedAlbumsResponse>("AudioLibrary.GetRecentlyAddedAlbums", params);
   }
 
   /**
    * Retrieve recently added songs
    */
   async GetRecentlyAddedSongs(params: AudioLibraryGetRecentlyAddedSongsParams): Promise<AudioLibraryGetRecentlyAddedSongsResponse> {
-    return this.sendMessage("AudioLibrary.GetRecentlyAddedSongs", params);
+    return this.sendMessage<AudioLibraryGetRecentlyAddedSongsResponse>("AudioLibrary.GetRecentlyAddedSongs", params);
   }
 
   /**
    * Retrieve recently played albums
    */
   async GetRecentlyPlayedAlbums(params: AudioLibraryGetRecentlyPlayedAlbumsParams): Promise<AudioLibraryGetRecentlyPlayedAlbumsResponse> {
-    return this.sendMessage("AudioLibrary.GetRecentlyPlayedAlbums", params);
+    return this.sendMessage<AudioLibraryGetRecentlyPlayedAlbumsResponse>("AudioLibrary.GetRecentlyPlayedAlbums", params);
   }
 
   /**
    * Retrieve recently played songs
    */
   async GetRecentlyPlayedSongs(params: AudioLibraryGetRecentlyPlayedSongsParams): Promise<AudioLibraryGetRecentlyPlayedSongsResponse> {
-    return this.sendMessage("AudioLibrary.GetRecentlyPlayedSongs", params);
+    return this.sendMessage<AudioLibraryGetRecentlyPlayedSongsResponse>("AudioLibrary.GetRecentlyPlayedSongs", params);
   }
 
   /**
    * Retrieve all contributor roles
    */
   async GetRoles(params: AudioLibraryGetRolesParams): Promise<AudioLibraryGetRolesResponse> {
-    return this.sendMessage("AudioLibrary.GetRoles", params);
+    return this.sendMessage<AudioLibraryGetRolesResponse>("AudioLibrary.GetRoles", params);
   }
 
   /**
    * Retrieve details about a specific song
    */
   async GetSongDetails(params: AudioLibraryGetSongDetailsParams): Promise<AudioLibraryGetSongDetailsResponse> {
-    return this.sendMessage("AudioLibrary.GetSongDetails", params);
+    return this.sendMessage<AudioLibraryGetSongDetailsResponse>("AudioLibrary.GetSongDetails", params);
   }
 
   /**
    * Retrieve all songs from specified album, artist or genre
    */
   async GetSongs(params: AudioLibraryGetSongsParams): Promise<AudioLibraryGetSongsResponse> {
-    return this.sendMessage("AudioLibrary.GetSongs", params);
+    return this.sendMessage<AudioLibraryGetSongsResponse>("AudioLibrary.GetSongs", params);
   }
 
   /**
    * Get all music sources, including unique ID
    */
   async GetSources(params: AudioLibraryGetSourcesParams): Promise<AudioLibraryGetSourcesResponse> {
-    return this.sendMessage("AudioLibrary.GetSources", params);
+    return this.sendMessage<AudioLibraryGetSourcesResponse>("AudioLibrary.GetSources", params);
   }
 
   /**
    * Scans the audio sources for new library items
    */
   async Scan(params: AudioLibraryScanParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.Scan", params);
+    return this.sendMessage<string>("AudioLibrary.Scan", params);
   }
 
   /**
    * Update the given album with the given details
    */
   async SetAlbumDetails(params: AudioLibrarySetAlbumDetailsParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.SetAlbumDetails", params);
+    return this.sendMessage<string>("AudioLibrary.SetAlbumDetails", params);
   }
 
   /**
    * Update the given artist with the given details
    */
   async SetArtistDetails(params: AudioLibrarySetArtistDetailsParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.SetArtistDetails", params);
+    return this.sendMessage<string>("AudioLibrary.SetArtistDetails", params);
   }
 
   /**
    * Update the given song with the given details
    */
   async SetSongDetails(params: AudioLibrarySetSongDetailsParams): Promise<string> {
-    return this.sendMessage("AudioLibrary.SetSongDetails", params);
+    return this.sendMessage<string>("AudioLibrary.SetSongDetails", params);
   }
 
 }

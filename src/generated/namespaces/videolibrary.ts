@@ -94,259 +94,259 @@ export class KodiVideoLibraryNamespace {
    * Cleans the video library for non-existent items
    */
   async Clean(params: VideoLibraryCleanParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.Clean", params);
+    return this.sendMessage<string>("VideoLibrary.Clean", params);
   }
 
   /**
    * Exports all items from the video library
    */
   async Export(params: VideoLibraryExportParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.Export", params);
+    return this.sendMessage<string>("VideoLibrary.Export", params);
   }
 
   /**
    * Retrieve all potential art URLs for a media item by art type
    */
   async GetAvailableArt(params: VideoLibraryGetAvailableArtParams): Promise<VideoLibraryGetAvailableArtResponse> {
-    return this.sendMessage("VideoLibrary.GetAvailableArt", params);
+    return this.sendMessage<VideoLibraryGetAvailableArtResponse>("VideoLibrary.GetAvailableArt", params);
   }
 
   /**
    * Retrieve a list of potential art types for a media item
    */
   async GetAvailableArtTypes(params: VideoLibraryGetAvailableArtTypesParams): Promise<VideoLibraryGetAvailableArtTypesResponse> {
-    return this.sendMessage("VideoLibrary.GetAvailableArtTypes", params);
+    return this.sendMessage<VideoLibraryGetAvailableArtTypesResponse>("VideoLibrary.GetAvailableArtTypes", params);
   }
 
   /**
    * Retrieve details about a specific tv show episode
    */
   async GetEpisodeDetails(params: VideoLibraryGetEpisodeDetailsParams): Promise<VideoLibraryGetEpisodeDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetEpisodeDetails", params);
+    return this.sendMessage<VideoLibraryGetEpisodeDetailsResponse>("VideoLibrary.GetEpisodeDetails", params);
   }
 
   /**
    * Retrieve all tv show episodes
    */
   async GetEpisodes(params: VideoLibraryGetEpisodesParams): Promise<VideoLibraryGetEpisodesResponse> {
-    return this.sendMessage("VideoLibrary.GetEpisodes", params);
+    return this.sendMessage<VideoLibraryGetEpisodesResponse>("VideoLibrary.GetEpisodes", params);
   }
 
   /**
    * Retrieve all genres
    */
   async GetGenres(params: VideoLibraryGetGenresParams): Promise<VideoLibraryGetGenresResponse> {
-    return this.sendMessage("VideoLibrary.GetGenres", params);
+    return this.sendMessage<VideoLibraryGetGenresResponse>("VideoLibrary.GetGenres", params);
   }
 
   /**
    * Retrieve all in progress tvshows
    */
   async GetInProgressTVShows(params: VideoLibraryGetInProgressTVShowsParams): Promise<VideoLibraryGetInProgressTVShowsResponse> {
-    return this.sendMessage("VideoLibrary.GetInProgressTVShows", params);
+    return this.sendMessage<VideoLibraryGetInProgressTVShowsResponse>("VideoLibrary.GetInProgressTVShows", params);
   }
 
   /**
    * Retrieve details about a specific movie
    */
   async GetMovieDetails(params: VideoLibraryGetMovieDetailsParams): Promise<VideoLibraryGetMovieDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetMovieDetails", params);
+    return this.sendMessage<VideoLibraryGetMovieDetailsResponse>("VideoLibrary.GetMovieDetails", params);
   }
 
   /**
    * Retrieve details about a specific movie set
    */
   async GetMovieSetDetails(params: VideoLibraryGetMovieSetDetailsParams): Promise<VideoLibraryGetMovieSetDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetMovieSetDetails", params);
+    return this.sendMessage<VideoLibraryGetMovieSetDetailsResponse>("VideoLibrary.GetMovieSetDetails", params);
   }
 
   /**
    * Retrieve all movie sets
    */
   async GetMovieSets(params: VideoLibraryGetMovieSetsParams): Promise<VideoLibraryGetMovieSetsResponse> {
-    return this.sendMessage("VideoLibrary.GetMovieSets", params);
+    return this.sendMessage<VideoLibraryGetMovieSetsResponse>("VideoLibrary.GetMovieSets", params);
   }
 
   /**
    * Retrieve all movies
    */
   async GetMovies(params: VideoLibraryGetMoviesParams): Promise<VideoLibraryGetMoviesResponse> {
-    return this.sendMessage("VideoLibrary.GetMovies", params);
+    return this.sendMessage<VideoLibraryGetMoviesResponse>("VideoLibrary.GetMovies", params);
   }
 
   /**
    * Retrieve details about a specific music video
    */
   async GetMusicVideoDetails(params: VideoLibraryGetMusicVideoDetailsParams): Promise<VideoLibraryGetMusicVideoDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetMusicVideoDetails", params);
+    return this.sendMessage<VideoLibraryGetMusicVideoDetailsResponse>("VideoLibrary.GetMusicVideoDetails", params);
   }
 
   /**
    * Retrieve all music videos
    */
   async GetMusicVideos(params: VideoLibraryGetMusicVideosParams): Promise<VideoLibraryGetMusicVideosResponse> {
-    return this.sendMessage("VideoLibrary.GetMusicVideos", params);
+    return this.sendMessage<VideoLibraryGetMusicVideosResponse>("VideoLibrary.GetMusicVideos", params);
   }
 
   /**
    * Retrieve all recently added tv episodes
    */
   async GetRecentlyAddedEpisodes(params: VideoLibraryGetRecentlyAddedEpisodesParams): Promise<VideoLibraryGetRecentlyAddedEpisodesResponse> {
-    return this.sendMessage("VideoLibrary.GetRecentlyAddedEpisodes", params);
+    return this.sendMessage<VideoLibraryGetRecentlyAddedEpisodesResponse>("VideoLibrary.GetRecentlyAddedEpisodes", params);
   }
 
   /**
    * Retrieve all recently added movies
    */
   async GetRecentlyAddedMovies(params: VideoLibraryGetRecentlyAddedMoviesParams): Promise<VideoLibraryGetRecentlyAddedMoviesResponse> {
-    return this.sendMessage("VideoLibrary.GetRecentlyAddedMovies", params);
+    return this.sendMessage<VideoLibraryGetRecentlyAddedMoviesResponse>("VideoLibrary.GetRecentlyAddedMovies", params);
   }
 
   /**
    * Retrieve all recently added music videos
    */
   async GetRecentlyAddedMusicVideos(params: VideoLibraryGetRecentlyAddedMusicVideosParams): Promise<VideoLibraryGetRecentlyAddedMusicVideosResponse> {
-    return this.sendMessage("VideoLibrary.GetRecentlyAddedMusicVideos", params);
+    return this.sendMessage<VideoLibraryGetRecentlyAddedMusicVideosResponse>("VideoLibrary.GetRecentlyAddedMusicVideos", params);
   }
 
   /**
    * Retrieve details about a specific tv show season
    */
   async GetSeasonDetails(params: VideoLibraryGetSeasonDetailsParams): Promise<VideoLibraryGetSeasonDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetSeasonDetails", params);
+    return this.sendMessage<VideoLibraryGetSeasonDetailsResponse>("VideoLibrary.GetSeasonDetails", params);
   }
 
   /**
    * Retrieve all tv seasons
    */
   async GetSeasons(params: VideoLibraryGetSeasonsParams): Promise<VideoLibraryGetSeasonsResponse> {
-    return this.sendMessage("VideoLibrary.GetSeasons", params);
+    return this.sendMessage<VideoLibraryGetSeasonsResponse>("VideoLibrary.GetSeasons", params);
   }
 
   /**
    * Retrieve details about a specific tv show
    */
   async GetTVShowDetails(params: VideoLibraryGetTVShowDetailsParams): Promise<VideoLibraryGetTVShowDetailsResponse> {
-    return this.sendMessage("VideoLibrary.GetTVShowDetails", params);
+    return this.sendMessage<VideoLibraryGetTVShowDetailsResponse>("VideoLibrary.GetTVShowDetails", params);
   }
 
   /**
    * Retrieve all tv shows
    */
   async GetTVShows(params: VideoLibraryGetTVShowsParams): Promise<VideoLibraryGetTVShowsResponse> {
-    return this.sendMessage("VideoLibrary.GetTVShows", params);
+    return this.sendMessage<VideoLibraryGetTVShowsResponse>("VideoLibrary.GetTVShows", params);
   }
 
   /**
    * Retrieve all tags
    */
   async GetTags(params: VideoLibraryGetTagsParams): Promise<VideoLibraryGetTagsResponse> {
-    return this.sendMessage("VideoLibrary.GetTags", params);
+    return this.sendMessage<VideoLibraryGetTagsResponse>("VideoLibrary.GetTags", params);
   }
 
   /**
    * Refresh the given episode in the library
    */
   async RefreshEpisode(params: VideoLibraryRefreshEpisodeParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RefreshEpisode", params);
+    return this.sendMessage<string>("VideoLibrary.RefreshEpisode", params);
   }
 
   /**
    * Refresh the given movie in the library
    */
   async RefreshMovie(params: VideoLibraryRefreshMovieParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RefreshMovie", params);
+    return this.sendMessage<string>("VideoLibrary.RefreshMovie", params);
   }
 
   /**
    * Refresh the given music video in the library
    */
   async RefreshMusicVideo(params: VideoLibraryRefreshMusicVideoParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RefreshMusicVideo", params);
+    return this.sendMessage<string>("VideoLibrary.RefreshMusicVideo", params);
   }
 
   /**
    * Refresh the given tv show in the library
    */
   async RefreshTVShow(params: VideoLibraryRefreshTVShowParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RefreshTVShow", params);
+    return this.sendMessage<string>("VideoLibrary.RefreshTVShow", params);
   }
 
   /**
    * Removes the given episode from the library
    */
   async RemoveEpisode(params: VideoLibraryRemoveEpisodeParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RemoveEpisode", params);
+    return this.sendMessage<string>("VideoLibrary.RemoveEpisode", params);
   }
 
   /**
    * Removes the given movie from the library
    */
   async RemoveMovie(params: VideoLibraryRemoveMovieParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RemoveMovie", params);
+    return this.sendMessage<string>("VideoLibrary.RemoveMovie", params);
   }
 
   /**
    * Removes the given music video from the library
    */
   async RemoveMusicVideo(params: VideoLibraryRemoveMusicVideoParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RemoveMusicVideo", params);
+    return this.sendMessage<string>("VideoLibrary.RemoveMusicVideo", params);
   }
 
   /**
    * Removes the given tv show from the library
    */
   async RemoveTVShow(params: VideoLibraryRemoveTVShowParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.RemoveTVShow", params);
+    return this.sendMessage<string>("VideoLibrary.RemoveTVShow", params);
   }
 
   /**
    * Scans the video sources for new library items
    */
   async Scan(params: VideoLibraryScanParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.Scan", params);
+    return this.sendMessage<string>("VideoLibrary.Scan", params);
   }
 
   /**
    * Update the given episode with the given details
    */
   async SetEpisodeDetails(params: VideoLibrarySetEpisodeDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetEpisodeDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetEpisodeDetails", params);
   }
 
   /**
    * Update the given movie with the given details
    */
   async SetMovieDetails(params: VideoLibrarySetMovieDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetMovieDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetMovieDetails", params);
   }
 
   /**
    * Update the given movie set with the given details
    */
   async SetMovieSetDetails(params: VideoLibrarySetMovieSetDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetMovieSetDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetMovieSetDetails", params);
   }
 
   /**
    * Update the given music video with the given details
    */
   async SetMusicVideoDetails(params: VideoLibrarySetMusicVideoDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetMusicVideoDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetMusicVideoDetails", params);
   }
 
   /**
    * Update the given season with the given details
    */
   async SetSeasonDetails(params: VideoLibrarySetSeasonDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetSeasonDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetSeasonDetails", params);
   }
 
   /**
    * Update the given tvshow with the given details
    */
   async SetTVShowDetails(params: VideoLibrarySetTVShowDetailsParams): Promise<string> {
-    return this.sendMessage("VideoLibrary.SetTVShowDetails", params);
+    return this.sendMessage<string>("VideoLibrary.SetTVShowDetails", params);
   }
 
 }

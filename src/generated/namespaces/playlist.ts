@@ -32,60 +32,60 @@ export class KodiPlaylistNamespace {
    * Add item(s) to playlist
    */
   async Add(params: PlaylistAddParams): Promise<string> {
-    return this.sendMessage("Playlist.Add", params);
+    return this.sendMessage<string>("Playlist.Add", params);
   }
 
   /**
    * Clear playlist
    */
   async Clear(params: PlaylistClearParams): Promise<string> {
-    return this.sendMessage("Playlist.Clear", params);
+    return this.sendMessage<string>("Playlist.Clear", params);
   }
 
-  async GetItems<P extends readonly __ListItemAllKeys[]>(params: { playlistid: PlaylistId; properties: P; limits?: ListLimits; sort?: ListSort }): Promise<{ items: Array<Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>>>; limits: ListLimitsReturned }>;
+  async GetItems<P extends readonly __ListItemAllKeys[]>(params: { playlistid: PlaylistId; properties: P; limits?: ListLimits; sort?: ListSort }): Promise<Array<Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>>>>;
   /**
    * Get all items from playlist
    */
-  async GetItems(params: PlaylistGetItemsParams): Promise<PlaylistGetItemsResponse>;
-  async GetItems(params: PlaylistGetItemsParams) {
-    return this.sendMessage("Playlist.GetItems", params);
+  async GetItems(params: PlaylistGetItemsParams): Promise<ListItemAll[]>;
+  async GetItems(params: any) {
+    return this.sendMessage<ListItemAll[]>("Playlist.GetItems", params);
   }
 
   /**
    * Returns all existing playlists
    */
   async GetPlaylists(): Promise<unknown[]> {
-    return this.sendMessage("Playlist.GetPlaylists", {});
+    return this.sendMessage<unknown[]>("Playlist.GetPlaylists", {});
   }
 
-  async GetProperties<P extends readonly __PlaylistPropertyValueKeys[]>(params: { playlistid: PlaylistId; properties: P}): Promise<{ item: Pick<PlaylistPropertyValue, Extract<P[number], __PlaylistPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __PlaylistPropertyValueKeys[]>(params: { playlistid: PlaylistId; properties: P}): Promise<Pick<PlaylistPropertyValue, Extract<P[number], __PlaylistPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: PlaylistGetPropertiesParams): Promise<PlaylistPropertyValue>;
-  async GetProperties(params: PlaylistGetPropertiesParams) {
-    return this.sendMessage("Playlist.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<PlaylistPropertyValue>("Playlist.GetProperties", params);
   }
 
   /**
    * Insert item(s) into playlist. Does not work for picture playlists (aka slideshows).
    */
   async Insert(params: PlaylistInsertParams): Promise<string> {
-    return this.sendMessage("Playlist.Insert", params);
+    return this.sendMessage<string>("Playlist.Insert", params);
   }
 
   /**
    * Remove item from playlist. Does not work for picture playlists (aka slideshows).
    */
   async Remove(params: PlaylistRemoveParams): Promise<string> {
-    return this.sendMessage("Playlist.Remove", params);
+    return this.sendMessage<string>("Playlist.Remove", params);
   }
 
   /**
    * Swap items in the playlist. Does not work for picture playlists (aka slideshows).
    */
   async Swap(params: PlaylistSwapParams): Promise<string> {
-    return this.sendMessage("Playlist.Swap", params);
+    return this.sendMessage<string>("Playlist.Swap", params);
   }
 
 }

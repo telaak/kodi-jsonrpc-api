@@ -25,28 +25,28 @@ export class KodiAddonsNamespace {
    * Executes the given addon with the given parameters (if possible)
    */
   async ExecuteAddon(params: AddonsExecuteAddonParams): Promise<string> {
-    return this.sendMessage("Addons.ExecuteAddon", params);
+    return this.sendMessage<string>("Addons.ExecuteAddon", params);
   }
 
   /**
    * Gets the details of a specific addon
    */
   async GetAddonDetails(params: AddonsGetAddonDetailsParams): Promise<AddonsGetAddonDetailsResponse> {
-    return this.sendMessage("Addons.GetAddonDetails", params);
+    return this.sendMessage<AddonsGetAddonDetailsResponse>("Addons.GetAddonDetails", params);
   }
 
   /**
    * Gets all available addons
    */
   async GetAddons(params: AddonsGetAddonsParams): Promise<AddonsGetAddonsResponse> {
-    return this.sendMessage("Addons.GetAddons", params);
+    return this.sendMessage<AddonsGetAddonsResponse>("Addons.GetAddons", params);
   }
 
   /**
    * Enables/Disables a specific addon
    */
   async SetAddonEnabled(params: AddonsSetAddonEnabledParams): Promise<string> {
-    return this.sendMessage("Addons.SetAddonEnabled", params);
+    return this.sendMessage<string>("Addons.SetAddonEnabled", params);
   }
 
 }

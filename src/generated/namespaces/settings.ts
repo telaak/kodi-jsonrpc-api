@@ -31,63 +31,63 @@ export class KodiSettingsNamespace {
    * Retrieves all setting categories
    */
   async GetCategories(params: SettingsGetCategoriesParams): Promise<SettingsGetCategoriesResponse> {
-    return this.sendMessage("Settings.GetCategories", params);
+    return this.sendMessage<SettingsGetCategoriesResponse>("Settings.GetCategories", params);
   }
 
   /**
    * Retrieves all setting sections
    */
   async GetSections(params: SettingsGetSectionsParams): Promise<SettingsGetSectionsResponse> {
-    return this.sendMessage("Settings.GetSections", params);
+    return this.sendMessage<SettingsGetSectionsResponse>("Settings.GetSections", params);
   }
 
   /**
    * Retrieves the value of a setting
    */
   async GetSettingValue(params: SettingsGetSettingValueParams): Promise<SettingsGetSettingValueResponse> {
-    return this.sendMessage("Settings.GetSettingValue", params);
+    return this.sendMessage<SettingsGetSettingValueResponse>("Settings.GetSettingValue", params);
   }
 
   /**
    * Retrieves all settings
    */
   async GetSettings(params: SettingsGetSettingsParams): Promise<SettingsGetSettingsResponse> {
-    return this.sendMessage("Settings.GetSettings", params);
+    return this.sendMessage<SettingsGetSettingsResponse>("Settings.GetSettings", params);
   }
 
   /**
    * Retrieves the value of the specified skin setting
    */
   async GetSkinSettingValue(params: SettingsGetSkinSettingValueParams): Promise<SettingsGetSkinSettingValueResponse> {
-    return this.sendMessage("Settings.GetSkinSettingValue", params);
+    return this.sendMessage<SettingsGetSkinSettingValueResponse>("Settings.GetSkinSettingValue", params);
   }
 
   /**
    * Retrieves all skin settings of the currently used skin
    */
   async GetSkinSettings(): Promise<SettingsGetSkinSettingsResponse> {
-    return this.sendMessage("Settings.GetSkinSettings", {});
+    return this.sendMessage<SettingsGetSkinSettingsResponse>("Settings.GetSkinSettings", {});
   }
 
   /**
    * Resets the value of a setting
    */
   async ResetSettingValue(params: SettingsResetSettingValueParams): Promise<string> {
-    return this.sendMessage("Settings.ResetSettingValue", params);
+    return this.sendMessage<string>("Settings.ResetSettingValue", params);
   }
 
   /**
    * Changes the value of a setting
    */
   async SetSettingValue(params: SettingsSetSettingValueParams): Promise<boolean> {
-    return this.sendMessage("Settings.SetSettingValue", params);
+    return this.sendMessage<boolean>("Settings.SetSettingValue", params);
   }
 
   /**
    * Changes the value of the specified skin setting
    */
   async SetSkinSettingValue(params: SettingsSetSkinSettingValueParams): Promise<boolean> {
-    return this.sendMessage("Settings.SetSkinSettingValue", params);
+    return this.sendMessage<boolean>("Settings.SetSkinSettingValue", params);
   }
 
 }

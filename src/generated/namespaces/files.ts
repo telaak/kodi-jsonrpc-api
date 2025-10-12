@@ -28,28 +28,28 @@ export class KodiFilesNamespace {
    * Get the directories and files in the given directory
    */
   async GetDirectory(params: FilesGetDirectoryParams): Promise<FilesGetDirectoryResponse> {
-    return this.sendMessage("Files.GetDirectory", params);
+    return this.sendMessage<FilesGetDirectoryResponse>("Files.GetDirectory", params);
   }
 
   /**
    * Get details for a specific file
    */
   async GetFileDetails(params: FilesGetFileDetailsParams): Promise<FilesGetFileDetailsResponse> {
-    return this.sendMessage("Files.GetFileDetails", params);
+    return this.sendMessage<FilesGetFileDetailsResponse>("Files.GetFileDetails", params);
   }
 
   /**
    * Get the sources of the media windows
    */
   async GetSources(params: FilesGetSourcesParams): Promise<FilesGetSourcesResponse> {
-    return this.sendMessage("Files.GetSources", params);
+    return this.sendMessage<FilesGetSourcesResponse>("Files.GetSources", params);
   }
 
   /**
    * Update the given specific file with the given details
    */
   async SetFileDetails(params: FilesSetFileDetailsParams): Promise<string> {
-    return this.sendMessage("Files.SetFileDetails", params);
+    return this.sendMessage<string>("Files.SetFileDetails", params);
   }
 
 }

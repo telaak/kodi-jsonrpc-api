@@ -17,44 +17,44 @@ export class KodiSystemNamespace {
    * Ejects or closes the optical disc drive (if available)
    */
   async EjectOpticalDrive(): Promise<string> {
-    return this.sendMessage("System.EjectOpticalDrive", {});
+    return this.sendMessage<string>("System.EjectOpticalDrive", {});
   }
 
-  async GetProperties<P extends readonly __SystemPropertyValueKeys[]>(params: { properties: P}): Promise<{ item: Pick<SystemPropertyValue, Extract<P[number], __SystemPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __SystemPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<SystemPropertyValue, Extract<P[number], __SystemPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: SystemGetPropertiesParams): Promise<SystemPropertyValue>;
-  async GetProperties(params: SystemGetPropertiesParams) {
-    return this.sendMessage("System.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<SystemPropertyValue>("System.GetProperties", params);
   }
 
   /**
    * Puts the system running Kodi into hibernate mode
    */
   async Hibernate(): Promise<string> {
-    return this.sendMessage("System.Hibernate", {});
+    return this.sendMessage<string>("System.Hibernate", {});
   }
 
   /**
    * Reboots the system running Kodi
    */
   async Reboot(): Promise<string> {
-    return this.sendMessage("System.Reboot", {});
+    return this.sendMessage<string>("System.Reboot", {});
   }
 
   /**
    * Shuts the system running Kodi down
    */
   async Shutdown(): Promise<string> {
-    return this.sendMessage("System.Shutdown", {});
+    return this.sendMessage<string>("System.Shutdown", {});
   }
 
   /**
    * Suspends the system running Kodi
    */
   async Suspend(): Promise<string> {
-    return this.sendMessage("System.Suspend", {});
+    return this.sendMessage<string>("System.Suspend", {});
   }
 
 }

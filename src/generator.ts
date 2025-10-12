@@ -77,24 +77,41 @@ export class KodiNamespaceGenerator {
 
     // build an inline params object type where 'properties' can be replaced with the generic P to aid inference
     const paramsInline = (() => {
-      const typesOut = path.join(this.outDir, '..', 'types');
+      const typesOut = path.join(this.outDir, "..", "types");
       const parts: string[] = [];
       (method.params || []).forEach((p: any) => {
-        const pname = p.name || 'param';
+        const pname = p.name || "param";
         let ptype: string;
         if (p.$ref) ptype = this.refToTypeName(p.$ref);
-        else ptype = this.schemaToTs(p, typesOut, `${paramsInterfaceName}${this.capitalize(pname)}`, paramsInterfaceName || `${ns}${name}Params`);
+        else
+          ptype = this.schemaToTs(
+            p,
+            typesOut,
+            `${paramsInterfaceName}${this.capitalize(pname)}`,
+            paramsInterfaceName || `${ns}${name}Params`
+          );
         // leave a placeholder type name; later when generating the generic overload we'll replace 'properties' with 'P'
-        const optional = p.required ? '' : '?';
+        const optional = p.required ? "" : "?";
         parts.push(`${pname}${optional}: ${ptype}`);
       });
-      return `{ ${parts.join('; ')} }`;
+      return `{ ${parts.join("; ")} }`;
     })();
 
     // special-case: methods that accept List.Fields.* as a 'properties' param and return List.Item.*
     const hasListFieldsParam = (method.params || []).some((p: any) => {
-      if (p && p.$ref && typeof p.$ref === 'string' && p.$ref.startsWith('List.Fields')) return true;
-      if (p && typeof p.name === 'string' && /^(properties|props|fields)$/.test(p.name)) return true;
+      if (
+        p &&
+        p.$ref &&
+        typeof p.$ref === "string" &&
+        p.$ref.startsWith("List.Fields")
+      )
+        return true;
+      if (
+        p &&
+        typeof p.name === "string" &&
+        /^(properties|props|fields)$/.test(p.name)
+      )
+        return true;
       return false;
     });
     let itemRef: string | undefined = undefined;
@@ -124,7 +141,11 @@ export class KodiNamespaceGenerator {
           itemRef = this.refToTypeName(itemsProp.items.$ref);
           itemsAreArray = true;
         }
-      } else if (method.returns.type === 'array' && method.returns.items && method.returns.items.$ref) {
+      } else if (
+        method.returns.type === "array" &&
+        method.returns.items &&
+        method.returns.items.$ref
+      ) {
         itemRef = this.refToTypeName(method.returns.items.$ref);
         itemsAreArray = true;
       }
@@ -132,50 +153,76 @@ export class KodiNamespaceGenerator {
     if (hasListFieldsParam && itemRef) {
       const paramsType = paramsInterfaceName || "any";
       const lines: string[] = [];
-      const respName = (method.returns && method.returns.properties) ? `${ns}${name}Response` : (itemsAreArray ? `${itemRef}[]` : itemRef);
-  // build generic return type when properties narrow returned item — emit the narrow overload first so it is preferred
-  if (itemsAreArray) {
+      // prefer returning the unwrapped item(s) as the method result (no wrapper with 'items' or 'item')
+      const respName = itemsAreArray ? `${itemRef}[]` : itemRef;
+      // build generic return type when properties narrow returned item — emit the narrow overload first so it is preferred
+      if (itemsAreArray) {
         // build other response props (e.g., limits) from method.returns.properties
         const parts: string[] = [];
         const props = method.returns.properties || {};
         Object.keys(props).forEach((k) => {
-          if (k === 'items') {
-            parts.push(`items: Array<Pick<${itemRef}, Extract<P[number], __${itemRef}Keys>>>`);
+          if (k === "items") {
+            parts.push(
+              `items: Array<Pick<${itemRef}, Extract<P[number], __${itemRef}Keys>>>`
+            );
           } else {
             const p = props[k];
             if (p && p.$ref) {
               parts.push(`${k}: ${this.refToTypeName(p.$ref)}`);
             } else {
               // fallback to schemaToTs for inline schema
-              const t = this.schemaToTs(p, path.join(this.outDir, '..', 'types'), `${ns}${name}Response${this.capitalize(k)}`);
+              const t = this.schemaToTs(
+                p,
+                path.join(this.outDir, "..", "types"),
+                `${ns}${name}Response${this.capitalize(k)}`
+              );
               parts.push(`${k}: ${t}`);
             }
           }
         });
-  // replace the 'properties' property's type with the generic `P` so tuples infer correctly
-  const paramsInlineWithP = paramsInline.replace(/(properties|props|fields)\??:\s*[^;\}]+/, `$1: P`);
-  if (helpers && itemRef) helpers.add(itemRef);
-  lines.push(`  async ${name}<P extends readonly __${itemRef}Keys[]>(params: ${paramsInlineWithP}): Promise<{ ${parts.join('; ')} }>;`);
-        // default overload returning the standard response (if a response interface exists)
-        lines.push(`${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`);
+        // replace the 'properties' property's type with the generic `P` so tuples infer correctly
+        const paramsInlineWithP = paramsInline.replace(
+          /(properties|props|fields)\??:\s*[^;\}]+/,
+          `$1: P`
+        );
+        if (helpers && itemRef) helpers.add(itemRef);
+        // Narrowing overload returns the array of picked items (unwrapped)
+        lines.push(
+          `  async ${name}<P extends readonly __${itemRef}Keys[]>(params: ${paramsInlineWithP}): Promise<Array<Pick<${itemRef}, Extract<P[number], __${itemRef}Keys>>>>;`
+        );
+        // default overload returning the unwrapped items/item
+        lines.push(
+          `${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
+        );
       } else {
         // single-item response — emit narrow overload first
-  const paramsInlineWithP = paramsInline.replace(/(properties|props|fields)\??:\s*[^;\}]+/, `$1: P`);
-  if (helpers && itemRef) helpers.add(itemRef);
-  lines.push(`  async ${name}<P extends readonly __${itemRef}Keys[]>(params: ${paramsInlineWithP}): Promise<{ item: Pick<${itemRef}, Extract<P[number], __${itemRef}Keys>> }>;`);
+        const paramsInlineWithP = paramsInline.replace(
+          /(properties|props|fields)\??:\s*[^;\}]+/,
+          `$1: P`
+        );
+        if (helpers && itemRef) helpers.add(itemRef);
+        // Narrowing overload returns the single picked item (unwrapped)
+        lines.push(
+          `  async ${name}<P extends readonly __${itemRef}Keys[]>(params: ${paramsInlineWithP}): Promise<Pick<${itemRef}, Extract<P[number], __${itemRef}Keys>>>;`
+        );
         // default overload returning the standard response (if a response interface exists)
-        lines.push(`${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`);
+        lines.push(
+          `${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
+        );
       }
 
-      // implementation
-      lines.push(`  async ${name}(params: ${paramsType}) {`);
-      lines.push(`    return this.sendMessage("${ns}.${name}", params);`);
-      lines.push('  }');
-      return lines.join('\n') + '\n';
+      // implementation: call sendMessage with the unwrapped response generic when possible
+      const implReturnType = respName;
+      lines.push(`  async ${name}(params: any) {`);
+      lines.push(
+        `    return this.sendMessage<${implReturnType}>("${ns}.${name}", params);`
+      );
+      lines.push("  }");
+      return lines.join("\n") + "\n";
     }
     // handled above when hasListFieldsParam && itemRef
 
-    return `${doc}  async ${name}(${methodParams}): Promise<${responseInterfaceName}> {\n    return this.sendMessage("${ns}.${name}", ${sendParams});\n  }\n`;
+    return `${doc}  async ${name}(${methodParams}): Promise<${responseInterfaceName}> {\n    return this.sendMessage<${responseInterfaceName}>("${ns}.${name}", ${sendParams});\n  }\n`;
   }
 
   // Generate per-method params and response interfaces
@@ -316,20 +363,27 @@ export class KodiNamespaceGenerator {
           if (p.$ref) refs.add(this.refToTypeName(p.$ref));
         });
         if (m.method.returns) {
-          if (m.method.returns.$ref) refs.add(this.refToTypeName(m.method.returns.$ref));
+          if (m.method.returns.$ref)
+            refs.add(this.refToTypeName(m.method.returns.$ref));
           if (m.method.returns.properties) {
             Object.keys(m.method.returns.properties).forEach((k) => {
               const v = m.method.returns.properties[k];
               if (!v) return;
               if (v.$ref) refs.add(this.refToTypeName(v.$ref));
               // items: { items: { $ref: 'List.Item.All' } }
-              if (v.items && v.items.$ref) refs.add(this.refToTypeName(v.items.$ref));
+              if (v.items && v.items.$ref)
+                refs.add(this.refToTypeName(v.items.$ref));
               // item: { $ref: 'List.Item.All' }
-              if (v.item && v.item.$ref) refs.add(this.refToTypeName(v.item.$ref));
+              if (v.item && v.item.$ref)
+                refs.add(this.refToTypeName(v.item.$ref));
             });
           }
           // top-level array returns: { type: 'array', items: { $ref: 'List.Item.All' } }
-          if (m.method.returns.type === 'array' && m.method.returns.items && m.method.returns.items.$ref) {
+          if (
+            m.method.returns.type === "array" &&
+            m.method.returns.items &&
+            m.method.returns.items.$ref
+          ) {
             refs.add(this.refToTypeName(m.method.returns.items.$ref));
           }
         }
@@ -342,7 +396,7 @@ export class KodiNamespaceGenerator {
         if (m.method.returns && m.method.returns.properties)
           refs.add(`${ns}${m.name}Response`);
 
-    const methodSnippet = this.buildMethod(ns, m.name, m.method, helpers);
+        const methodSnippet = this.buildMethod(ns, m.name, m.method, helpers);
         methodsLines.push(methodSnippet);
       });
 
@@ -358,7 +412,9 @@ export class KodiNamespaceGenerator {
       // emit helper type aliases for any refs that are actually referenced in the method overloads
       const methodsText = methodsLines.join("\n");
       const helperLines: string[] = [];
-      const combinedRefs = Array.from(new Set([...Array.from(refs), ...Array.from(helpers)]));
+      const combinedRefs = Array.from(
+        new Set([...Array.from(refs), ...Array.from(helpers)])
+      );
       combinedRefs.forEach((r) => {
         const keyName = `__${r}Keys`;
         if (methodsText.includes(keyName)) {
@@ -521,16 +577,20 @@ export class KodiNamespaceGenerator {
     // handle case where schema.type is an array of schemas (not just strings)
     if (Array.isArray(schema.type)) {
       const items = schema.type.map((t: any, idx: number) => {
-        if (typeof t === 'string') return this.jsonTypeToTs(t);
+        if (typeof t === "string") return this.jsonTypeToTs(t);
         // t is a nested schema object
         return this.schemaToTs(
           t,
           typesOut,
-          schema && schema.id ? this.refToTypeName(schema.id) + 'Option' + idx : (suggestedName ? `${suggestedName}Option${idx}` : undefined),
+          schema && schema.id
+            ? this.refToTypeName(schema.id) + "Option" + idx
+            : suggestedName
+            ? `${suggestedName}Option${idx}`
+            : undefined,
           currentType
         );
       });
-      return items.join(' | ');
+      return items.join(" | ");
     }
 
     if (schema.oneOf || schema.anyOf) {

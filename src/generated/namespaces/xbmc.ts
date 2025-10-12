@@ -14,14 +14,14 @@ export class KodiXBMCNamespace {
    * Retrieve info booleans about Kodi and the system
    */
   async GetInfoBooleans(params: XBMCGetInfoBooleansParams): Promise<Record<string, unknown>> {
-    return this.sendMessage("XBMC.GetInfoBooleans", params);
+    return this.sendMessage<Record<string, unknown>>("XBMC.GetInfoBooleans", params);
   }
 
   /**
    * Retrieve info labels about Kodi and the system
    */
   async GetInfoLabels(params: XBMCGetInfoLabelsParams): Promise<Record<string, unknown>> {
-    return this.sendMessage("XBMC.GetInfoLabels", params);
+    return this.sendMessage<Record<string, unknown>>("XBMC.GetInfoLabels", params);
   }
 
 }

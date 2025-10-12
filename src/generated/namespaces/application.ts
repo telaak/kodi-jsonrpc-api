@@ -16,34 +16,34 @@ export class KodiApplicationNamespace {
     this.sendMessage = sendMessage;
   }
 
-  async GetProperties<P extends readonly __ApplicationPropertyValueKeys[]>(params: { properties: P}): Promise<{ item: Pick<ApplicationPropertyValue, Extract<P[number], __ApplicationPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __ApplicationPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<ApplicationPropertyValue, Extract<P[number], __ApplicationPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: ApplicationGetPropertiesParams): Promise<ApplicationPropertyValue>;
-  async GetProperties(params: ApplicationGetPropertiesParams) {
-    return this.sendMessage("Application.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<ApplicationPropertyValue>("Application.GetProperties", params);
   }
 
   /**
    * Quit application
    */
   async Quit(): Promise<string> {
-    return this.sendMessage("Application.Quit", {});
+    return this.sendMessage<string>("Application.Quit", {});
   }
 
   /**
    * Toggle mute/unmute
    */
   async SetMute(params: ApplicationSetMuteParams): Promise<boolean> {
-    return this.sendMessage("Application.SetMute", params);
+    return this.sendMessage<boolean>("Application.SetMute", params);
   }
 
   /**
    * Set the current volume
    */
   async SetVolume(params: ApplicationSetVolumeParams): Promise<number> {
-    return this.sendMessage("Application.SetVolume", params);
+    return this.sendMessage<number>("Application.SetVolume", params);
   }
 
 }

@@ -20,14 +20,14 @@ export class KodiFavouritesNamespace {
    * Add a favourite with the given details
    */
   async AddFavourite(params: FavouritesAddFavouriteParams): Promise<string> {
-    return this.sendMessage("Favourites.AddFavourite", params);
+    return this.sendMessage<string>("Favourites.AddFavourite", params);
   }
 
   /**
    * Retrieve all favourites
    */
   async GetFavourites(params: FavouritesGetFavouritesParams): Promise<FavouritesGetFavouritesResponse> {
-    return this.sendMessage("Favourites.GetFavourites", params);
+    return this.sendMessage<FavouritesGetFavouritesResponse>("Favourites.GetFavourites", params);
   }
 
 }

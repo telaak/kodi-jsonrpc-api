@@ -63,128 +63,128 @@ export class KodiPVRNamespace {
    * Adds a timer to record the given show one times or a timer rule to record all showings of the given show or adds a reminder timer or reminder timer rule
    */
   async AddTimer(params: PVRAddTimerParams): Promise<string> {
-    return this.sendMessage("PVR.AddTimer", params);
+    return this.sendMessage<string>("PVR.AddTimer", params);
   }
 
   /**
    * Deletes a onetime timer or a timer rule
    */
   async DeleteTimer(params: PVRDeleteTimerParams): Promise<string> {
-    return this.sendMessage("PVR.DeleteTimer", params);
+    return this.sendMessage<string>("PVR.DeleteTimer", params);
   }
 
   /**
    * Retrieves the details of a specific broadcast
    */
   async GetBroadcastDetails(params: PVRGetBroadcastDetailsParams): Promise<PVRGetBroadcastDetailsResponse> {
-    return this.sendMessage("PVR.GetBroadcastDetails", params);
+    return this.sendMessage<PVRGetBroadcastDetailsResponse>("PVR.GetBroadcastDetails", params);
   }
 
   /**
    * Retrieves whether or not a broadcast is playable
    */
   async GetBroadcastIsPlayable(params: PVRGetBroadcastIsPlayableParams): Promise<boolean> {
-    return this.sendMessage("PVR.GetBroadcastIsPlayable", params);
+    return this.sendMessage<boolean>("PVR.GetBroadcastIsPlayable", params);
   }
 
   /**
    * Retrieves the program of a specific channel
    */
   async GetBroadcasts(params: PVRGetBroadcastsParams): Promise<PVRGetBroadcastsResponse> {
-    return this.sendMessage("PVR.GetBroadcasts", params);
+    return this.sendMessage<PVRGetBroadcastsResponse>("PVR.GetBroadcasts", params);
   }
 
   /**
    * Retrieves the details of a specific channel
    */
   async GetChannelDetails(params: PVRGetChannelDetailsParams): Promise<PVRGetChannelDetailsResponse> {
-    return this.sendMessage("PVR.GetChannelDetails", params);
+    return this.sendMessage<PVRGetChannelDetailsResponse>("PVR.GetChannelDetails", params);
   }
 
   /**
    * Retrieves the details of a specific channel group
    */
   async GetChannelGroupDetails(params: PVRGetChannelGroupDetailsParams): Promise<PVRGetChannelGroupDetailsResponse> {
-    return this.sendMessage("PVR.GetChannelGroupDetails", params);
+    return this.sendMessage<PVRGetChannelGroupDetailsResponse>("PVR.GetChannelGroupDetails", params);
   }
 
   /**
    * Retrieves the channel groups for the specified type
    */
   async GetChannelGroups(params: PVRGetChannelGroupsParams): Promise<PVRGetChannelGroupsResponse> {
-    return this.sendMessage("PVR.GetChannelGroups", params);
+    return this.sendMessage<PVRGetChannelGroupsResponse>("PVR.GetChannelGroups", params);
   }
 
   /**
    * Retrieves the channel list
    */
   async GetChannels(params: PVRGetChannelsParams): Promise<PVRGetChannelsResponse> {
-    return this.sendMessage("PVR.GetChannels", params);
+    return this.sendMessage<PVRGetChannelsResponse>("PVR.GetChannels", params);
   }
 
   /**
    * Retrieves the enabled PVR clients and their capabilities
    */
   async GetClients(params: PVRGetClientsParams): Promise<PVRGetClientsResponse> {
-    return this.sendMessage("PVR.GetClients", params);
+    return this.sendMessage<PVRGetClientsResponse>("PVR.GetClients", params);
   }
 
-  async GetProperties<P extends readonly __PVRPropertyValueKeys[]>(params: { properties: P}): Promise<{ item: Pick<PVRPropertyValue, Extract<P[number], __PVRPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __PVRPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<PVRPropertyValue, Extract<P[number], __PVRPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: PVRGetPropertiesParams): Promise<PVRPropertyValue>;
-  async GetProperties(params: PVRGetPropertiesParams) {
-    return this.sendMessage("PVR.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<PVRPropertyValue>("PVR.GetProperties", params);
   }
 
   /**
    * Retrieves the details of a specific recording
    */
   async GetRecordingDetails(params: PVRGetRecordingDetailsParams): Promise<PVRGetRecordingDetailsResponse> {
-    return this.sendMessage("PVR.GetRecordingDetails", params);
+    return this.sendMessage<PVRGetRecordingDetailsResponse>("PVR.GetRecordingDetails", params);
   }
 
   /**
    * Retrieves the recordings
    */
   async GetRecordings(params: PVRGetRecordingsParams): Promise<PVRGetRecordingsResponse> {
-    return this.sendMessage("PVR.GetRecordings", params);
+    return this.sendMessage<PVRGetRecordingsResponse>("PVR.GetRecordings", params);
   }
 
   /**
    * Retrieves the details of a specific timer
    */
   async GetTimerDetails(params: PVRGetTimerDetailsParams): Promise<PVRGetTimerDetailsResponse> {
-    return this.sendMessage("PVR.GetTimerDetails", params);
+    return this.sendMessage<PVRGetTimerDetailsResponse>("PVR.GetTimerDetails", params);
   }
 
   /**
    * Retrieves the timers
    */
   async GetTimers(params: PVRGetTimersParams): Promise<PVRGetTimersResponse> {
-    return this.sendMessage("PVR.GetTimers", params);
+    return this.sendMessage<PVRGetTimersResponse>("PVR.GetTimers", params);
   }
 
   /**
    * Toggle recording of a channel
    */
   async Record(params: PVRRecordParams): Promise<string> {
-    return this.sendMessage("PVR.Record", params);
+    return this.sendMessage<string>("PVR.Record", params);
   }
 
   /**
    * Starts a channel scan
    */
   async Scan(params: PVRScanParams): Promise<string> {
-    return this.sendMessage("PVR.Scan", params);
+    return this.sendMessage<string>("PVR.Scan", params);
   }
 
   /**
    * Creates or deletes a onetime timer or timer rule for a given show. If it exists, it will be deleted. If it does not exist, it will be created
    */
   async ToggleTimer(params: PVRToggleTimerParams): Promise<string> {
-    return this.sendMessage("PVR.ToggleTimer", params);
+    return this.sendMessage<string>("PVR.ToggleTimer", params);
   }
 
 }

@@ -25,51 +25,51 @@ export class KodiGUINamespace {
    * Activates currently used screensaver
    */
   async ActivateScreenSaver(): Promise<string> {
-    return this.sendMessage("GUI.ActivateScreenSaver", {});
+    return this.sendMessage<string>("GUI.ActivateScreenSaver", {});
   }
 
   /**
    * Activates the given window
    */
   async ActivateWindow(params: GUIActivateWindowParams): Promise<string> {
-    return this.sendMessage("GUI.ActivateWindow", params);
+    return this.sendMessage<string>("GUI.ActivateWindow", params);
   }
 
-  async GetProperties<P extends readonly __GUIPropertyValueKeys[]>(params: { properties: P}): Promise<{ item: Pick<GUIPropertyValue, Extract<P[number], __GUIPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __GUIPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<GUIPropertyValue, Extract<P[number], __GUIPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: GUIGetPropertiesParams): Promise<GUIPropertyValue>;
-  async GetProperties(params: GUIGetPropertiesParams) {
-    return this.sendMessage("GUI.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<GUIPropertyValue>("GUI.GetProperties", params);
   }
 
   /**
    * Returns the supported stereoscopic modes of the GUI
    */
   async GetStereoscopicModes(): Promise<GUIGetStereoscopicModesResponse> {
-    return this.sendMessage("GUI.GetStereoscopicModes", {});
+    return this.sendMessage<GUIGetStereoscopicModesResponse>("GUI.GetStereoscopicModes", {});
   }
 
   /**
    * Toggle fullscreen/GUI
    */
   async SetFullscreen(params: GUISetFullscreenParams): Promise<boolean> {
-    return this.sendMessage("GUI.SetFullscreen", params);
+    return this.sendMessage<boolean>("GUI.SetFullscreen", params);
   }
 
   /**
    * Sets the stereoscopic mode of the GUI to the given mode
    */
   async SetStereoscopicMode(params: GUISetStereoscopicModeParams): Promise<string> {
-    return this.sendMessage("GUI.SetStereoscopicMode", params);
+    return this.sendMessage<string>("GUI.SetStereoscopicMode", params);
   }
 
   /**
    * Shows a GUI notification
    */
   async ShowNotification(params: GUIShowNotificationParams): Promise<string> {
-    return this.sendMessage("GUI.ShowNotification", params);
+    return this.sendMessage<string>("GUI.ShowNotification", params);
   }
 
 }

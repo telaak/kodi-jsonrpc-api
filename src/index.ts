@@ -19,7 +19,7 @@ import { KodiJSONRPCNamespace } from "./generated/namespaces/jsonrpc";
 import { KodiAudioLibraryNamespace } from "./generated/namespaces/audiolibrary";
 import { KodiPVRNamespace } from "./generated/namespaces/pvr";
 import { KodiVideoLibraryNamespace } from "./generated/namespaces/videolibrary";
-export type ISendMessage = (method: string, params: any) => Promise<any>;
+export type ISendMessage = <T = any>(method: string, params: any) => Promise<T>;
 
 abstract class BaseKodiClient {
   public Addons!: KodiAddonsNamespace;
@@ -72,7 +72,7 @@ abstract class BaseKodiClient {
    * @param args - The arguments to pass to the method.
    * @returns A promise resolving with the result of the API call.
    */
-  abstract sendMessage<T>(method: string, args: object): Promise<T>;
+  abstract sendMessage<T = any>(method: string, args: object): Promise<T>;
 }
 
 export class HttpKodiClient extends BaseKodiClient {

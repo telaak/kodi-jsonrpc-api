@@ -53,179 +53,179 @@ export class KodiPlayerNamespace {
    * Add subtitle to the player
    */
   async AddSubtitle(params: PlayerAddSubtitleParams): Promise<string> {
-    return this.sendMessage("Player.AddSubtitle", params);
+    return this.sendMessage<string>("Player.AddSubtitle", params);
   }
 
   /**
    * Returns all active players
    */
   async GetActivePlayers(): Promise<unknown[]> {
-    return this.sendMessage("Player.GetActivePlayers", {});
+    return this.sendMessage<unknown[]>("Player.GetActivePlayers", {});
   }
 
   /**
    * Get the audio delay for the current playback
    */
   async GetAudioDelay(): Promise<PlayerGetAudioDelayResponse> {
-    return this.sendMessage("Player.GetAudioDelay", {});
+    return this.sendMessage<PlayerGetAudioDelayResponse>("Player.GetAudioDelay", {});
   }
 
-  async GetItem<P extends readonly __ListItemAllKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<{ item: Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>> }>;
+  async GetItem<P extends readonly __ListItemAllKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>>>;
   /**
    * Retrieves the currently played item
    */
-  async GetItem(params: PlayerGetItemParams): Promise<PlayerGetItemResponse>;
-  async GetItem(params: PlayerGetItemParams) {
-    return this.sendMessage("Player.GetItem", params);
+  async GetItem(params: PlayerGetItemParams): Promise<ListItemAll>;
+  async GetItem(params: any) {
+    return this.sendMessage<ListItemAll>("Player.GetItem", params);
   }
 
   /**
    * Get a list of available players
    */
   async GetPlayers(params: PlayerGetPlayersParams): Promise<unknown[]> {
-    return this.sendMessage("Player.GetPlayers", params);
+    return this.sendMessage<unknown[]>("Player.GetPlayers", params);
   }
 
-  async GetProperties<P extends readonly __PlayerPropertyValueKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<{ item: Pick<PlayerPropertyValue, Extract<P[number], __PlayerPropertyValueKeys>> }>;
+  async GetProperties<P extends readonly __PlayerPropertyValueKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<Pick<PlayerPropertyValue, Extract<P[number], __PlayerPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
    */
   async GetProperties(params: PlayerGetPropertiesParams): Promise<PlayerPropertyValue>;
-  async GetProperties(params: PlayerGetPropertiesParams) {
-    return this.sendMessage("Player.GetProperties", params);
+  async GetProperties(params: any) {
+    return this.sendMessage<PlayerPropertyValue>("Player.GetProperties", params);
   }
 
   /**
    * Get view mode of video player
    */
   async GetViewMode(): Promise<PlayerGetViewModeResponse> {
-    return this.sendMessage("Player.GetViewMode", {});
+    return this.sendMessage<PlayerGetViewModeResponse>("Player.GetViewMode", {});
   }
 
   /**
    * Go to previous/next/specific item in the playlist
    */
   async GoTo(params: PlayerGoToParams): Promise<string> {
-    return this.sendMessage("Player.GoTo", params);
+    return this.sendMessage<string>("Player.GoTo", params);
   }
 
   /**
    * If picture is zoomed move viewport left/right/up/down otherwise skip previous/next
    */
   async Move(params: PlayerMoveParams): Promise<string> {
-    return this.sendMessage("Player.Move", params);
+    return this.sendMessage<string>("Player.Move", params);
   }
 
   /**
    * Start playback of either the playlist with the given ID, a slideshow with the pictures from the given directory or a single file or an item from the database.
    */
   async Open(params: PlayerOpenParams): Promise<string> {
-    return this.sendMessage("Player.Open", params);
+    return this.sendMessage<string>("Player.Open", params);
   }
 
   /**
    * Pauses or unpause playback and returns the new state
    */
   async PlayPause(params: PlayerPlayPauseParams): Promise<PlayerSpeed> {
-    return this.sendMessage("Player.PlayPause", params);
+    return this.sendMessage<PlayerSpeed>("Player.PlayPause", params);
   }
 
   /**
    * Rotates current picture
    */
   async Rotate(params: PlayerRotateParams): Promise<string> {
-    return this.sendMessage("Player.Rotate", params);
+    return this.sendMessage<string>("Player.Rotate", params);
   }
 
   /**
    * Seek through the playing item
    */
   async Seek(params: PlayerSeekParams): Promise<PlayerSeekResponse> {
-    return this.sendMessage("Player.Seek", params);
+    return this.sendMessage<PlayerSeekResponse>("Player.Seek", params);
   }
 
   /**
    * Set the audio delay for the current playback
    */
   async SetAudioDelay(params: PlayerSetAudioDelayParams): Promise<PlayerSetAudioDelayResponse> {
-    return this.sendMessage("Player.SetAudioDelay", params);
+    return this.sendMessage<PlayerSetAudioDelayResponse>("Player.SetAudioDelay", params);
   }
 
   /**
    * Set the audio stream played by the player
    */
   async SetAudioStream(params: PlayerSetAudioStreamParams): Promise<string> {
-    return this.sendMessage("Player.SetAudioStream", params);
+    return this.sendMessage<string>("Player.SetAudioStream", params);
   }
 
   /**
    * Turn partymode on or off
    */
   async SetPartymode(params: PlayerSetPartymodeParams): Promise<string> {
-    return this.sendMessage("Player.SetPartymode", params);
+    return this.sendMessage<string>("Player.SetPartymode", params);
   }
 
   /**
    * Set the repeat mode of the player
    */
   async SetRepeat(params: PlayerSetRepeatParams): Promise<string> {
-    return this.sendMessage("Player.SetRepeat", params);
+    return this.sendMessage<string>("Player.SetRepeat", params);
   }
 
   /**
    * Shuffle/Unshuffle items in the player
    */
   async SetShuffle(params: PlayerSetShuffleParams): Promise<string> {
-    return this.sendMessage("Player.SetShuffle", params);
+    return this.sendMessage<string>("Player.SetShuffle", params);
   }
 
   /**
    * Set the speed of the current playback
    */
   async SetSpeed(params: PlayerSetSpeedParams): Promise<PlayerSpeed> {
-    return this.sendMessage("Player.SetSpeed", params);
+    return this.sendMessage<PlayerSpeed>("Player.SetSpeed", params);
   }
 
   /**
    * Set the subtitle displayed by the player
    */
   async SetSubtitle(params: PlayerSetSubtitleParams): Promise<string> {
-    return this.sendMessage("Player.SetSubtitle", params);
+    return this.sendMessage<string>("Player.SetSubtitle", params);
   }
 
   /**
    * Set the tempo of the current playback
    */
   async SetTempo(params: PlayerSetTempoParams): Promise<PlayerTempo> {
-    return this.sendMessage("Player.SetTempo", params);
+    return this.sendMessage<PlayerTempo>("Player.SetTempo", params);
   }
 
   /**
    * Set the video stream played by the player
    */
   async SetVideoStream(params: PlayerSetVideoStreamParams): Promise<string> {
-    return this.sendMessage("Player.SetVideoStream", params);
+    return this.sendMessage<string>("Player.SetVideoStream", params);
   }
 
   /**
    * Set view mode of video player
    */
   async SetViewMode(params: PlayerSetViewModeParams): Promise<string> {
-    return this.sendMessage("Player.SetViewMode", params);
+    return this.sendMessage<string>("Player.SetViewMode", params);
   }
 
   /**
    * Stops playback
    */
   async Stop(params: PlayerStopParams): Promise<string> {
-    return this.sendMessage("Player.Stop", params);
+    return this.sendMessage<string>("Player.Stop", params);
   }
 
   /**
    * Zoom current picture
    */
   async Zoom(params: PlayerZoomParams): Promise<string> {
-    return this.sendMessage("Player.Zoom", params);
+    return this.sendMessage<string>("Player.Zoom", params);
   }
 
 }

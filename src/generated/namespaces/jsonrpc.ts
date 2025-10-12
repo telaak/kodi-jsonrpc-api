@@ -18,49 +18,49 @@ export class KodiJSONRPCNamespace {
    * Get client-specific configurations
    */
   async GetConfiguration(): Promise<Configuration> {
-    return this.sendMessage("JSONRPC.GetConfiguration", {});
+    return this.sendMessage<Configuration>("JSONRPC.GetConfiguration", {});
   }
 
   /**
    * Enumerates all actions and descriptions
    */
   async Introspect(params: JSONRPCIntrospectParams): Promise<Record<string, unknown>> {
-    return this.sendMessage("JSONRPC.Introspect", params);
+    return this.sendMessage<Record<string, unknown>>("JSONRPC.Introspect", params);
   }
 
   /**
    * Notify all other connected clients
    */
   async NotifyAll(params: JSONRPCNotifyAllParams): Promise<any> {
-    return this.sendMessage("JSONRPC.NotifyAll", params);
+    return this.sendMessage<any>("JSONRPC.NotifyAll", params);
   }
 
   /**
    * Retrieve the clients permissions
    */
   async Permission(): Promise<JSONRPCPermissionResponse> {
-    return this.sendMessage("JSONRPC.Permission", {});
+    return this.sendMessage<JSONRPCPermissionResponse>("JSONRPC.Permission", {});
   }
 
   /**
    * Ping responder
    */
   async Ping(): Promise<string> {
-    return this.sendMessage("JSONRPC.Ping", {});
+    return this.sendMessage<string>("JSONRPC.Ping", {});
   }
 
   /**
    * Change the client-specific configuration
    */
   async SetConfiguration(params: JSONRPCSetConfigurationParams): Promise<Configuration> {
-    return this.sendMessage("JSONRPC.SetConfiguration", params);
+    return this.sendMessage<Configuration>("JSONRPC.SetConfiguration", params);
   }
 
   /**
    * Retrieve the JSON-RPC protocol version.
    */
   async Version(): Promise<JSONRPCVersionResponse> {
-    return this.sendMessage("JSONRPC.Version", {});
+    return this.sendMessage<JSONRPCVersionResponse>("JSONRPC.Version", {});
   }
 
 }

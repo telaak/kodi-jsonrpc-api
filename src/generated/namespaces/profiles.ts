@@ -21,27 +21,27 @@ export class KodiProfilesNamespace {
     this.sendMessage = sendMessage;
   }
 
-  async GetCurrentProfile<P extends readonly __ProfilesDetailsProfileKeys[]>(params: { properties: P}): Promise<{ item: Pick<ProfilesDetailsProfile, Extract<P[number], __ProfilesDetailsProfileKeys>> }>;
+  async GetCurrentProfile<P extends readonly __ProfilesDetailsProfileKeys[]>(params: { properties: P}): Promise<Pick<ProfilesDetailsProfile, Extract<P[number], __ProfilesDetailsProfileKeys>>>;
   /**
    * Retrieve the current profile
    */
   async GetCurrentProfile(params: ProfilesGetCurrentProfileParams): Promise<ProfilesDetailsProfile>;
-  async GetCurrentProfile(params: ProfilesGetCurrentProfileParams) {
-    return this.sendMessage("Profiles.GetCurrentProfile", params);
+  async GetCurrentProfile(params: any) {
+    return this.sendMessage<ProfilesDetailsProfile>("Profiles.GetCurrentProfile", params);
   }
 
   /**
    * Retrieve all profiles
    */
   async GetProfiles(params: ProfilesGetProfilesParams): Promise<ProfilesGetProfilesResponse> {
-    return this.sendMessage("Profiles.GetProfiles", params);
+    return this.sendMessage<ProfilesGetProfilesResponse>("Profiles.GetProfiles", params);
   }
 
   /**
    * Load the specified profile
    */
   async LoadProfile(params: ProfilesLoadProfileParams): Promise<string> {
-    return this.sendMessage("Profiles.LoadProfile", params);
+    return this.sendMessage<string>("Profiles.LoadProfile", params);
   }
 
 }
