@@ -23,6 +23,7 @@ export class KodiGUINamespace {
 
   /**
    * Activates currently used screensaver
+   * @returns string
    */
   async ActivateScreenSaver(): Promise<string> {
     return this.sendMessage<string>("GUI.ActivateScreenSaver", {});
@@ -30,6 +31,9 @@ export class KodiGUINamespace {
 
   /**
    * Activates the given window
+   * @param window GUIWindow
+   * @param parameters string[] (optional)
+   * @returns string
    */
   async ActivateWindow(params: GUIActivateWindowParams): Promise<string> {
     return this.sendMessage<string>("GUI.ActivateWindow", params);
@@ -38,6 +42,8 @@ export class KodiGUINamespace {
   async GetProperties<P extends readonly __GUIPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<GUIPropertyValue, Extract<P[number], __GUIPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
+   * @param properties GUIPropertyName[]
+   * @returns GUIPropertyValue
    */
   async GetProperties(params: GUIGetPropertiesParams): Promise<GUIPropertyValue>;
   async GetProperties(params: any) {
@@ -46,6 +52,7 @@ export class KodiGUINamespace {
 
   /**
    * Returns the supported stereoscopic modes of the GUI
+   * @returns GUIGetStereoscopicModesResponse
    */
   async GetStereoscopicModes(): Promise<GUIGetStereoscopicModesResponse> {
     return this.sendMessage<GUIGetStereoscopicModesResponse>("GUI.GetStereoscopicModes", {});
@@ -53,6 +60,8 @@ export class KodiGUINamespace {
 
   /**
    * Toggle fullscreen/GUI
+   * @param fullscreen GlobalToggle
+   * @returns boolean
    */
   async SetFullscreen(params: GUISetFullscreenParams): Promise<boolean> {
     return this.sendMessage<boolean>("GUI.SetFullscreen", params);
@@ -60,6 +69,8 @@ export class KodiGUINamespace {
 
   /**
    * Sets the stereoscopic mode of the GUI to the given mode
+   * @param mode "toggle" | "tomono" | "next" | "previous" | "select" | "off" | "split_vertical" | "split_horizontal" | "row_interleaved" | "hardware_based" | "anaglyph_cyan_red" | "anaglyph_green_magenta" | "monoscopic"
+   * @returns string
    */
   async SetStereoscopicMode(params: GUISetStereoscopicModeParams): Promise<string> {
     return this.sendMessage<string>("GUI.SetStereoscopicMode", params);
@@ -67,6 +78,11 @@ export class KodiGUINamespace {
 
   /**
    * Shows a GUI notification
+   * @param title string
+   * @param message string
+   * @param image "info" | "warning" | "error" | string (optional)
+   * @param displaytime number (optional)
+   * @returns string
    */
   async ShowNotification(params: GUIShowNotificationParams): Promise<string> {
     return this.sendMessage<string>("GUI.ShowNotification", params);

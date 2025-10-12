@@ -69,6 +69,9 @@ export class KodiNamespaceGenerator {
       ? `  /**\n   * ${method.description.replace(/\n/g, "\n   * ")}\n   */\n`
       : "";
 
+    // collect param docs while building the inline params shape
+    const paramDocs: Array<{ name: string; type: string; optional: boolean }> = [];
+
     const paramsSig = paramsInterfaceName ? `${paramsInterfaceName}` : "";
     const methodParams = paramsInterfaceName
       ? `params: ${paramsInterfaceName}`
@@ -93,8 +96,37 @@ export class KodiNamespaceGenerator {
         // leave a placeholder type name; later when generating the generic overload we'll replace 'properties' with 'P'
         const optional = p.required ? "" : "?";
         parts.push(`${pname}${optional}: ${ptype}`);
+        paramDocs.push({ name: pname, type: ptype, optional: !p.required });
       });
       return `{ ${parts.join("; ")} }`;
+    })();
+
+    // Build a JSDoc block with description, @param and @returns
+    const jsdoc = (() => {
+      const lines: string[] = [];
+      lines.push("  /**");
+      if (method.description) {
+        method.description.split("\n").forEach((ln: string) =>
+          lines.push(`   * ${ln}`)
+        );
+      } else {
+        lines.push("   *");
+      }
+      paramDocs.forEach((pd) => {
+        lines.push(
+          `   * @param ${pd.name} ${pd.type}${pd.optional ? " (optional)" : ""}`
+        );
+      });
+      // compute a reasonable return type for docs
+      let returnTypeDoc = "any";
+      if (method.returns) {
+        if (method.returns.$ref) returnTypeDoc = this.refToTypeName(method.returns.$ref);
+        else if (method.returns.properties) returnTypeDoc = `${ns}${name}Response`;
+        else if (method.returns.type) returnTypeDoc = this.jsonTypeToTs(method.returns.type);
+      }
+      lines.push(`   * @returns ${returnTypeDoc}`);
+      lines.push("   */\n");
+      return lines.join("\n");
     })();
 
     // special-case: methods that accept List.Fields.* as a 'properties' param and return List.Item.*
@@ -192,7 +224,7 @@ export class KodiNamespaceGenerator {
         );
         // default overload returning the unwrapped items/item
         lines.push(
-          `${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
+          `${jsdoc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
         );
       } else {
         // single-item response — emit narrow overload first
@@ -207,7 +239,7 @@ export class KodiNamespaceGenerator {
         );
         // default overload returning the standard response (if a response interface exists)
         lines.push(
-          `${doc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
+          `${jsdoc}  async ${name}(params: ${paramsType}): Promise<${respName}>;`
         );
       }
 
@@ -222,7 +254,7 @@ export class KodiNamespaceGenerator {
     }
     // handled above when hasListFieldsParam && itemRef
 
-    return `${doc}  async ${name}(${methodParams}): Promise<${responseInterfaceName}> {\n    return this.sendMessage<${responseInterfaceName}>("${ns}.${name}", ${sendParams});\n  }\n`;
+    return `${jsdoc}  async ${name}(${methodParams}): Promise<${responseInterfaceName}> {\n    return this.sendMessage<${responseInterfaceName}>("${ns}.${name}", ${sendParams});\n  }\n`;
   }
 
   // Generate per-method params and response interfaces

@@ -30,6 +30,9 @@ export class KodiPlaylistNamespace {
 
   /**
    * Add item(s) to playlist
+   * @param playlistid PlaylistId
+   * @param item PlaylistItem | PlaylistItem[]
+   * @returns string
    */
   async Add(params: PlaylistAddParams): Promise<string> {
     return this.sendMessage<string>("Playlist.Add", params);
@@ -37,6 +40,8 @@ export class KodiPlaylistNamespace {
 
   /**
    * Clear playlist
+   * @param playlistid PlaylistId
+   * @returns string
    */
   async Clear(params: PlaylistClearParams): Promise<string> {
     return this.sendMessage<string>("Playlist.Clear", params);
@@ -45,6 +50,11 @@ export class KodiPlaylistNamespace {
   async GetItems<P extends readonly __ListItemAllKeys[]>(params: { playlistid: PlaylistId; properties: P; limits?: ListLimits; sort?: ListSort }): Promise<Array<Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>>>>;
   /**
    * Get all items from playlist
+   * @param playlistid PlaylistId
+   * @param properties ListFieldsAll (optional)
+   * @param limits ListLimits (optional)
+   * @param sort ListSort (optional)
+   * @returns PlaylistGetItemsResponse
    */
   async GetItems(params: PlaylistGetItemsParams): Promise<ListItemAll[]>;
   async GetItems(params: any) {
@@ -53,6 +63,7 @@ export class KodiPlaylistNamespace {
 
   /**
    * Returns all existing playlists
+   * @returns unknown[]
    */
   async GetPlaylists(): Promise<unknown[]> {
     return this.sendMessage<unknown[]>("Playlist.GetPlaylists", {});
@@ -61,6 +72,9 @@ export class KodiPlaylistNamespace {
   async GetProperties<P extends readonly __PlaylistPropertyValueKeys[]>(params: { playlistid: PlaylistId; properties: P}): Promise<Pick<PlaylistPropertyValue, Extract<P[number], __PlaylistPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
+   * @param playlistid PlaylistId
+   * @param properties PlaylistPropertyName[]
+   * @returns PlaylistPropertyValue
    */
   async GetProperties(params: PlaylistGetPropertiesParams): Promise<PlaylistPropertyValue>;
   async GetProperties(params: any) {
@@ -69,6 +83,10 @@ export class KodiPlaylistNamespace {
 
   /**
    * Insert item(s) into playlist. Does not work for picture playlists (aka slideshows).
+   * @param playlistid PlaylistId
+   * @param position PlaylistPosition
+   * @param item PlaylistItem | PlaylistItem[]
+   * @returns string
    */
   async Insert(params: PlaylistInsertParams): Promise<string> {
     return this.sendMessage<string>("Playlist.Insert", params);
@@ -76,6 +94,9 @@ export class KodiPlaylistNamespace {
 
   /**
    * Remove item from playlist. Does not work for picture playlists (aka slideshows).
+   * @param playlistid PlaylistId
+   * @param position PlaylistPosition
+   * @returns string
    */
   async Remove(params: PlaylistRemoveParams): Promise<string> {
     return this.sendMessage<string>("Playlist.Remove", params);
@@ -83,6 +104,10 @@ export class KodiPlaylistNamespace {
 
   /**
    * Swap items in the playlist. Does not work for picture playlists (aka slideshows).
+   * @param playlistid PlaylistId
+   * @param position1 PlaylistPosition
+   * @param position2 PlaylistPosition
+   * @returns string
    */
   async Swap(params: PlaylistSwapParams): Promise<string> {
     return this.sendMessage<string>("Playlist.Swap", params);

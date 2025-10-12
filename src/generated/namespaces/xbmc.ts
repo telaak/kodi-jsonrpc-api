@@ -12,6 +12,8 @@ export class KodiXBMCNamespace {
 
   /**
    * Retrieve info booleans about Kodi and the system
+   * @param booleans string[]
+   * @returns Record<string, unknown>
    */
   async GetInfoBooleans(params: XBMCGetInfoBooleansParams): Promise<Record<string, unknown>> {
     return this.sendMessage<Record<string, unknown>>("XBMC.GetInfoBooleans", params);
@@ -19,6 +21,8 @@ export class KodiXBMCNamespace {
 
   /**
    * Retrieve info labels about Kodi and the system
+   * @param labels string[]
+   * @returns Record<string, unknown>
    */
   async GetInfoLabels(params: XBMCGetInfoLabelsParams): Promise<Record<string, unknown>> {
     return this.sendMessage<Record<string, unknown>>("XBMC.GetInfoLabels", params);

@@ -16,6 +16,7 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Get client-specific configurations
+   * @returns Configuration
    */
   async GetConfiguration(): Promise<Configuration> {
     return this.sendMessage<Configuration>("JSONRPC.GetConfiguration", {});
@@ -23,6 +24,11 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Enumerates all actions and descriptions
+   * @param getdescriptions boolean (optional)
+   * @param getmetadata boolean (optional)
+   * @param filterbytransport boolean (optional)
+   * @param filter JSONRPCIntrospectParamsFilter (optional)
+   * @returns Record<string, unknown>
    */
   async Introspect(params: JSONRPCIntrospectParams): Promise<Record<string, unknown>> {
     return this.sendMessage<Record<string, unknown>>("JSONRPC.Introspect", params);
@@ -30,6 +36,10 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Notify all other connected clients
+   * @param sender string
+   * @param message string
+   * @param data any (optional)
+   * @returns any
    */
   async NotifyAll(params: JSONRPCNotifyAllParams): Promise<any> {
     return this.sendMessage<any>("JSONRPC.NotifyAll", params);
@@ -37,6 +47,7 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Retrieve the clients permissions
+   * @returns JSONRPCPermissionResponse
    */
   async Permission(): Promise<JSONRPCPermissionResponse> {
     return this.sendMessage<JSONRPCPermissionResponse>("JSONRPC.Permission", {});
@@ -44,6 +55,7 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Ping responder
+   * @returns string
    */
   async Ping(): Promise<string> {
     return this.sendMessage<string>("JSONRPC.Ping", {});
@@ -51,6 +63,8 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Change the client-specific configuration
+   * @param notifications JSONRPCSetConfigurationParamsNotifications (optional)
+   * @returns Configuration
    */
   async SetConfiguration(params: JSONRPCSetConfigurationParams): Promise<Configuration> {
     return this.sendMessage<Configuration>("JSONRPC.SetConfiguration", params);
@@ -58,6 +72,7 @@ export class KodiJSONRPCNamespace {
 
   /**
    * Retrieve the JSON-RPC protocol version.
+   * @returns JSONRPCVersionResponse
    */
   async Version(): Promise<JSONRPCVersionResponse> {
     return this.sendMessage<JSONRPCVersionResponse>("JSONRPC.Version", {});

@@ -51,6 +51,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Add subtitle to the player
+   * @param playerid PlayerId
+   * @param subtitle string
+   * @returns string
    */
   async AddSubtitle(params: PlayerAddSubtitleParams): Promise<string> {
     return this.sendMessage<string>("Player.AddSubtitle", params);
@@ -58,6 +61,7 @@ export class KodiPlayerNamespace {
 
   /**
    * Returns all active players
+   * @returns unknown[]
    */
   async GetActivePlayers(): Promise<unknown[]> {
     return this.sendMessage<unknown[]>("Player.GetActivePlayers", {});
@@ -65,6 +69,7 @@ export class KodiPlayerNamespace {
 
   /**
    * Get the audio delay for the current playback
+   * @returns PlayerGetAudioDelayResponse
    */
   async GetAudioDelay(): Promise<PlayerGetAudioDelayResponse> {
     return this.sendMessage<PlayerGetAudioDelayResponse>("Player.GetAudioDelay", {});
@@ -73,6 +78,9 @@ export class KodiPlayerNamespace {
   async GetItem<P extends readonly __ListItemAllKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<Pick<ListItemAll, Extract<P[number], __ListItemAllKeys>>>;
   /**
    * Retrieves the currently played item
+   * @param playerid PlayerId
+   * @param properties ListFieldsAll (optional)
+   * @returns PlayerGetItemResponse
    */
   async GetItem(params: PlayerGetItemParams): Promise<ListItemAll>;
   async GetItem(params: any) {
@@ -81,6 +89,8 @@ export class KodiPlayerNamespace {
 
   /**
    * Get a list of available players
+   * @param media "all" | "video" | "audio" (optional)
+   * @returns unknown[]
    */
   async GetPlayers(params: PlayerGetPlayersParams): Promise<unknown[]> {
     return this.sendMessage<unknown[]>("Player.GetPlayers", params);
@@ -89,6 +99,9 @@ export class KodiPlayerNamespace {
   async GetProperties<P extends readonly __PlayerPropertyValueKeys[]>(params: { playerid: PlayerId; properties: P}): Promise<Pick<PlayerPropertyValue, Extract<P[number], __PlayerPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
+   * @param playerid PlayerId
+   * @param properties PlayerPropertyName[]
+   * @returns PlayerPropertyValue
    */
   async GetProperties(params: PlayerGetPropertiesParams): Promise<PlayerPropertyValue>;
   async GetProperties(params: any) {
@@ -97,6 +110,7 @@ export class KodiPlayerNamespace {
 
   /**
    * Get view mode of video player
+   * @returns PlayerGetViewModeResponse
    */
   async GetViewMode(): Promise<PlayerGetViewModeResponse> {
     return this.sendMessage<PlayerGetViewModeResponse>("Player.GetViewMode", {});
@@ -104,6 +118,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Go to previous/next/specific item in the playlist
+   * @param playerid PlayerId
+   * @param to "previous" | "next" | PlaylistPosition
+   * @returns string
    */
   async GoTo(params: PlayerGoToParams): Promise<string> {
     return this.sendMessage<string>("Player.GoTo", params);
@@ -111,6 +128,9 @@ export class KodiPlayerNamespace {
 
   /**
    * If picture is zoomed move viewport left/right/up/down otherwise skip previous/next
+   * @param playerid PlayerId
+   * @param direction "left" | "right" | "up" | "down"
+   * @returns string
    */
   async Move(params: PlayerMoveParams): Promise<string> {
     return this.sendMessage<string>("Player.Move", params);
@@ -118,6 +138,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Start playback of either the playlist with the given ID, a slideshow with the pictures from the given directory or a single file or an item from the database.
+   * @param item PlayerOpenParamsItemOption0 | PlaylistItem | PlayerOpenParamsItemOption2 | PlayerOpenParamsItemOption3 | PlayerOpenParamsItemOption4 | PlayerOpenParamsItemOption5 | PlayerOpenParamsItemOption6 (optional)
+   * @param options PlayerOpenParamsOptions (optional)
+   * @returns string
    */
   async Open(params: PlayerOpenParams): Promise<string> {
     return this.sendMessage<string>("Player.Open", params);
@@ -125,6 +148,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Pauses or unpause playback and returns the new state
+   * @param playerid PlayerId
+   * @param play GlobalToggle (optional)
+   * @returns PlayerSpeed
    */
   async PlayPause(params: PlayerPlayPauseParams): Promise<PlayerSpeed> {
     return this.sendMessage<PlayerSpeed>("Player.PlayPause", params);
@@ -132,6 +158,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Rotates current picture
+   * @param playerid PlayerId
+   * @param value "clockwise" | "counterclockwise" (optional)
+   * @returns string
    */
   async Rotate(params: PlayerRotateParams): Promise<string> {
     return this.sendMessage<string>("Player.Rotate", params);
@@ -139,6 +168,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Seek through the playing item
+   * @param playerid PlayerId
+   * @param value PlayerSeekParamsValueOption0 | PlayerSeekParamsValueOption1 | PlayerSeekParamsValueOption2 | PlayerSeekParamsValueOption3
+   * @returns PlayerSeekResponse
    */
   async Seek(params: PlayerSeekParams): Promise<PlayerSeekResponse> {
     return this.sendMessage<PlayerSeekResponse>("Player.Seek", params);
@@ -146,6 +178,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the audio delay for the current playback
+   * @param playerid PlayerId
+   * @param offset number | GlobalIncrementDecrement
+   * @returns PlayerSetAudioDelayResponse
    */
   async SetAudioDelay(params: PlayerSetAudioDelayParams): Promise<PlayerSetAudioDelayResponse> {
     return this.sendMessage<PlayerSetAudioDelayResponse>("Player.SetAudioDelay", params);
@@ -153,6 +188,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the audio stream played by the player
+   * @param playerid PlayerId
+   * @param stream "previous" | "next" | number
+   * @returns string
    */
   async SetAudioStream(params: PlayerSetAudioStreamParams): Promise<string> {
     return this.sendMessage<string>("Player.SetAudioStream", params);
@@ -160,6 +198,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Turn partymode on or off
+   * @param playerid PlayerId
+   * @param partymode GlobalToggle
+   * @returns string
    */
   async SetPartymode(params: PlayerSetPartymodeParams): Promise<string> {
     return this.sendMessage<string>("Player.SetPartymode", params);
@@ -167,6 +208,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the repeat mode of the player
+   * @param playerid PlayerId
+   * @param repeat PlayerRepeat | "cycle"
+   * @returns string
    */
   async SetRepeat(params: PlayerSetRepeatParams): Promise<string> {
     return this.sendMessage<string>("Player.SetRepeat", params);
@@ -174,6 +218,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Shuffle/Unshuffle items in the player
+   * @param playerid PlayerId
+   * @param shuffle GlobalToggle
+   * @returns string
    */
   async SetShuffle(params: PlayerSetShuffleParams): Promise<string> {
     return this.sendMessage<string>("Player.SetShuffle", params);
@@ -181,6 +228,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the speed of the current playback
+   * @param playerid PlayerId
+   * @param speed -32 | -16 | -8 | -4 | -2 | -1 | 0 | 1 | 2 | 4 | 8 | 16 | 32 | GlobalIncrementDecrement
+   * @returns PlayerSpeed
    */
   async SetSpeed(params: PlayerSetSpeedParams): Promise<PlayerSpeed> {
     return this.sendMessage<PlayerSpeed>("Player.SetSpeed", params);
@@ -188,6 +238,10 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the subtitle displayed by the player
+   * @param playerid PlayerId
+   * @param subtitle "previous" | "next" | "off" | "on" | number
+   * @param enable boolean (optional)
+   * @returns string
    */
   async SetSubtitle(params: PlayerSetSubtitleParams): Promise<string> {
     return this.sendMessage<string>("Player.SetSubtitle", params);
@@ -195,6 +249,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the tempo of the current playback
+   * @param playerid PlayerId
+   * @param tempo number | GlobalIncrementDecrement
+   * @returns PlayerTempo
    */
   async SetTempo(params: PlayerSetTempoParams): Promise<PlayerTempo> {
     return this.sendMessage<PlayerTempo>("Player.SetTempo", params);
@@ -202,6 +259,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Set the video stream played by the player
+   * @param playerid PlayerId
+   * @param stream "previous" | "next" | number
+   * @returns string
    */
   async SetVideoStream(params: PlayerSetVideoStreamParams): Promise<string> {
     return this.sendMessage<string>("Player.SetVideoStream", params);
@@ -209,6 +269,8 @@ export class KodiPlayerNamespace {
 
   /**
    * Set view mode of video player
+   * @param viewmode PlayerCustomViewMode | PlayerViewMode
+   * @returns string
    */
   async SetViewMode(params: PlayerSetViewModeParams): Promise<string> {
     return this.sendMessage<string>("Player.SetViewMode", params);
@@ -216,6 +278,8 @@ export class KodiPlayerNamespace {
 
   /**
    * Stops playback
+   * @param playerid PlayerId
+   * @returns string
    */
   async Stop(params: PlayerStopParams): Promise<string> {
     return this.sendMessage<string>("Player.Stop", params);
@@ -223,6 +287,9 @@ export class KodiPlayerNamespace {
 
   /**
    * Zoom current picture
+   * @param playerid PlayerId
+   * @param zoom "in" | "out" | number
+   * @returns string
    */
   async Zoom(params: PlayerZoomParams): Promise<string> {
     return this.sendMessage<string>("Player.Zoom", params);

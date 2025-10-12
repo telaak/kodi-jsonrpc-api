@@ -17,6 +17,9 @@ export class KodiTexturesNamespace {
 
   /**
    * Retrieve all textures
+   * @param properties TexturesFieldsTexture (optional)
+   * @param filter ListFilterTextures (optional)
+   * @returns TexturesGetTexturesResponse
    */
   async GetTextures(params: TexturesGetTexturesParams): Promise<TexturesGetTexturesResponse> {
     return this.sendMessage<TexturesGetTexturesResponse>("Textures.GetTextures", params);
@@ -24,6 +27,8 @@ export class KodiTexturesNamespace {
 
   /**
    * Remove the specified texture
+   * @param textureid LibraryId
+   * @returns string
    */
   async RemoveTexture(params: TexturesRemoveTextureParams): Promise<string> {
     return this.sendMessage<string>("Textures.RemoveTexture", params);

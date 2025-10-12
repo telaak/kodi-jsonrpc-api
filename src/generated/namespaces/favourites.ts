@@ -18,6 +18,13 @@ export class KodiFavouritesNamespace {
 
   /**
    * Add a favourite with the given details
+   * @param title string
+   * @param type FavouriteType
+   * @param path OptionalString (optional)
+   * @param window OptionalString (optional)
+   * @param windowparameter OptionalString (optional)
+   * @param thumbnail OptionalString (optional)
+   * @returns string
    */
   async AddFavourite(params: FavouritesAddFavouriteParams): Promise<string> {
     return this.sendMessage<string>("Favourites.AddFavourite", params);
@@ -25,6 +32,9 @@ export class KodiFavouritesNamespace {
 
   /**
    * Retrieve all favourites
+   * @param type any | FavouriteType (optional)
+   * @param properties FavouriteFieldsFavourite (optional)
+   * @returns FavouritesGetFavouritesResponse
    */
   async GetFavourites(params: FavouritesGetFavouritesParams): Promise<FavouritesGetFavouritesResponse> {
     return this.sendMessage<FavouritesGetFavouritesResponse>("Favourites.GetFavourites", params);

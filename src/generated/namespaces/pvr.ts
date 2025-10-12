@@ -61,6 +61,10 @@ export class KodiPVRNamespace {
 
   /**
    * Adds a timer to record the given show one times or a timer rule to record all showings of the given show or adds a reminder timer or reminder timer rule
+   * @param broadcastid LibraryId
+   * @param timerrule boolean (optional)
+   * @param reminder boolean (optional)
+   * @returns string
    */
   async AddTimer(params: PVRAddTimerParams): Promise<string> {
     return this.sendMessage<string>("PVR.AddTimer", params);
@@ -68,6 +72,8 @@ export class KodiPVRNamespace {
 
   /**
    * Deletes a onetime timer or a timer rule
+   * @param timerid LibraryId
+   * @returns string
    */
   async DeleteTimer(params: PVRDeleteTimerParams): Promise<string> {
     return this.sendMessage<string>("PVR.DeleteTimer", params);
@@ -75,6 +81,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the details of a specific broadcast
+   * @param broadcastid LibraryId
+   * @param properties PVRFieldsBroadcast (optional)
+   * @returns PVRGetBroadcastDetailsResponse
    */
   async GetBroadcastDetails(params: PVRGetBroadcastDetailsParams): Promise<PVRGetBroadcastDetailsResponse> {
     return this.sendMessage<PVRGetBroadcastDetailsResponse>("PVR.GetBroadcastDetails", params);
@@ -82,6 +91,8 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves whether or not a broadcast is playable
+   * @param broadcastid LibraryId
+   * @returns boolean
    */
   async GetBroadcastIsPlayable(params: PVRGetBroadcastIsPlayableParams): Promise<boolean> {
     return this.sendMessage<boolean>("PVR.GetBroadcastIsPlayable", params);
@@ -89,6 +100,10 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the program of a specific channel
+   * @param channelid LibraryId
+   * @param properties PVRFieldsBroadcast (optional)
+   * @param limits ListLimits (optional)
+   * @returns PVRGetBroadcastsResponse
    */
   async GetBroadcasts(params: PVRGetBroadcastsParams): Promise<PVRGetBroadcastsResponse> {
     return this.sendMessage<PVRGetBroadcastsResponse>("PVR.GetBroadcasts", params);
@@ -96,6 +111,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the details of a specific channel
+   * @param channelid LibraryId
+   * @param properties PVRFieldsChannel (optional)
+   * @returns PVRGetChannelDetailsResponse
    */
   async GetChannelDetails(params: PVRGetChannelDetailsParams): Promise<PVRGetChannelDetailsResponse> {
     return this.sendMessage<PVRGetChannelDetailsResponse>("PVR.GetChannelDetails", params);
@@ -103,6 +121,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the details of a specific channel group
+   * @param channelgroupid PVRChannelGroupId
+   * @param channels PVRGetChannelGroupDetailsParamsChannels (optional)
+   * @returns PVRGetChannelGroupDetailsResponse
    */
   async GetChannelGroupDetails(params: PVRGetChannelGroupDetailsParams): Promise<PVRGetChannelGroupDetailsResponse> {
     return this.sendMessage<PVRGetChannelGroupDetailsResponse>("PVR.GetChannelGroupDetails", params);
@@ -110,6 +131,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the channel groups for the specified type
+   * @param channeltype PVRChannelType
+   * @param limits ListLimits (optional)
+   * @returns PVRGetChannelGroupsResponse
    */
   async GetChannelGroups(params: PVRGetChannelGroupsParams): Promise<PVRGetChannelGroupsResponse> {
     return this.sendMessage<PVRGetChannelGroupsResponse>("PVR.GetChannelGroups", params);
@@ -117,6 +141,11 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the channel list
+   * @param channelgroupid PVRChannelGroupId
+   * @param properties PVRFieldsChannel (optional)
+   * @param limits ListLimits (optional)
+   * @param sort ListSort (optional)
+   * @returns PVRGetChannelsResponse
    */
   async GetChannels(params: PVRGetChannelsParams): Promise<PVRGetChannelsResponse> {
     return this.sendMessage<PVRGetChannelsResponse>("PVR.GetChannels", params);
@@ -124,6 +153,8 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the enabled PVR clients and their capabilities
+   * @param limits ListLimits (optional)
+   * @returns PVRGetClientsResponse
    */
   async GetClients(params: PVRGetClientsParams): Promise<PVRGetClientsResponse> {
     return this.sendMessage<PVRGetClientsResponse>("PVR.GetClients", params);
@@ -132,6 +163,8 @@ export class KodiPVRNamespace {
   async GetProperties<P extends readonly __PVRPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<PVRPropertyValue, Extract<P[number], __PVRPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
+   * @param properties PVRPropertyName[]
+   * @returns PVRPropertyValue
    */
   async GetProperties(params: PVRGetPropertiesParams): Promise<PVRPropertyValue>;
   async GetProperties(params: any) {
@@ -140,6 +173,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the details of a specific recording
+   * @param recordingid LibraryId
+   * @param properties PVRFieldsRecording (optional)
+   * @returns PVRGetRecordingDetailsResponse
    */
   async GetRecordingDetails(params: PVRGetRecordingDetailsParams): Promise<PVRGetRecordingDetailsResponse> {
     return this.sendMessage<PVRGetRecordingDetailsResponse>("PVR.GetRecordingDetails", params);
@@ -147,6 +183,10 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the recordings
+   * @param properties PVRFieldsRecording (optional)
+   * @param limits ListLimits (optional)
+   * @param sort ListSort (optional)
+   * @returns PVRGetRecordingsResponse
    */
   async GetRecordings(params: PVRGetRecordingsParams): Promise<PVRGetRecordingsResponse> {
     return this.sendMessage<PVRGetRecordingsResponse>("PVR.GetRecordings", params);
@@ -154,6 +194,9 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the details of a specific timer
+   * @param timerid LibraryId
+   * @param properties PVRFieldsTimer (optional)
+   * @returns PVRGetTimerDetailsResponse
    */
   async GetTimerDetails(params: PVRGetTimerDetailsParams): Promise<PVRGetTimerDetailsResponse> {
     return this.sendMessage<PVRGetTimerDetailsResponse>("PVR.GetTimerDetails", params);
@@ -161,6 +204,10 @@ export class KodiPVRNamespace {
 
   /**
    * Retrieves the timers
+   * @param properties PVRFieldsTimer (optional)
+   * @param limits ListLimits (optional)
+   * @param sort ListSort (optional)
+   * @returns PVRGetTimersResponse
    */
   async GetTimers(params: PVRGetTimersParams): Promise<PVRGetTimersResponse> {
     return this.sendMessage<PVRGetTimersResponse>("PVR.GetTimers", params);
@@ -168,6 +215,9 @@ export class KodiPVRNamespace {
 
   /**
    * Toggle recording of a channel
+   * @param record GlobalToggle (optional)
+   * @param channel "current" | LibraryId (optional)
+   * @returns string
    */
   async Record(params: PVRRecordParams): Promise<string> {
     return this.sendMessage<string>("PVR.Record", params);
@@ -175,6 +225,8 @@ export class KodiPVRNamespace {
 
   /**
    * Starts a channel scan
+   * @param clientid LibraryId (optional)
+   * @returns string
    */
   async Scan(params: PVRScanParams): Promise<string> {
     return this.sendMessage<string>("PVR.Scan", params);
@@ -182,6 +234,9 @@ export class KodiPVRNamespace {
 
   /**
    * Creates or deletes a onetime timer or timer rule for a given show. If it exists, it will be deleted. If it does not exist, it will be created
+   * @param broadcastid LibraryId
+   * @param timerrule boolean (optional)
+   * @returns string
    */
   async ToggleTimer(params: PVRToggleTimerParams): Promise<string> {
     return this.sendMessage<string>("PVR.ToggleTimer", params);

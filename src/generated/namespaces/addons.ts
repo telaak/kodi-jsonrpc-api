@@ -23,6 +23,10 @@ export class KodiAddonsNamespace {
 
   /**
    * Executes the given addon with the given parameters (if possible)
+   * @param addonid string
+   * @param params AddonsExecuteAddonParamsParamsOption0 | string[] | string (optional)
+   * @param wait boolean (optional)
+   * @returns string
    */
   async ExecuteAddon(params: AddonsExecuteAddonParams): Promise<string> {
     return this.sendMessage<string>("Addons.ExecuteAddon", params);
@@ -30,6 +34,9 @@ export class KodiAddonsNamespace {
 
   /**
    * Gets the details of a specific addon
+   * @param addonid string
+   * @param properties AddonFields (optional)
+   * @returns AddonsGetAddonDetailsResponse
    */
   async GetAddonDetails(params: AddonsGetAddonDetailsParams): Promise<AddonsGetAddonDetailsResponse> {
     return this.sendMessage<AddonsGetAddonDetailsResponse>("Addons.GetAddonDetails", params);
@@ -37,6 +44,13 @@ export class KodiAddonsNamespace {
 
   /**
    * Gets all available addons
+   * @param type AddonTypes (optional)
+   * @param content AddonContent (optional)
+   * @param enabled boolean | "all" (optional)
+   * @param properties AddonFields (optional)
+   * @param limits ListLimits (optional)
+   * @param installed boolean | "all" (optional)
+   * @returns AddonsGetAddonsResponse
    */
   async GetAddons(params: AddonsGetAddonsParams): Promise<AddonsGetAddonsResponse> {
     return this.sendMessage<AddonsGetAddonsResponse>("Addons.GetAddons", params);
@@ -44,6 +58,9 @@ export class KodiAddonsNamespace {
 
   /**
    * Enables/Disables a specific addon
+   * @param addonid string
+   * @param enabled GlobalToggle
+   * @returns string
    */
   async SetAddonEnabled(params: AddonsSetAddonEnabledParams): Promise<string> {
     return this.sendMessage<string>("Addons.SetAddonEnabled", params);

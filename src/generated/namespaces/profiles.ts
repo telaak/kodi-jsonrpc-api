@@ -24,6 +24,8 @@ export class KodiProfilesNamespace {
   async GetCurrentProfile<P extends readonly __ProfilesDetailsProfileKeys[]>(params: { properties: P}): Promise<Pick<ProfilesDetailsProfile, Extract<P[number], __ProfilesDetailsProfileKeys>>>;
   /**
    * Retrieve the current profile
+   * @param properties ProfilesFieldsProfile (optional)
+   * @returns ProfilesDetailsProfile
    */
   async GetCurrentProfile(params: ProfilesGetCurrentProfileParams): Promise<ProfilesDetailsProfile>;
   async GetCurrentProfile(params: any) {
@@ -32,6 +34,10 @@ export class KodiProfilesNamespace {
 
   /**
    * Retrieve all profiles
+   * @param properties ProfilesFieldsProfile (optional)
+   * @param limits ListLimits (optional)
+   * @param sort ListSort (optional)
+   * @returns ProfilesGetProfilesResponse
    */
   async GetProfiles(params: ProfilesGetProfilesParams): Promise<ProfilesGetProfilesResponse> {
     return this.sendMessage<ProfilesGetProfilesResponse>("Profiles.GetProfiles", params);
@@ -39,6 +45,10 @@ export class KodiProfilesNamespace {
 
   /**
    * Load the specified profile
+   * @param profile string
+   * @param prompt boolean (optional)
+   * @param password ProfilesPassword (optional)
+   * @returns string
    */
   async LoadProfile(params: ProfilesLoadProfileParams): Promise<string> {
     return this.sendMessage<string>("Profiles.LoadProfile", params);

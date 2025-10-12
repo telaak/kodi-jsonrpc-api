@@ -29,6 +29,10 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves all setting categories
+   * @param level SettingLevel (optional)
+   * @param section string (optional)
+   * @param properties Array<"settings"> (optional)
+   * @returns SettingsGetCategoriesResponse
    */
   async GetCategories(params: SettingsGetCategoriesParams): Promise<SettingsGetCategoriesResponse> {
     return this.sendMessage<SettingsGetCategoriesResponse>("Settings.GetCategories", params);
@@ -36,6 +40,9 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves all setting sections
+   * @param level SettingLevel (optional)
+   * @param properties Array<"categories"> (optional)
+   * @returns SettingsGetSectionsResponse
    */
   async GetSections(params: SettingsGetSectionsParams): Promise<SettingsGetSectionsResponse> {
     return this.sendMessage<SettingsGetSectionsResponse>("Settings.GetSections", params);
@@ -43,6 +50,8 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves the value of a setting
+   * @param setting string
+   * @returns SettingsGetSettingValueResponse
    */
   async GetSettingValue(params: SettingsGetSettingValueParams): Promise<SettingsGetSettingValueResponse> {
     return this.sendMessage<SettingsGetSettingValueResponse>("Settings.GetSettingValue", params);
@@ -50,6 +59,9 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves all settings
+   * @param level SettingLevel (optional)
+   * @param filter SettingsGetSettingsParamsFilterOption0 (optional)
+   * @returns SettingsGetSettingsResponse
    */
   async GetSettings(params: SettingsGetSettingsParams): Promise<SettingsGetSettingsResponse> {
     return this.sendMessage<SettingsGetSettingsResponse>("Settings.GetSettings", params);
@@ -57,6 +69,8 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves the value of the specified skin setting
+   * @param setting string
+   * @returns SettingsGetSkinSettingValueResponse
    */
   async GetSkinSettingValue(params: SettingsGetSkinSettingValueParams): Promise<SettingsGetSkinSettingValueResponse> {
     return this.sendMessage<SettingsGetSkinSettingValueResponse>("Settings.GetSkinSettingValue", params);
@@ -64,6 +78,7 @@ export class KodiSettingsNamespace {
 
   /**
    * Retrieves all skin settings of the currently used skin
+   * @returns SettingsGetSkinSettingsResponse
    */
   async GetSkinSettings(): Promise<SettingsGetSkinSettingsResponse> {
     return this.sendMessage<SettingsGetSkinSettingsResponse>("Settings.GetSkinSettings", {});
@@ -71,6 +86,8 @@ export class KodiSettingsNamespace {
 
   /**
    * Resets the value of a setting
+   * @param setting string
+   * @returns string
    */
   async ResetSettingValue(params: SettingsResetSettingValueParams): Promise<string> {
     return this.sendMessage<string>("Settings.ResetSettingValue", params);
@@ -78,6 +95,9 @@ export class KodiSettingsNamespace {
 
   /**
    * Changes the value of a setting
+   * @param setting string
+   * @param value SettingValueExtended
+   * @returns boolean
    */
   async SetSettingValue(params: SettingsSetSettingValueParams): Promise<boolean> {
     return this.sendMessage<boolean>("Settings.SetSettingValue", params);
@@ -85,6 +105,9 @@ export class KodiSettingsNamespace {
 
   /**
    * Changes the value of the specified skin setting
+   * @param setting string
+   * @param value boolean | string
+   * @returns boolean
    */
   async SetSkinSettingValue(params: SettingsSetSkinSettingValueParams): Promise<boolean> {
     return this.sendMessage<boolean>("Settings.SetSkinSettingValue", params);

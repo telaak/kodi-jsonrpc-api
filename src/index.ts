@@ -1,6 +1,7 @@
 import axios, { AxiosBasicCredentials, AxiosInstance } from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { WebSocket } from "partysocket";
+import EventEmitter from "events";
 
 import { KodiAddonsNamespace } from "./generated/namespaces/addons";
 import { KodiApplicationNamespace } from "./generated/namespaces/application";
@@ -20,6 +21,14 @@ import { KodiAudioLibraryNamespace } from "./generated/namespaces/audiolibrary";
 import { KodiPVRNamespace } from "./generated/namespaces/pvr";
 import { KodiVideoLibraryNamespace } from "./generated/namespaces/videolibrary";
 export type ISendMessage = <T = any>(method: string, params: any) => Promise<T>;
+export type KodiWebsocketMessage = {
+  jsonrpc: string;
+  method: string;
+  params: {
+    data: any;
+  };
+  sender: string;
+};
 
 abstract class BaseKodiClient {
   public Addons!: KodiAddonsNamespace;
@@ -127,6 +136,7 @@ export class WebsocketKodiClient extends BaseKodiClient {
   public url: string;
   public webSocket: WebSocket;
   public isOpen: boolean;
+  public events: EventEmitter;
 
   /**
    * The sendMessage method, the actual JSON sent to Kodi
@@ -182,13 +192,36 @@ export class WebsocketKodiClient extends BaseKodiClient {
     this.url = url;
     this.webSocket = webSocket;
     this.isOpen = false;
+    this.events = new EventEmitter();
 
     this.webSocket.addEventListener("open", () => {
       this.isOpen = true;
+      this.events.emit("open");
     });
 
     this.webSocket.addEventListener("close", () => {
       this.isOpen = false;
+      this.events.emit("close");
+    });
+
+    this.webSocket.addEventListener("error", (err: any) => {
+      this.events.emit("error", err);
+    });
+
+    // Re-emit raw message and also parsed JSON and JSON-RPC notifications
+    this.webSocket.addEventListener("message", (event: MessageEvent) => {
+      this.events.emit("message", event);
+      try {
+        const json = JSON.parse(event.data.toString());
+        this.events.emit("json", json as KodiWebsocketMessage);
+
+        // JSON-RPC notification (no id)
+        if (!json.id && json.method) {
+          this.events.emit("notification", json);
+        }
+      } catch (e) {
+        // non-JSON payload, ignore parse error but still emit
+      }
     });
 
     this.init(this.sendMessage);

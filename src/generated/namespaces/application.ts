@@ -19,6 +19,8 @@ export class KodiApplicationNamespace {
   async GetProperties<P extends readonly __ApplicationPropertyValueKeys[]>(params: { properties: P}): Promise<Pick<ApplicationPropertyValue, Extract<P[number], __ApplicationPropertyValueKeys>>>;
   /**
    * Retrieves the values of the given properties
+   * @param properties ApplicationPropertyName[]
+   * @returns ApplicationPropertyValue
    */
   async GetProperties(params: ApplicationGetPropertiesParams): Promise<ApplicationPropertyValue>;
   async GetProperties(params: any) {
@@ -27,6 +29,7 @@ export class KodiApplicationNamespace {
 
   /**
    * Quit application
+   * @returns string
    */
   async Quit(): Promise<string> {
     return this.sendMessage<string>("Application.Quit", {});
@@ -34,6 +37,8 @@ export class KodiApplicationNamespace {
 
   /**
    * Toggle mute/unmute
+   * @param mute GlobalToggle
+   * @returns boolean
    */
   async SetMute(params: ApplicationSetMuteParams): Promise<boolean> {
     return this.sendMessage<boolean>("Application.SetMute", params);
@@ -41,6 +46,8 @@ export class KodiApplicationNamespace {
 
   /**
    * Set the current volume
+   * @param volume number | GlobalIncrementDecrement
+   * @returns number
    */
   async SetVolume(params: ApplicationSetVolumeParams): Promise<number> {
     return this.sendMessage<number>("Application.SetVolume", params);
