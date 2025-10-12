@@ -27,11 +27,15 @@ export class KodiGUINamespace {
    * Activates the given window.
    *
    * @param window - The window to activate.
-   * @param parameters - Parameters to pass to the window.
+  * @param parameters - Parameters to pass to the window.
    * @returns A promise resolving to a string, typically empty on success.
+  *
+  * @see {@link ../types/gui.makeActivateWindowParams | makeActivateWindowParams}
    */
-  async ActivateWindow(window: Window, parameters: string[]): Promise<string> {
-    return this.sendMessage("GUI.ActivateWindow", { window, parameters });
+  async ActivateWindow(window: Window, parameters?: string[]): Promise<string> {
+    const params: any = { window };
+    if (parameters !== undefined) params.parameters = parameters;
+    return this.sendMessage("GUI.ActivateWindow", params);
   }
 
   /**
@@ -49,10 +53,14 @@ export class KodiGUINamespace {
    * @param properties - List of properties to retrieve.
    * @returns A promise resolving to the property values.
    */
-  async GetProperties(properties: PropertyName[]): Promise<PropertyValue> {
-    const response = await this.sendMessage("GUI.GetProperties", {
-      properties,
-    });
+  // Overloads to support readonly-tuple inference for properties
+  /**
+   * @see {@link ../types/gui.makeGuiProps | makeGuiProps}
+   */
+  async GetProperties<P extends readonly PropertyName[]>(properties: P): Promise<PropertyValue>;
+  async GetProperties(properties: PropertyName[] | readonly PropertyName[]): Promise<PropertyValue> {
+    const params: any = { properties: properties as string[] };
+    const response = await this.sendMessage("GUI.GetProperties", params);
     return response as PropertyValue;
   }
 
@@ -75,6 +83,9 @@ export class KodiGUINamespace {
    * @param displaytime - Time in milliseconds the notification will be visible.
    * @returns A promise resolving to a string, typically empty on success.
    */
+  /**
+   * @see {@link ../types/gui.makeShowNotificationParams | makeShowNotificationParams}
+   */
   async ShowNotification(
     title: string,
     message: string,
@@ -91,7 +102,10 @@ export class KodiGUINamespace {
    * @param fullscreen - The fullscreen state to set.
    * @returns A promise resolving to the new fullscreen state.
    */
-  async SetFullscreen(fullscreen: boolean): Promise<boolean> {
+  /**
+   * @see {@link ../types/gui.makeSetFullscreenParams | makeSetFullscreenParams}
+   */
+  async SetFullscreen(fullscreen: boolean | "toggle"): Promise<boolean> {
     const params = { fullscreen };
     const response = await this.sendMessage("GUI.SetFullscreen", params);
     return response as boolean;

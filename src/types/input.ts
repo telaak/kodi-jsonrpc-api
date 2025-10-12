@@ -254,35 +254,36 @@ export interface InputSendTextParams {
  * InputExecuteActionParams ($ref: "Input.ExecuteAction.Params")
  * Parameters for the ExecuteAction method.
  */
-export interface InputExecuteActionParams {
-  action: InputAction; // Action to execute
-}
+/* NOTE: Input.ExecuteAction in kodi.json expects a single primitive parameter
+ * (Input.Action). We prefer using the primitive `InputAction` in namespace
+ * signatures and constructing the params object inline. The dedicated
+ * single-field interface has been removed.
+ */
 
 /**
  * InputShowCodecParams ($ref: "Input.ShowCodec.Params")
  * Parameters for the ShowCodec method.
  */
-export interface InputShowCodecParams {
-  playerid: number; // ID of the player
-}
+/* NOTE: kodi.json defines Input.ShowCodec with no parameters. Remove the
+ * single-field param interface and accept primitives (none) in the namespace.
+ */
 
 /**
  * InputShowOSDParams ($ref: "Input.ShowOSD.Params")
  * Parameters for the ShowOSD method.
  */
-export interface InputShowOSDParams {
-  playerid: number; // ID of the player
-  show: boolean; // Whether to show or hide the OSD
-}
+/* NOTE: kodi.json defines Input.ShowOSD with no parameters. The previous
+ * param interface is removed to match the schema.
+ */
 
 /**
  * InputShowPlayerProcessInfoParams ($ref: "Input.ShowPlayerProcessInfo.Params")
  * Parameters for the ShowPlayerProcessInfo method.
  */
-export interface InputShowPlayerProcessInfoParams {
-  playerid: number; // ID of the player
-  show: boolean; // Whether to show or hide the player process info
-}
+/* NOTE: kodi.json defines Input.ShowPlayerProcessInfo with no parameters.
+ * Remove the single-field param interface and use primitive/no-param
+ * signatures in namespaces.
+ */
 
 /**
  * InputMoveParams ($ref: "Input.Move.Params")

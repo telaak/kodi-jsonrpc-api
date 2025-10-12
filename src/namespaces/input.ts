@@ -10,14 +10,6 @@ import { ISendMessage } from "..";
 import {
   InputAction,
   InputButtonEventType,
-  InputButtonEventParams,
-  InputSendTextParams,
-  InputExecuteActionParams,
-  InputShowCodecParams,
-  InputShowOSDParams,
-  InputShowPlayerProcessInfoParams,
-  InputMoveParams,
-  InputGoToParams,
   InputFields,
   InputButtonEventResponse,
   InputSendTextResponse,
@@ -66,7 +58,8 @@ export class KodiInputNamespace {
     keymap: InputButtonEventType,
     holdtime?: number
   ): Promise<InputButtonEventResponse> {
-    const params: InputButtonEventParams = { button, keymap, holdtime };
+    const params: any = { button, keymap };
+    if (holdtime !== undefined) params.holdtime = holdtime;
     return this.sendMessage("Input.ButtonEvent", params);
   }
 
@@ -97,8 +90,7 @@ export class KodiInputNamespace {
   async ExecuteAction(
     action: InputAction
   ): Promise<InputExecuteActionResponse> {
-    const params: InputExecuteActionParams = { action };
-    return this.sendMessage("Input.ExecuteAction", params);
+    return this.sendMessage("Input.ExecuteAction", { action });
   }
 
   /**
@@ -157,8 +149,7 @@ export class KodiInputNamespace {
     text: string,
     done: boolean = true
   ): Promise<InputSendTextResponse> {
-    const params: InputSendTextParams = { text, done };
-    return this.sendMessage("Input.SendText", params);
+    return this.sendMessage("Input.SendText", { text, done });
   }
 
   /**

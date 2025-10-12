@@ -1,5 +1,6 @@
 // Types and Interfaces Block
-// These types and interfaces are specific to the Files methods and do not exist in koditestExports.ts
+// These types and interfaces are specific to the Files methods and mirror
+// the kodi.json schema for Files.* methods.
 
 /**
  * FileType ($ref: "Files.Media")
@@ -8,65 +9,177 @@
 export type FileType = "video" | "music" | "pictures" | "files" | "programs";
 
 /**
- * FileSource ($ref: "Files.Source")
- * Represents a file source.
+ * FileSource ($ref: "List.Items.Sources" / "Files.Source")
+ * Represents a source item returned by Files.GetSources.
  */
 export interface FileSource {
-  id: string; // Unique identifier for the source
-  name: string; // Name of the source
-  path: string; // Path to the source
+  // per schema this includes at least `file` (path). Additional fields from
+  // Item.Details.Base may also be present depending on Kodi version.
+  file: string;
+  [key: string]: any;
 }
 
 /**
- * FileItem ($ref: "Files.Item")
- * Represents a file or directory item.
+ * FileItem ($ref: "List.Item.File")
+ * Maps to kodi.json's List.Item.File (which extends List.Item.Base).
  */
 export interface FileItem {
-  fileid: string; // Unique identifier for the file
-  name: string; // Name of the file or directory
-  path: string; // Full path to the file or directory
-  type: FileType; // Type of the file
-  size: number; // Size of the file in bytes
-  date: string; // Last modified date
+  file: string; // full path
+  filetype: "file" | "directory";
+  lastmodified?: string;
+  mimetype?: string;
+  size?: number;
+  // allow additional properties from List.Item.Base
+  [key: string]: any;
 }
+
+/**
+ * Fields available for List.Item.File (List.Fields.Files)
+ * This is a curated subset matching kodi.json's List.Fields.Files enum for
+ * files. Callers can pass these to request specific properties for file
+ * entries.
+ */
+export type FileFields =
+  | "title"
+  | "artist"
+  | "albumartist"
+  | "genre"
+  | "year"
+  | "rating"
+  | "album"
+  | "track"
+  | "duration"
+  | "comment"
+  | "lyrics"
+  | "playcount"
+  | "fanart"
+  | "director"
+  | "trailer"
+  | "tagline"
+  | "plot"
+  | "plotoutline"
+  | "originaltitle"
+  | "lastplayed"
+  | "writer"
+  | "studio"
+  | "mpaa"
+  | "cast"
+  | "country"
+  | "imdbnumber"
+  | "premiered"
+  | "runtime"
+  | "streamdetails"
+  | "resume";
+
+/**
+ * Typed const list of available file properties (List.Fields.Files) exported
+ * as a convenience and for use with `makeFileProps`.
+ */
+export const fileProps = [
+  "title",
+  "artist",
+  "albumartist",
+  "genre",
+  "year",
+  "rating",
+  "album",
+  "track",
+  "duration",
+  "comment",
+  "lyrics",
+  "playcount",
+  "fanart",
+  "director",
+  "trailer",
+  "tagline",
+  "plot",
+  "plotoutline",
+  "originaltitle",
+  "lastplayed",
+  "writer",
+  "studio",
+  "mpaa",
+  "cast",
+  "country",
+  "imdbnumber",
+  "premiered",
+  "runtime",
+  "streamdetails",
+  "resume",
+] as const;
+
+/**
+ * Create a typed readonly tuple of FileFields.
+ * Preserves literal types for callers so TypeScript infers narrow tuple types
+ * without requiring `as const` at each call site.
+ *
+ * Note: at runtime the readonly tuple is sent as a plain string[] in the
+ * JSON-RPC payload; namespace wrappers cast it accordingly.
+ */
+export function makeFileProps<const P extends readonly FileFields[]>(...p: P) {
+  return p;
+}
+
+/** Alias for makeFileProps */
+export const asFileProps = makeFileProps;
 
 /**
  * FilesGetSourcesResponse ($ref: "Files.GetSources.Response")
- * Response structure for the GetSources method.
  */
 export interface FilesGetSourcesResponse {
-  sources: FileSource[]; // List of file sources
+  limits: ListLimitsReturned;
+  sources: FileSource[];
 }
 
 /**
  * FilesGetDirectoryParams ($ref: "Files.GetDirectory.Params")
- * Parameters for the GetDirectory method.
+ * Note: `media`, `properties`, `sort` and `limits` are optional per schema
+ * (defaults are applied by Kodi when omitted).
  */
 export interface FilesGetDirectoryParams {
-  directory: string; // Directory path to retrieve
-  media: FileType; // Type of media ('video', 'music', etc.)
+  directory: string;
+  media?: FileType;
+  properties?: string[];
+  sort?: ListSort;
+  limits?: ListLimits;
 }
 
 /**
  * FilesGetDirectoryResponse ($ref: "Files.GetDirectory.Response")
- * Response structure for the GetDirectory method.
  */
 export interface FilesGetDirectoryResponse {
-  files: FileItem[]; // List of files and directories
-}
-
-/**
- * FilesGetFileDetailsParams ($ref: "Files.GetFileDetails.Params")
- * Parameters for the GetFileDetails method.
- */
-export interface FilesGetFileDetailsParams {
-  fileid: string; // ID of the file to retrieve details for
+  files: FileItem[];
+  limits: ListLimitsReturned;
 }
 
 /**
  * FilesGetFileDetailsResponse ($ref: "Files.GetFileDetails.Response")
- * Response structure for the GetFileDetails method.
  */
 export interface FilesGetFileDetailsResponse {
-  details: FileItem; // Details of the specified file
+  filedetails: FileItem;
+}
+
+/**
+ * ListLimits ($ref: "List.Limits")
+ */
+export interface ListLimits {
+  start?: number;
+  end?: number;
+}
+
+/**
+ * ListLimitsReturned ($ref: "List.LimitsReturned")
+ */
+export interface ListLimitsReturned {
+  start: number;
+  end: number;
+  total: number;
+}
+
+/**
+ * ListSort ($ref: "List.Sort")
+ */
+export interface ListSort {
+  method: string;
+  order: "ascending" | "descending";
 }

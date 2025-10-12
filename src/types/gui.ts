@@ -1,9 +1,17 @@
 // Types and Interfaces Block
-// These types and interfaces are specific to the GUI methods and do not exist in koditestExports.ts
+// These types and interfaces are specific to the GUI methods and mirror the
+// shapes described in `src/kodi.json` under the GUI namespace.
+//
+// Consumers can use the exported helper factories (e.g. `makeGuiProps`) to
+// build readonly tuples that preserve literal types for better compile-time
+// inference with namespace methods such as `kodi.GUI.GetProperties`.
 
 /**
  * StereoscopicMode ($ref: "GUI.StereoscopicMode")
- * Enum for stereoscopic modes.
+ * Enum for stereoscopic modes used by GUI.SetStereoscopicMode and the
+ * stereoscopic properties returned by GUI.GetStereoscopicModes.
+ *
+ * Example: `const m: StereoscopicMode = "anaglyph_cyan_red";`
  */
 export type StereoscopicMode =
   | "toggle"
@@ -22,7 +30,9 @@ export type StereoscopicMode =
 
 /**
  * Window ($ref: "GUI.Window")
- * Enum for window names.
+ * Enum for window names accepted by GUI.ActivateWindow.
+ * Use these string literals when calling GUI methods that accept a window
+ * identifier.
  */
 export type Window =
   | "addon"
@@ -170,7 +180,10 @@ export type Window =
 
 /**
  * PropertyName ($ref: "GUI.Property.Name")
- * Enum for GUI property names.
+ * Enumerates the property names accepted by `GUI.GetProperties`.
+ *
+ * Use `makeGuiProps("currentwindow", "fullscreen")` to create a readonly
+ * tuple that preserves literal types for callers.
  */
 export type PropertyName =
   | "currentwindow"
@@ -184,15 +197,109 @@ export type PropertyName =
  * PropertyValue ($ref: "GUI.Property.Value")
  * Interface for GUI property values.
  */
+/**
+ * Full mapping of GUI.Property.Value from kodi.json
+ */
 export interface PropertyValue {
-  currentcontrol: string
-  currentwindow: Window; // Current active window
-  fullscreen: boolean; // Fullscreen state
-  osdvisible: boolean; // On-screen display visibility
-  videoplayerdisplaytext: string; // Display text in video player
-  resolutionsettings: string; // Current resolution settings
-  stereoscopicmode: StereoscopicMode; // Current stereoscopic mode
-  // Add other properties as per kodi.json
+  currentcontrol?: { label: string };
+  currentwindow?: { id: number; label: string };
+  fullscreen?: boolean;
+  skin?: { id: string; name?: string };
+  stereoscopicmode?: {
+    label: string;
+    mode:
+      | "off"
+      | "split_vertical"
+      | "split_horizontal"
+      | "row_interleaved"
+      | "hardware_based"
+      | "anaglyph_cyan_red"
+      | "anaglyph_green_magenta"
+      | "anaglyph_yellow_blue"
+      | "monoscopic";
+  };
+}
+
+/**
+ * Typed const list of GUI property names.
+ *
+ * Useful as a reference or when you want to pick values programmatically.
+ */
+export const guiProps = [
+  "currentwindow",
+  "currentcontrol",
+  "skin",
+  "fullscreen",
+  "stereoscopicmode",
+] as const;
+
+/**
+ * Create a typed readonly tuple of GUI PropertyName values.
+ *
+ * The returned value is a readonly tuple which preserves literal types so
+ * callers get narrowed inference when passing the tuple to namespace methods.
+ *
+ * @example
+ * ```ts
+ * import { makeGuiProps } from "../types/gui";
+ * const props = makeGuiProps("currentwindow", "fullscreen");
+ * // props is typed as readonly ["currentwindow","fullscreen"]
+ * ```
+ */
+export function makeGuiProps<const P extends readonly PropertyName[]>(...p: P) {
+  return p;
+}
+
+export const asGuiProps = makeGuiProps;
+
+/**
+ * Build params for `GUI.ActivateWindow`.
+ * Useful to construct the params object with correct typing.
+ *
+ * @example
+ * ```ts
+ * import { makeActivateWindowParams } from "../types/gui";
+ * const params = makeActivateWindowParams("filebrowser", ["/path/to/dir"]);
+ * // kodi.GUI.ActivateWindow(params.window, params.parameters)
+ * ```
+ */
+export function makeActivateWindowParams(window: Window, parameters?: string[]) {
+  const p: any = { window };
+  if (parameters !== undefined) p.parameters = parameters;
+  return p as { window: Window; parameters?: string[] };
+}
+
+/**
+ * Build params for `GUI.ShowNotification`.
+ * Normalizes optional image and displaytime parameters.
+ *
+ * @example
+ * ```ts
+ * import { makeShowNotificationParams } from "../types/gui";
+ * const params = makeShowNotificationParams("Hello", "This is a message", "info", 3000);
+ * // kodi.GUI.ShowNotification(params.title, params.message, params.image, params.displaytime)
+ * ```
+ */
+export function makeShowNotificationParams(
+  title: string,
+  message: string,
+  image: NotificationType | string = "info",
+  displaytime: number = 5000
+) {
+  return { title, message, image, displaytime } as {
+    title: string;
+    message: string;
+    image: NotificationType | string;
+    displaytime: number;
+  };
+}
+
+/**
+ * Build params for `GUI.SetFullscreen`.
+ * Accepts boolean or "toggle" per schema's Global.Toggle.
+ */
+export function makeSetFullscreenParams(fullscreen: boolean | "toggle") {
+  return { fullscreen } as { fullscreen: boolean | "toggle" };
 }
 
 /**
