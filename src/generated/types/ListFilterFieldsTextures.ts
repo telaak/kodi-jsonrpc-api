@@ -1,0 +1,1 @@
+export type ListFilterFieldsTextures = "textureid" | "url" | "cachedurl" | "lasthashcheck" | "imagehash" | "width" | "height" | "usecount" | "lastused";

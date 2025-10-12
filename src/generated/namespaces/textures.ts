@@ -1,0 +1,32 @@
+import { ISendMessage } from '../../';
+import { TexturesFieldsTexture } from '../types/TexturesFieldsTexture';
+import { ListFilterTextures } from '../types/ListFilterTextures';
+import { TexturesDetailsTexture } from '../types/TexturesDetailsTexture';
+import { TexturesGetTexturesParams } from '../types/TexturesGetTexturesParams';
+import { TexturesGetTexturesResponse } from '../types/TexturesGetTexturesResponse';
+import { LibraryId } from '../types/LibraryId';
+import { TexturesRemoveTextureParams } from '../types/TexturesRemoveTextureParams';
+
+
+export class KodiTexturesNamespace {
+  private sendMessage: ISendMessage;
+
+  constructor(sendMessage: ISendMessage) {
+    this.sendMessage = sendMessage;
+  }
+
+  /**
+   * Retrieve all textures
+   */
+  async GetTextures(params: TexturesGetTexturesParams): Promise<TexturesGetTexturesResponse> {
+    return this.sendMessage("Textures.GetTextures", params);
+  }
+
+  /**
+   * Remove the specified texture
+   */
+  async RemoveTexture(params: TexturesRemoveTextureParams): Promise<string> {
+    return this.sendMessage("Textures.RemoveTexture", params);
+  }
+
+}

@@ -1,0 +1,1 @@
+export type AudioFieldsRole = Array<"title">;

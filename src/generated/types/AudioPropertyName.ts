@@ -1,0 +1,1 @@
+export type AudioPropertyName = "missingartistid" | "librarylastupdated" | "librarylastcleaned" | "artistlinksupdated" | "songslastadded" | "albumslastadded" | "artistslastadded" | "genreslastadded" | "songsmodified" | "albumsmodified" | "artistsmodified";

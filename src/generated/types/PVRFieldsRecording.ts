@@ -1,0 +1,1 @@
+export type PVRFieldsRecording = Array<"title" | "plot" | "plotoutline" | "genre" | "playcount" | "resume" | "channel" | "starttime" | "endtime" | "runtime" | "lifetime" | "icon" | "art" | "streamurl" | "file" | "directory" | "radio" | "isdeleted" | "epgeventid" | "channeluid" | "season" | "episode" | "showtitle" | "clientid">;

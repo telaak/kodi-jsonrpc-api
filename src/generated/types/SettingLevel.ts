@@ -1,0 +1,1 @@
+export type SettingLevel = "basic" | "standard" | "advanced" | "expert";

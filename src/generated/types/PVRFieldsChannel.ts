@@ -1,0 +1,1 @@
+export type PVRFieldsChannel = Array<"thumbnail" | "channeltype" | "hidden" | "locked" | "channel" | "lastplayed" | "broadcastnow" | "broadcastnext" | "uniqueid" | "icon" | "channelnumber" | "subchannelnumber" | "isrecording" | "hasarchive" | "clientid">;

@@ -1,0 +1,1 @@
+export type GUIPropertyName = "currentwindow" | "currentcontrol" | "skin" | "fullscreen" | "stereoscopicmode";

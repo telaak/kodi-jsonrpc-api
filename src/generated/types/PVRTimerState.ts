@@ -1,0 +1,1 @@
+export type PVRTimerState = "unknown" | "new" | "scheduled" | "recording" | "completed" | "aborted" | "cancelled" | "conflict_ok" | "conflict_notok" | "error" | "disabled";

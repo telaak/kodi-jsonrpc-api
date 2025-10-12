@@ -1,0 +1,1 @@
+export type PlaylistPropertyName = "type" | "size";

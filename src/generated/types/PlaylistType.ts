@@ -1,0 +1,1 @@
+export type PlaylistType = "unknown" | "video" | "audio" | "picture" | "mixed";

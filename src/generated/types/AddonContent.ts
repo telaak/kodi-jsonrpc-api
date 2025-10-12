@@ -1,0 +1,1 @@
+export type AddonContent = "unknown" | "video" | "audio" | "image" | "executable";

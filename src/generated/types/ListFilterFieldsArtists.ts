@@ -1,0 +1,1 @@
+export type ListFilterFieldsArtists = "artist" | "source" | "genre" | "moods" | "styles" | "instruments" | "biography" | "artisttype" | "gender" | "disambiguation" | "born" | "bandformed" | "disbanded" | "died" | "role" | "path" | "dateadded" | "datemodified" | "datenew" | "playlist" | "virtualfolder";

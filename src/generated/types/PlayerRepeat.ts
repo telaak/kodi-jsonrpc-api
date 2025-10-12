@@ -1,0 +1,1 @@
+export type PlayerRepeat = "off" | "one" | "all";

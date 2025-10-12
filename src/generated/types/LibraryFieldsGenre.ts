@@ -1,0 +1,1 @@
+export type LibraryFieldsGenre = Array<"title" | "thumbnail" | "sourceid">;

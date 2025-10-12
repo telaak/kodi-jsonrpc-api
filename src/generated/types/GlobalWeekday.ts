@@ -1,0 +1,1 @@
+export type GlobalWeekday = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";

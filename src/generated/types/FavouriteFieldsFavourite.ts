@@ -1,0 +1,1 @@
+export type FavouriteFieldsFavourite = Array<"window" | "windowparameter" | "thumbnail" | "path">;

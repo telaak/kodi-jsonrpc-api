@@ -1,0 +1,1 @@
+export type FavouriteType = "media" | "window" | "script" | "androidapp" | "unknown";

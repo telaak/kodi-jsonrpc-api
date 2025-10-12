@@ -1,0 +1,1 @@
+export type PVRPropertyName = "available" | "recording" | "scanning";

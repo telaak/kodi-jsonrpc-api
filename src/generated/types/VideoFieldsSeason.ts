@@ -1,0 +1,1 @@
+export type VideoFieldsSeason = Array<"season" | "showtitle" | "playcount" | "episode" | "fanart" | "thumbnail" | "tvshowid" | "watchedepisodes" | "art" | "userrating" | "title">;

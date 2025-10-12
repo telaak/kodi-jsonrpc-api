@@ -1,0 +1,1 @@
+export type FilesMedia = "video" | "music" | "pictures" | "files" | "programs";

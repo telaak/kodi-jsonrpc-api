@@ -1,0 +1,1 @@
+export type SettingType = "boolean" | "integer" | "number" | "string" | "action" | "list" | "path" | "addon" | "date" | "time";

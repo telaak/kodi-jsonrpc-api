@@ -1,0 +1,1 @@
+export type PVRFieldsClient = Array<"addonid" | "supportstv" | "supportsradio" | "supportsepg" | "supportsrecordings" | "supportstimers" | "supportschannelgroups" | "supportschannelscan">;

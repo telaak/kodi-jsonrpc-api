@@ -1,0 +1,1 @@
+export type VideoFieldsMovieSet = Array<"title" | "playcount" | "fanart" | "thumbnail" | "art" | "plot">;

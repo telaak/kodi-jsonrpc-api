@@ -1,0 +1,1 @@
+export type LibraryFieldsSource = Array<"file" | "paths">;

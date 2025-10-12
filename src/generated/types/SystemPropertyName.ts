@@ -1,0 +1,1 @@
+export type SystemPropertyName = "canshutdown" | "cansuspend" | "canhibernate" | "canreboot";

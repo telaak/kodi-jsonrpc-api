@@ -1,0 +1,1 @@
+export type ListFilterFieldsTVShows = "title" | "originaltitle" | "plot" | "status" | "votes" | "rating" | "userrating" | "year" | "genre" | "director" | "actor" | "numepisodes" | "numwatched" | "playcount" | "path" | "studio" | "mpaarating" | "dateadded" | "lastplayed" | "inprogress" | "tag" | "playlist" | "virtualfolder";

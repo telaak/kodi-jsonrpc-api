@@ -1,0 +1,1 @@
+export type TexturesFieldsTexture = Array<"url" | "cachedurl" | "lasthashcheck" | "imagehash" | "sizes">;

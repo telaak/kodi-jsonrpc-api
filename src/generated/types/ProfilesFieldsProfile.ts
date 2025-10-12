@@ -1,0 +1,1 @@
+export type ProfilesFieldsProfile = Array<"thumbnail" | "lockmode">;

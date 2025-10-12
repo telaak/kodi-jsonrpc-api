@@ -1,0 +1,46 @@
+import { LibraryId } from './LibraryId';
+import { OptionalString } from './OptionalString';
+import { OptionalInteger } from './OptionalInteger';
+import { ArrayString } from './ArrayString';
+import { OptionalNumber } from './OptionalNumber';
+import { MediaArtworkSet } from './MediaArtworkSet';
+import { VideoResume } from './VideoResume';
+import { VideoRatingsSet } from './VideoRatingsSet';
+import { MediaUniqueIDSet } from './MediaUniqueIDSet';
+
+export interface VideoLibrarySetMovieDetailsParams {
+  movieid: LibraryId;
+  title?: OptionalString;
+  playcount?: OptionalInteger;
+  runtime?: OptionalInteger;
+  director?: any | ArrayString;
+  studio?: any | ArrayString;
+  year?: OptionalInteger;
+  plot?: OptionalString;
+  genre?: any | ArrayString;
+  rating?: OptionalNumber;
+  mpaa?: OptionalString;
+  imdbnumber?: OptionalString;
+  votes?: OptionalString;
+  lastplayed?: OptionalString;
+  originaltitle?: OptionalString;
+  trailer?: OptionalString;
+  tagline?: OptionalString;
+  plotoutline?: OptionalString;
+  writer?: any | ArrayString;
+  country?: any | ArrayString;
+  top250?: OptionalInteger;
+  sorttitle?: OptionalString;
+  set?: OptionalString;
+  showlink?: any | ArrayString;
+  thumbnail?: OptionalString;
+  fanart?: OptionalString;
+  tag?: any | ArrayString;
+  art?: any | MediaArtworkSet;
+  resume?: any | VideoResume;
+  userrating?: OptionalInteger;
+  ratings?: VideoRatingsSet;
+  dateadded?: OptionalString;
+  premiered?: OptionalString;
+  uniqueid?: any | MediaUniqueIDSet;
+}

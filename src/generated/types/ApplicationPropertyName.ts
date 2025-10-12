@@ -1,0 +1,1 @@
+export type ApplicationPropertyName = "volume" | "muted" | "name" | "version" | "sorttokens" | "language";
