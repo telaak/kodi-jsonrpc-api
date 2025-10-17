@@ -243,12 +243,34 @@ export class KodiNamespaceGenerator {
         );
       }
 
-      // implementation: call sendMessage with the unwrapped response generic when possible
+      // implementation: call sendMessage and unwrap common wrapper shapes
       const implReturnType = respName;
       lines.push(`  async ${name}(params: any) {`);
-      lines.push(
-        `    return this.sendMessage<${implReturnType}>("${ns}.${name}", params);`
-      );
+      lines.push(`    const res = await this.sendMessage<any>("${ns}.${name}", params);`);
+      if (itemsAreArray) {
+        // handle { items: [...] } or top-level array responses
+        lines.push(
+          `    if (res && typeof res === "object" && Array.isArray((res as any).items)) {`
+        );
+        lines.push(
+          `      return (res as any).items as ${itemRef}[];`
+        );
+        lines.push(`    }`);
+        lines.push(
+          `    if (Array.isArray(res)) return res as ${itemRef}[];`
+        );
+        lines.push(`    return res as ${implReturnType};`);
+      } else {
+        // single-item response: { item: { ... } }
+        lines.push(
+          `    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {`
+        );
+        lines.push(
+          `      return (res as any).item as ${itemRef};`
+        );
+        lines.push(`    }`);
+        lines.push(`    return res as ${implReturnType};`);
+      }
       lines.push("  }");
       return lines.join("\n") + "\n";
     }
@@ -512,6 +534,8 @@ export class KodiNamespaceGenerator {
           return "number";
         case "string":
           return "string";
+        case "null":
+          return "null";
         case "boolean":
           return "boolean";
         case "array":
