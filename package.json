@@ -1,6 +1,6 @@
 {
   "name": "kodi-jsonrpc-api",
-  "version": "13.5.0",
+  "version": "13.5.1",
   "description": "TypeScript methods to access Kodi's JSONRPC API",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
