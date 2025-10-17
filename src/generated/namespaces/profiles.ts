@@ -29,7 +29,11 @@ export class KodiProfilesNamespace {
    */
   async GetCurrentProfile(params: ProfilesGetCurrentProfileParams): Promise<ProfilesDetailsProfile>;
   async GetCurrentProfile(params: any) {
-    return this.sendMessage<ProfilesDetailsProfile>("Profiles.GetCurrentProfile", params);
+    const res = await this.sendMessage<any>("Profiles.GetCurrentProfile", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as ProfilesDetailsProfile;
+    }
+    return res as ProfilesDetailsProfile;
   }
 
   /**

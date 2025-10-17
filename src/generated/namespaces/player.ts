@@ -84,7 +84,11 @@ export class KodiPlayerNamespace {
    */
   async GetItem(params: PlayerGetItemParams): Promise<ListItemAll>;
   async GetItem(params: any) {
-    return this.sendMessage<ListItemAll>("Player.GetItem", params);
+    const res = await this.sendMessage<any>("Player.GetItem", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as ListItemAll;
+    }
+    return res as ListItemAll;
   }
 
   /**
@@ -105,7 +109,11 @@ export class KodiPlayerNamespace {
    */
   async GetProperties(params: PlayerGetPropertiesParams): Promise<PlayerPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<PlayerPropertyValue>("Player.GetProperties", params);
+    const res = await this.sendMessage<any>("Player.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as PlayerPropertyValue;
+    }
+    return res as PlayerPropertyValue;
   }
 
   /**

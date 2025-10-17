@@ -174,7 +174,11 @@ export class KodiAudioLibraryNamespace {
    */
   async GetProperties(params: AudioLibraryGetPropertiesParams): Promise<AudioPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<AudioPropertyValue>("AudioLibrary.GetProperties", params);
+    const res = await this.sendMessage<any>("AudioLibrary.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as AudioPropertyValue;
+    }
+    return res as AudioPropertyValue;
   }
 
   /**

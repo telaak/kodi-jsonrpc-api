@@ -47,7 +47,11 @@ export class KodiGUINamespace {
    */
   async GetProperties(params: GUIGetPropertiesParams): Promise<GUIPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<GUIPropertyValue>("GUI.GetProperties", params);
+    const res = await this.sendMessage<any>("GUI.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as GUIPropertyValue;
+    }
+    return res as GUIPropertyValue;
   }
 
   /**

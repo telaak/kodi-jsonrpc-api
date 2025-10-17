@@ -58,7 +58,12 @@ export class KodiPlaylistNamespace {
    */
   async GetItems(params: PlaylistGetItemsParams): Promise<ListItemAll[]>;
   async GetItems(params: any) {
-    return this.sendMessage<ListItemAll[]>("Playlist.GetItems", params);
+    const res = await this.sendMessage<any>("Playlist.GetItems", params);
+    if (res && typeof res === "object" && Array.isArray((res as any).items)) {
+      return (res as any).items as ListItemAll[];
+    }
+    if (Array.isArray(res)) return res as ListItemAll[];
+    return res as ListItemAll[];
   }
 
   /**
@@ -78,7 +83,11 @@ export class KodiPlaylistNamespace {
    */
   async GetProperties(params: PlaylistGetPropertiesParams): Promise<PlaylistPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<PlaylistPropertyValue>("Playlist.GetProperties", params);
+    const res = await this.sendMessage<any>("Playlist.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as PlaylistPropertyValue;
+    }
+    return res as PlaylistPropertyValue;
   }
 
   /**

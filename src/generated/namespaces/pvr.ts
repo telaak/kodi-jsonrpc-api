@@ -168,7 +168,11 @@ export class KodiPVRNamespace {
    */
   async GetProperties(params: PVRGetPropertiesParams): Promise<PVRPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<PVRPropertyValue>("PVR.GetProperties", params);
+    const res = await this.sendMessage<any>("PVR.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as PVRPropertyValue;
+    }
+    return res as PVRPropertyValue;
   }
 
   /**

@@ -24,7 +24,11 @@ export class KodiApplicationNamespace {
    */
   async GetProperties(params: ApplicationGetPropertiesParams): Promise<ApplicationPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<ApplicationPropertyValue>("Application.GetProperties", params);
+    const res = await this.sendMessage<any>("Application.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as ApplicationPropertyValue;
+    }
+    return res as ApplicationPropertyValue;
   }
 
   /**

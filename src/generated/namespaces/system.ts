@@ -29,7 +29,11 @@ export class KodiSystemNamespace {
    */
   async GetProperties(params: SystemGetPropertiesParams): Promise<SystemPropertyValue>;
   async GetProperties(params: any) {
-    return this.sendMessage<SystemPropertyValue>("System.GetProperties", params);
+    const res = await this.sendMessage<any>("System.GetProperties", params);
+    if (res && typeof res === "object" && Object.prototype.hasOwnProperty.call(res, "item")) {
+      return (res as any).item as SystemPropertyValue;
+    }
+    return res as SystemPropertyValue;
   }
 
   /**
