@@ -4,8 +4,8 @@ import { PlayerPositionPercentage } from './PlayerPositionPercentage';
 import { PlayerPositionTime } from './PlayerPositionTime';
 
 export interface PlayerOpenParamsOptions {
-  playername?: any | "default" | string;
-  repeat?: any | PlayerRepeat;
+  playername?: null | "default" | string;
+  repeat?: null | PlayerRepeat;
   resume?: boolean | PlayerPositionPercentage | PlayerPositionTime;
   shuffled?: OptionalBoolean;
 }

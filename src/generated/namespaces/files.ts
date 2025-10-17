@@ -65,7 +65,7 @@ export class KodiFilesNamespace {
    * @param media FilesMedia
    * @param playcount OptionalInteger (optional)
    * @param lastplayed OptionalString (optional)
-   * @param resume any | VideoResume (optional)
+   * @param resume null | VideoResume (optional)
    * @returns string
    */
   async SetFileDetails(params: FilesSetFileDetailsParams): Promise<string> {

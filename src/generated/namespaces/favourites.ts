@@ -32,7 +32,7 @@ export class KodiFavouritesNamespace {
 
   /**
    * Retrieve all favourites
-   * @param type any | FavouriteType (optional)
+   * @param type null | FavouriteType (optional)
    * @param properties FavouriteFieldsFavourite (optional)
    * @returns FavouritesGetFavouritesResponse
    */

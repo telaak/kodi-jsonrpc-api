@@ -8,5 +8,5 @@ export interface FilesSetFileDetailsParams {
   media: FilesMedia;
   playcount?: OptionalInteger;
   lastplayed?: OptionalString;
-  resume?: any | VideoResume;
+  resume?: null | VideoResume;
 }

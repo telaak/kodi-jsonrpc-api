@@ -1,1 +1,1 @@
-export type OptionalNumber = any | number;
+export type OptionalNumber = null | number;

@@ -13,12 +13,12 @@ export interface VideoLibrarySetEpisodeDetailsParams {
   title?: OptionalString;
   playcount?: OptionalInteger;
   runtime?: OptionalInteger;
-  director?: any | ArrayString;
+  director?: null | ArrayString;
   plot?: OptionalString;
   rating?: OptionalNumber;
   votes?: OptionalString;
   lastplayed?: OptionalString;
-  writer?: any | ArrayString;
+  writer?: null | ArrayString;
   firstaired?: OptionalString;
   productioncode?: OptionalString;
   season?: OptionalInteger;
@@ -26,10 +26,10 @@ export interface VideoLibrarySetEpisodeDetailsParams {
   originaltitle?: OptionalString;
   thumbnail?: OptionalString;
   fanart?: OptionalString;
-  art?: any | MediaArtworkSet;
-  resume?: any | VideoResume;
+  art?: null | MediaArtworkSet;
+  resume?: null | VideoResume;
   userrating?: OptionalInteger;
   ratings?: VideoRatingsSet;
   dateadded?: OptionalString;
-  uniqueid?: any | MediaUniqueIDSet;
+  uniqueid?: null | MediaUniqueIDSet;
 }

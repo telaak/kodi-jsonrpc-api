@@ -6,20 +6,20 @@ import { MediaArtworkSet } from './MediaArtworkSet';
 export interface AudioLibrarySetArtistDetailsParams {
   artistid: LibraryId;
   artist?: OptionalString;
-  instrument?: any | ArrayString;
-  style?: any | ArrayString;
-  mood?: any | ArrayString;
+  instrument?: null | ArrayString;
+  style?: null | ArrayString;
+  mood?: null | ArrayString;
   born?: OptionalString;
   formed?: OptionalString;
   description?: OptionalString;
-  genre?: any | ArrayString;
+  genre?: null | ArrayString;
   died?: OptionalString;
   disbanded?: OptionalString;
-  yearsactive?: any | ArrayString;
+  yearsactive?: null | ArrayString;
   musicbrainzartistid?: OptionalString;
   sortname?: OptionalString;
   type?: OptionalString;
   gender?: OptionalString;
   disambiguation?: OptionalString;
-  art?: any | MediaArtworkSet;
+  art?: null | MediaArtworkSet;
 }

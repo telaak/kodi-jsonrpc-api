@@ -534,6 +534,8 @@ export class KodiNamespaceGenerator {
           return "number";
         case "string":
           return "string";
+        case "null":
+          return "null";
         case "boolean":
           return "boolean";
         case "array":

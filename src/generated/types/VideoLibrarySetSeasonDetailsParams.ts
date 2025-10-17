@@ -5,7 +5,7 @@ import { OptionalString } from './OptionalString';
 
 export interface VideoLibrarySetSeasonDetailsParams {
   seasonid: LibraryId;
-  art?: any | MediaArtworkSet;
+  art?: null | MediaArtworkSet;
   userrating?: OptionalInteger;
   title?: OptionalString;
 }

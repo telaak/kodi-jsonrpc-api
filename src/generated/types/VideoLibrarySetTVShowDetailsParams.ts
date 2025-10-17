@@ -11,9 +11,9 @@ export interface VideoLibrarySetTVShowDetailsParams {
   tvshowid: LibraryId;
   title?: OptionalString;
   playcount?: OptionalInteger;
-  studio?: any | ArrayString;
+  studio?: null | ArrayString;
   plot?: OptionalString;
-  genre?: any | ArrayString;
+  genre?: null | ArrayString;
   rating?: OptionalNumber;
   mpaa?: OptionalString;
   imdbnumber?: OptionalString;
@@ -25,12 +25,12 @@ export interface VideoLibrarySetTVShowDetailsParams {
   episodeguide?: OptionalString;
   thumbnail?: OptionalString;
   fanart?: OptionalString;
-  tag?: any | ArrayString;
-  art?: any | MediaArtworkSet;
+  tag?: null | ArrayString;
+  art?: null | MediaArtworkSet;
   userrating?: OptionalInteger;
   ratings?: VideoRatingsSet;
   dateadded?: OptionalString;
   runtime?: OptionalInteger;
   status?: OptionalString;
-  uniqueid?: any | MediaUniqueIDSet;
+  uniqueid?: null | MediaUniqueIDSet;
 }

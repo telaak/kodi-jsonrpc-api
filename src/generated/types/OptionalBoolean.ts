@@ -1,1 +1,1 @@
-export type OptionalBoolean = any | boolean;
+export type OptionalBoolean = null | boolean;

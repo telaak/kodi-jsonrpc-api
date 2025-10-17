@@ -1,1 +1,1 @@
-export type OptionalString = any | string;
+export type OptionalString = null | string;

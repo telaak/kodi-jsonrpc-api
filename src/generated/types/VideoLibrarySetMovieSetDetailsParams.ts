@@ -5,6 +5,6 @@ import { MediaArtworkSet } from './MediaArtworkSet';
 export interface VideoLibrarySetMovieSetDetailsParams {
   setid: LibraryId;
   title?: OptionalString;
-  art?: any | MediaArtworkSet;
+  art?: null | MediaArtworkSet;
   plot?: OptionalString;
 }

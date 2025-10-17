@@ -8,8 +8,8 @@ import { MediaArtworkSet } from './MediaArtworkSet';
 export interface AudioLibrarySetSongDetailsParams {
   songid: LibraryId;
   title?: OptionalString;
-  artist?: any | ArrayString;
-  genre?: any | ArrayString;
+  artist?: null | ArrayString;
+  genre?: null | ArrayString;
   year?: OptionalInteger;
   rating?: OptionalNumber;
   track?: OptionalInteger;
@@ -25,7 +25,7 @@ export interface AudioLibrarySetSongDetailsParams {
   displayartist?: OptionalString;
   sortartist?: OptionalString;
   mood?: OptionalString;
-  art?: any | MediaArtworkSet;
+  art?: null | MediaArtworkSet;
   disctitle?: OptionalString;
   releasedate?: OptionalString;
   originaldate?: OptionalString;

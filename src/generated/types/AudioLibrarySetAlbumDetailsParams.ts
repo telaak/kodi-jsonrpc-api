@@ -9,12 +9,12 @@ import { OptionalBoolean } from './OptionalBoolean';
 export interface AudioLibrarySetAlbumDetailsParams {
   albumid: LibraryId;
   title?: OptionalString;
-  artist?: any | ArrayString;
+  artist?: null | ArrayString;
   description?: OptionalString;
-  genre?: any | ArrayString;
-  theme?: any | ArrayString;
-  mood?: any | ArrayString;
-  style?: any | ArrayString;
+  genre?: null | ArrayString;
+  theme?: null | ArrayString;
+  mood?: null | ArrayString;
+  style?: null | ArrayString;
   type?: OptionalString;
   albumlabel?: OptionalString;
   rating?: OptionalNumber;
@@ -25,8 +25,8 @@ export interface AudioLibrarySetAlbumDetailsParams {
   musicbrainzreleasegroupid?: OptionalString;
   sortartist?: OptionalString;
   displayartist?: OptionalString;
-  musicbrainzalbumartistid?: any | ArrayString;
-  art?: any | MediaArtworkSet;
+  musicbrainzalbumartistid?: null | ArrayString;
+  art?: null | MediaArtworkSet;
   isboxset?: OptionalBoolean;
   releasedate?: OptionalString;
   originaldate?: OptionalString;
